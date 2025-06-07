@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 // Helper function to construct full API URLs
-const getBaseUrl = () => {
+export const getBaseUrl = () => {
   // In development, use localhost
   if (process.env.NODE_ENV === 'development') {
     return 'http://localhost:5019';
   }
-  // In production, use the API URL
-  return 'https://restaurant-api-923e.onrender.com';
+  // In production, use the API URL from environment variable
+  return process.env.VITE_API_URL || 'https://restaurant-api-923e.onrender.com';
 };
 
 // Centralized API endpoint configuration
