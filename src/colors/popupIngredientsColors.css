@@ -1,0 +1,164 @@
+:root {
+  /* Popup Container Colors */
+  --popup-container-bg: #ffffff; /* Main background color of the popup */
+  --popup-container-border: #e5e7eb; /* Border color around the popup */
+  --popup-header-text: #1f2937; /* Text color for popup header/title */
+  --popup-item-text: #4b5563; /* Text color for regular popup content */
+  --popup-item-desc: #6b7280; /* Text color for descriptions */
+  --popup-item-price: #ef3e3e; /* Price text color */
+  --popup-item-discount: #6b7280; /* Discounted price text color */
+
+  /* Popup Header Colors */
+  --popup-header-bg: #ffffff;
+  --popup-header-text: #111827;
+  --popup-header-border: #e5e7eb;
+
+  /* Popup Content Colors */
+  --popup-content-bg: #ffffff; /* popup bg */
+  --popup-content-text: #4b5563;
+  --popup-content-border: #e5e7eb;
+
+  /* Popup Item Colors : small medium large colors*/
+  --popup-item-bg: #ffffff;
+  --popup-item-hover-bg: #f3f4f6;
+  --popup-item-text: #111827; 
+  --popup-item-border: #e5e7eb;
+  --popup-item-selected-bg: #ffffff;
+ 
+
+  /* Popup  Below Container Colors */
+  --popup-container-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  /* Popup Button Colors */
+  --popup-button-bg: #f3f4f6; /* Background color for secondary buttons */
+  --popup-button-text: #4b5563; /* Text color for secondary buttons */
+  --popup-button-hover-bg: #e5e7eb; /* Background color on hover for secondary buttons */
+  --popup-button-hover-text: #1f2937; /* Text color on hover for secondary buttons */
+  --popup-button-border: #d1d5db; /* Border color for secondary buttons */
+  --popup-button-primary-bg: #ffffff; /* Background color for primary action button */
+  --popup-button-primary-hover-bg: #ef3e3e; /* Background color on hover for primary action button */
+  --popup-button-primary-text: #transparent; /* Text color for primary action button */
+  --popup-button-primary-border: #dc2626; /* Border color for primary action button */
+
+  /* Popup Close Button Colors */
+  --popup-close-button-bg: #ffffff; /* Background color for close button */
+  --popup-close-button-text: #4b5563; /* Text/icon color for close button */
+  --popup-close-button-hover-text: #1f2937; /* Text/icon color on hover for close button */
+  --popup-close-button-border: #e5e7eb; /* Border color for close button */
+
+  /* Selection Group Colors */
+  --popup-selection-group-bg: #f9fafb; /* Background color for selection groups */
+  --popup-selection-group-border: #e5e7eb; /* Border color for selection groups */
+  --popup-selection-group-text: #4b5563; /* Text color for selection groups */
+  --popup-selection-group-hover-bg: #f3f4f6; /* Background color on hover for selection groups */
+  --popup-selection-group-hover-text: #1f2937; /* Text color on hover for selection groups */
+  --popup-selection-group-active-bg: #ef3e3e; /* Background color for active selection */
+  --popup-selection-group-active-text: #ffffff; /* Text color for active selection */
+  --popup-selection-group-active-border: #dc2626; /* Border color for active selection */
+  --popup-selection-group-active-hover-bg: #dc2626; /* Background color on hover for active selection */
+  --popup-selection-group-active-hover-text: #ffffff; /* Text color on hover for active selection */
+  --popup-selection-group-active-hover-border: #b91c1c; /* Border color on hover for active selection */
+
+  /* Quantity Button Colors */
+  --popup-quantity-button-bg: #f3f4f6; /* Background color for quantity buttons */
+  --popup-quantity-button-text: #4b5563; /* Text color for quantity buttons */
+  --popup-quantity-button-hover-bg: #e5e7eb; /* Background color on hover for quantity buttons */
+  --popup-quantity-button-hover-text: #1f2937; /* Text color on hover for quantity buttons */
+  --popup-quantity-button-border: #d1d5db; /* Border color for quantity buttons */
+  --popup-quantity-button-disabled-bg: #f3f4f6; /* Background color for disabled quantity buttons */
+  --popup-quantity-button-disabled-text: #9ca3af; /* Text color for disabled quantity buttons */
+  --popup-quantity-button-disabled-border: #e5e7eb; /* Border color for disabled quantity buttons */
+
+  /* Dark Mode Colors */
+  --popup-container-bg-dark: #1f2937; /* Dark mode background color of the popup */
+  --popup-container-border-dark: #374151; /* Dark mode border color around the popup */
+  --popup-header-text-dark: #f9fafb; /* Dark mode text color for popup header/title */
+  --popup-item-text-dark: #e5e7eb; /* Dark mode text color for regular popup content */
+  --popup-item-desc-dark: #9ca3af; /* Dark mode text color for descriptions */
+  --popup-item-price-dark: #ef3e3e; /* Dark mode price text color */
+  --popup-item-discount-dark: #6b7280; /* Dark mode discounted price text color */
+
+  /* Dark Mode Button Colors */
+  --popup-button-bg-dark: #374151; /* Dark mode background color for secondary buttons */
+  --popup-button-text-dark: #e5e7eb; /* Dark mode text color for secondary buttons */
+  --popup-button-hover-bg-dark: #4b5563; /* Dark mode background color on hover for secondary buttons */
+  --popup-button-hover-text-dark: #f9fafb; /* Dark mode text color on hover for secondary buttons */
+  --popup-button-border-dark: #4b5563; /* Dark mode border color for secondary buttons */
+
+  /* Dark Mode Primary Action Button Colors */
+  --popup-button-primary-bg-dark: #ef3e3e; /* Dark mode background color for primary action button */
+  --popup-button-primary-text-dark: #ffffff; /* Dark mode text color for primary action button */
+  --popup-button-primary-border-dark: #dc2626; /* Dark mode border color for primary action button */
+  --popup-button-primary-hover-bg-dark: #dc2626; /* Dark mode background color on hover for primary action button */
+
+  /* Dark Mode Close Button Colors */
+  --popup-close-button-bg-dark: #1f2937; /* Dark mode background color for close button */
+  --popup-close-button-text-dark: #e5e7eb; /* Dark mode text/icon color for close button */
+  --popup-close-button-hover-text-dark: #f9fafb; /* Dark mode text/icon color on hover for close button */
+  --popup-close-button-border-dark: #374151; /* Dark mode border color for close button */
+
+  /* Dark Mode Selection Group Colors */
+  --popup-selection-group-bg-dark: #374151; /* Dark mode background color for selection groups */
+  --popup-selection-group-border-dark: #4b5563; /* Dark mode border color for selection groups */
+  --popup-selection-group-text-dark: #e5e7eb; /* Dark mode text color for selection groups */
+  --popup-selection-group-hover-bg-dark: #4b5563; /* Dark mode background color on hover for selection groups */
+  --popup-selection-group-hover-text-dark: #f9fafb; /* Dark mode text color on hover for selection groups */
+  --popup-selection-group-active-bg-dark: #ef3e3e; /* Dark mode background color for active selection */
+  --popup-selection-group-active-text-dark: #ffffff; /* Dark mode text color for active selection */
+  --popup-selection-group-active-border-dark: #dc2626; /* Dark mode border color for active selection */
+  --popup-selection-group-active-hover-bg-dark: #dc2626; /* Dark mode background color on hover for active selection */
+  --popup-selection-group-active-hover-text-dark: #ffffff; /* Dark mode text color on hover for active selection */
+  --popup-selection-group-active-hover-border-dark: #b91c1c; /* Dark mode border color on hover for active selection */
+
+  /* Dark Mode Quantity Button Colors */
+  --popup-quantity-button-bg-dark: #374151; /* Dark mode background color for quantity buttons */
+  --popup-quantity-button-text-dark: #e5e7eb; /* Dark mode text color for quantity buttons */
+  --popup-quantity-button-hover-bg-dark: #4b5563; /* Dark mode background color on hover for quantity buttons */
+  --popup-quantity-button-hover-text-dark: #f9fafb; /* Dark mode text color on hover for quantity buttons */
+  --popup-quantity-button-border-dark: #4b5563; /* Dark mode border color for quantity buttons */
+  --popup-quantity-button-disabled-bg-dark: #374151; /* Dark mode background color for disabled quantity buttons */
+  --popup-quantity-button-disabled-text-dark: #6b7280; /* Dark mode text color for disabled quantity buttons */
+  --popup-quantity-button-disabled-border-dark: #4b5563; /* Dark mode border color for disabled quantity buttons */
+}
+
+.dark {
+  /* Popup Container Colors */
+  --popup-container-bg: #1f2937;
+  --popup-container-border: #374151;
+  --popup-container-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+
+  /* Popup Header Colors */
+  --popup-header-bg: #1f2937;
+  --popup-header-text: #f9fafb;
+  --popup-header-border: #374151;
+
+  /* Popup Content Colors */
+  --popup-content-bg: #1f2937;
+  --popup-content-text: #d1d5db;
+  --popup-content-border: #374151;
+
+  /* Popup Item Colors */
+  --popup-item-bg: #1f2937;
+  --popup-item-hover-bg: #374151;
+  --popup-item-text: #d1d5db;
+  --popup-item-border: #374151;
+  --popup-item-selected-bg: #7f1d1d;
+  --popup-item-selected-text: #fca5a5;
+
+  /* Popup Button Colors */
+  --popup-button-bg: #1f2937;
+  --popup-button-hover-bg: #374151;
+  --popup-button-text: #f9fafb;
+  --popup-button-border: #4b5563;
+  --popup-button-primary-bg: #1f2937;
+  --popup-button-primary-hover-bg: #374151;
+  --popup-button-primary-text: #f9fafb;
+  --popup-button-primary-border: #ffffff;
+
+  /* Popup Close Button Colors */
+  --popup-close-button-bg: rgba(31, 41, 55, 0.8);
+  --popup-close-button-hover-bg: rgba(31, 41, 55, 0.9);
+  --popup-close-button-text: #d1d5db;
+  --popup-close-button-border: #374151;
+  --popup-close-button-hover-text: #f87171;
+} 

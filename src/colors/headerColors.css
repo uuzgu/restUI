@@ -1,0 +1,138 @@
+:root {
+  /* Header Container Colors */
+  --header-bg-light: #ffffff;
+  --header-bg-dark: #1f2937;
+  --header-border-light: #e5e7eb;
+  --header-border-dark: #374151;
+  --header-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --header-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Header Text Colors */
+  --header-text-primary-light: #1f2937;
+  --header-text-primary-dark: #f3f4f6;
+  --header-text-hover-light: #dc2626;
+  --header-text-hover-dark: #f87171;
+  --header-text-active-light: #dc2626;
+  --header-text-active-dark: #f87171;
+  --header-border-active-light: #dc2626;
+  --header-border-active-dark: #f87171;
+
+  /* Header Button Colors */
+  --header-button-bg-light: #f3f4f6;
+  --header-button-bg-dark: #374151;
+  --header-button-hover-light: #e5e7eb;
+  --header-button-hover-dark: #4b5563;
+  --header-button-text-light: #1f2937;
+  --header-button-text-dark: #f3f4f6;
+
+  /* Header Basket Colors */
+  --header-basket-border-light: #e5e7eb;
+  --header-basket-border-dark: #374151;
+  --header-basket-border-active-light: #dc2626;
+  --header-basket-border-active-dark: #f87171;
+  --header-basket-text-light: #1f2937;
+  --header-basket-text-dark: #f3f4f6;
+  --header-basket-text-active-light: #dc2626;
+  --header-basket-text-active-dark: #f87171;
+
+  /* Header Logo Colors */
+  --header-logo-text-light: #1f2937;
+  --header-logo-text-dark: #f3f4f6;
+  --header-logo-hover-light: #dc2626;
+  --header-logo-hover-dark: #f87171;
+
+  /* Header Navigation Colors */
+  --header-nav-bg-light: #ffffff;
+  --header-nav-bg-dark: #1f2937;
+  --header-nav-text-light: #1f2937;
+  --header-nav-text-dark: #f3f4f6;
+  --header-nav-hover-light: #dc2626;
+  --header-nav-hover-dark: #f87171;
+  --header-nav-active-light: #dc2626;
+  --header-nav-active-dark: #f87171;
+
+  /* Header Cart Icon Colors */
+  --header-cart-bg-light: #f3f4f6;
+  --header-cart-bg-dark: #374151;
+  --header-cart-text-light: #1f2937;
+  --header-cart-text-dark: #f3f4f6;
+  --header-cart-hover-light: #e5e7eb;
+  --header-cart-hover-dark: #4b5563;
+  --header-cart-count-bg-light: #dc2626;
+  --header-cart-count-bg-dark: #ef4444;
+  --header-cart-count-text-light: #ffffff;
+  --header-cart-count-text-dark: #ffffff;
+
+  /* Header Language Selector Colors */
+  --header-lang-bg-light: #f3f4f6;
+  --header-lang-bg-dark: #374151;
+  --header-lang-text-light: #1f2937;
+  --header-lang-text-dark: #f3f4f6;
+  --header-lang-hover-light: #e5e7eb;
+  --header-lang-hover-dark: #4b5563;
+  --header-lang-active-light: #dc2626;
+  --header-lang-active-dark: #f87171;
+}
+
+/* Light mode defaults */
+:root {
+  --header-bg: var(--header-bg-light);
+  --header-border: var(--header-border-light);
+  --header-shadow: var(--header-shadow-light);
+
+  --header-text-primary: var(--header-text-primary-light);
+  --header-text-hover: var(--header-text-hover-light);
+  --header-text-active: var(--header-text-active-light);
+  --header-border-active: var(--header-border-active-light);
+
+  --header-button-bg: var(--header-button-bg-light);
+  --header-button-hover: var(--header-button-hover-light);
+  --header-button-text: var(--header-button-text-light);
+
+  --header-basket-border: var(--header-basket-border-light);
+  --header-basket-border-active: var(--header-basket-border-active-light);
+  --header-basket-text: var(--header-basket-text-light);
+  --header-basket-text-active: var(--header-basket-text-active-light);
+}
+
+/* Dark mode overrides */
+.dark {
+  --header-bg: var(--header-bg-dark);
+  --header-border: var(--header-border-dark);
+  --header-shadow: var(--header-shadow-dark);
+
+  --header-text-primary: var(--header-text-primary-dark);
+  --header-text-hover: var(--header-text-hover-dark);
+  --header-text-active: var(--header-text-active-dark);
+  --header-border-active: var(--header-border-active-dark);
+
+  --header-button-bg: var(--header-button-bg-dark);
+  --header-button-hover: var(--header-button-hover-dark);
+  --header-button-text: var(--header-button-text-dark);
+
+  --header-basket-border: var(--header-basket-border-dark);
+  --header-basket-border-active: var(--header-basket-border-active-dark);
+  --header-basket-text: var(--header-basket-text-dark);
+  --header-basket-text-active: var(--header-basket-text-active-dark);
+}
+
+/* Apply transitions to header elements */
+[class*="bg-[var(--header-"] {
+  transition: var(--header-transition);
+  will-change: background-color;
+}
+
+[class*="text-[var(--header-"] {
+  transition: var(--header-transition);
+  will-change: color;
+}
+
+[class*="border-[var(--header-"] {
+  transition: var(--header-transition);
+  will-change: border-color;
+}
+
+[class*="shadow-[var(--header-"] {
+  transition: var(--header-transition);
+  will-change: box-shadow;
+} 

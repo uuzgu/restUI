@@ -1,0 +1,135 @@
+import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../LanguageContext';
+import homeImage1 from '../assets/homeImage1.jpg';
+import homeImage2 from '../assets/pizzahome2.png';
+import homeImage3 from '../assets/pizzahomeOutside.png';
+import homeHours from '../assets/homeHours.png';
+import { ChevronLeft, ChevronRight, Clock, Phone, MapPin } from 'lucide-react';
+import { useDarkMode } from '../DarkModeContext';
+import { Link } from 'react-router-dom';
+
+const HomePage = () => {
+  const { language, translations } = useLanguage();
+  const images = [homeImage1, homeImage2, homeImage3];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const { darkMode } = useDarkMode();
+
+  const goToPrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      goToNext();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+
+  return (
+    <div className="bg-white dark:bg-gray-900 pb-16">
+      {/* Image Slider */}
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 pt-32 h-[500px] sm:h-[600px] overflow-hidden rounded-2xl z-10">
+        <div className="relative w-full h-full">
+          {images.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`Slide ${index + 1}`}
+              className={`
+                absolute top-0 left-0 w-full h-full object-cover rounded-2xl transition-opacity duration-1000 ease-in-out
+                ${index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}
+              `}
+            />
+          ))}
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl" />
+        </div>
+
+        {/* Arrows - Completely revised */}
+        <div className="absolute inset-0 flex items-center justify-between px-4 sm:px-12 z-20 pointer-events-none">
+          <button
+            onClick={goToPrev}
+            className="pointer-events-auto w-12 h-12 flex items-center justify-center bg-white/90 text-black rounded-full shadow-lg hover:bg-white transition dark:bg-gray-900/90 dark:text-white dark:hover:bg-gray-900"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className="pointer-events-auto w-12 h-12 flex items-center justify-center bg-white/90 text-black rounded-full shadow-lg hover:bg-white transition dark:bg-gray-900/90 dark:text-white dark:hover:bg-gray-900"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Slide indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                index === currentIndex ? 'bg-white w-4' : 'bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Text + Image Section */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-20 max-w-[1400px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          {/* Text Content */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 sm:p-10 shadow-lg">
+            <h1 className="text-3xl sm:text-4xl text-red-600 dark:text-red-400 mb-6 leading-tight font-bold">
+              {translations[language].welcomeMessage || 'Welcome to Pizza Vienna – Where Flavor Meets Freshness'}
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+              {translations[language].welcomeText || 'At Pizza Vienna, we serve more than just food — we serve the best culinary experience in town. Our menu is crafted with passion, featuring a wide selection of delicious, handcrafted dishes made from the freshest, high-quality ingredients.'}
+            </p>
+            
+            {/* Quick Info Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                <Clock className="w-5 h-5 text-red-500" />
+                <span>Open Daily</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                <Phone className="w-5 h-5 text-red-500" />
+                <span>+43 123 456 789</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                <MapPin className="w-5 h-5 text-red-500" />
+                <span>Vienna, Austria</span>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <Link
+              to="/order"
+              className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-full transition-colors duration-200 shadow-lg hover:shadow-xl"
+            >
+              {translations[language].orderNow || 'Order Now'}
+            </Link>
+          </div>
+
+          {/* Image Block */}
+          <div className="flex justify-center">
+            <img
+              src={homeHours}
+              alt="Opening Hours"
+              className="w-full max-w-lg rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HomePage;

@@ -1,0 +1,582 @@
+.basket-panel {
+    position: fixed;
+    right: 1rem;
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    background-color: var(--basket-container-bg);
+    border: 1px solid var(--basket-container-border);
+    box-shadow: var(--basket-container-shadow);
+    transition: transform 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Dark mode overrides */
+.dark .basket-panel {
+    background-color: var(--basket-container-bg);
+    border-color: var(--basket-container-border);
+    box-shadow: var(--basket-container-shadow);
+}
+
+/* Light mode defaults */
+:root .basket-panel {
+    background-color: var(--basket-container-bg);
+    border-color: var(--basket-container-border);
+    box-shadow: var(--basket-container-shadow);
+}
+
+/* Mobile styles */
+@media (max-width: 800px) {
+    .basket-panel {
+        position: fixed !important;
+        top: 96px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: calc(var(--vh, 1vh) * 100 - 96px) !important;
+        z-index: 1050 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        border-radius: 1rem 1rem 0 0 !important;
+        border: 1px solid var(--basket-container-border) !important;
+        background: var(--basket-container-bg) !important;
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.18) !important;
+        padding: 1rem 0.5rem !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        max-width: 100vw !important;
+    }
+    .order-toggle {
+        margin: 1rem 0 0.5rem 0;
+        padding: 0 0.5rem;
+    }
+    .basket-content {
+        flex: 1 1 0;
+        min-height: 0;
+        overflow-y: auto;
+    }
+    .basket-footer {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--basket-container-bg);
+        padding: 1rem;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+        z-index: 10;
+        border-top: 1px solid var(--basket-container-border);
+    }
+    .basket-footer button {
+        width: 100%;
+        margin: 0;
+    }
+    .basket-total {
+        padding: 0.5rem 1rem;
+        background-color: var(--basket-container-bg);
+        border-top: 1px solid var(--basket-container-border);
+        border-radius: 0 0 1rem 1rem;
+    }
+    .basket-panel > button {
+        margin: 0 1rem 1rem 1rem;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 801px) {
+    .basket-panel {
+        position: fixed;
+        top: 96px;
+        right: 1.5rem;
+        width: 100%;
+        max-width: 28rem;
+        height: calc(100vh - 96px);
+        transform: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .basket-panel {
+        right: 0.75rem;
+        max-width: 24rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .basket-panel {
+        right: 1.5rem;
+        max-width: 28rem;
+    }
+}
+
+/* Dark/light mode themes */
+.basket-light {
+    background-color: var(--basket-container-bg);
+    color: var(--basket-item-text);
+    border: 1px solid var(--basket-container-border);
+}
+
+.basket-dark {
+    background-color: var(--basket-container-bg);
+    color: var(--basket-item-text);
+    border: 1px solid var(--basket-container-border);
+}
+
+/* Basket content styles */
+.basket-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    position: relative;
+    border: none !important;
+}
+
+.basket-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    background-color: var(--basket-item-bg);
+    border: 1px solid var(--basket-item-border);
+    color: var(--basket-item-text);
+    position: relative;
+}
+
+/* Remove margin-bottom for the last item since we're using gap in the parent */
+.basket-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Add a pseudo-element for the bottom border of the last item */
+.basket-item:last-child::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--basket-item-border);
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.basket-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.basket-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.basket-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--basket-button-bg);
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+}
+
+.basket-item-quantity button {
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    border: 1px solid var(--basket-button-hover);
+    background-color: var(--basket-button-bg);
+    color: var(--basket-button-text);
+    transition: all 0.2s ease;
+}
+
+.basket-item-quantity button:hover {
+    background-color: var(--basket-button-hover);
+}
+
+.basket-item-quantity span {
+    min-width: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+    color: var(--basket-button-text);
+}
+
+.basket-item .item-price {
+    text-align: right;
+    margin-top: 0.25rem;
+    color: var(--basket-item-price);
+}
+
+.basket-light .basket-item {
+    background-color: var(--basket-item-bg);
+}
+
+.basket-dark .basket-item {
+    background-color: var(--basket-item-bg);
+}
+
+.basket-item:hover {
+    transform: translateX(4px);
+}
+
+.basket-item-image {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.basket-item-details {
+    flex: 1;
+}
+
+.basket-light .basket-item-name {
+    color: var(--basket-item-text);
+}
+
+.basket-dark .basket-item-name {
+    color: var(--basket-item-text);
+}
+
+.basket-item-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--basket-item-text);
+}
+
+.basket-light .basket-item-price {
+    color: var(--basket-item-price);
+}
+
+.basket-dark .basket-item-price {
+    color: var(--basket-item-price);
+}
+
+.basket-item .item-price {
+    text-align: right;
+}
+
+.basket-light .quantity-button {
+    background-color: var(--basket-button-bg);
+    color: var(--basket-text);
+    border: 1px solid var(--basket-border);
+}
+
+.basket-dark .quantity-button {
+    background-color: var(--basket-button-bg);
+    color: var(--basket-text);
+    border: 1px solid var(--basket-border);
+}
+
+.quantity-btn {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.quantity-btn:hover:not(:disabled) {
+    background-color: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quantity-display {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--basket-item-text);
+    margin: 0 2px;
+}
+
+.remove-button {
+    color: var(--basket-item-price);
+    transition: all 0.2s ease;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.remove-button:hover {
+    background-color: var(--basket-button-hover);
+    transform: scale(1.1);
+}
+
+.item-price {
+    margin-top: 0.5rem;
+    text-align: right;
+}
+
+.price-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.original-price {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+}
+
+.discounted-price {
+    color: var(--text-success);
+    font-weight: 500;
+}
+
+.discount-badge {
+    background-color: var(--bg-success);
+    color: var(--text-success);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.regular-price {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Basket summary styles */
+.basket-summary {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+}
+
+.basket-summary h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.basket-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    position: relative;
+}
+
+.item-details h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.ingredients {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.price {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.quantity {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.checkout-button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+}
+
+.basket-light .checkout-button {
+    background-color: #ef4444;
+    color: white;
+}
+
+.basket-dark .checkout-button {
+    background-color: #dc2626;
+    color: white;
+}
+
+.checkout-button:hover {
+    transform: translateY(-2px);
+}
+
+/* Empty basket state */
+.empty-basket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 2rem;
+    color: var(--basket-item-text);
+}
+
+.basket-light .empty-basket {
+    color: #6b7280;
+}
+
+.basket-dark .empty-basket {
+    color: #9ca3af;
+}
+
+.empty-basket-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Responsive adjustments for basket items */
+@media (max-width: 767px) {
+    .basket-item {
+        padding: 0.5rem;
+    }
+
+    .basket-item-image {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .basket-item-name {
+        font-size: 0.875rem;
+    }
+
+    .basket-item-price {
+        font-size: 0.75rem;
+    }
+
+    .quantity-button {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+/* Order Toggle */
+.order-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    border: none !important;
+}
+
+.toggle-wrapper-long {
+    display: flex;
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--basket-button-bg);
+    border-radius: 9999px;
+    padding: 0.25rem;
+    position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.toggle-option {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: var(--basket-button-text);
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+    box-sizing: border-box;
+    min-width: 0;
+    border-radius: 9999px;
+}
+
+/* Sliding background effect */
+.toggle-wrapper-long::before {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: calc(50% - 0.25rem);
+    height: calc(100% - 0.5rem);
+    background-color: var(--basket-button-hover);
+    border-radius: 9999px;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.toggle-wrapper-long[data-selected="selfCollection"]::before {
+    transform: translateX(100%);
+}
+
+.toggle-option.active {
+    color: var(--basket-item-price);
+}
+
+.toggle-option:hover:not(.active) {
+    background-color: var(--basket-button-hover);
+}
+  

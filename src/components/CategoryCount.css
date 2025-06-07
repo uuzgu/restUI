@@ -1,0 +1,15 @@
+/* Persistent underline for active category button */
+.category-underline {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 66%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--category-header-active);
+  transition: all 0.2s;
+  content: '';
+  display: block;
+  z-index: 1;
+} 

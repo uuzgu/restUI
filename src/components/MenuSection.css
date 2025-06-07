@@ -1,0 +1,191 @@
+.menu-item-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.allergen-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid var(--allergen-soy-text);
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  color: var(--allergen-symbol-text-light);
+}
+
+.dark .allergen-indicator {
+  background-color: #1f2937;
+  border: 2px solid var(--allergen-soy-text);
+  color: var(--allergen-symbol-text-dark);
+}
+
+.allergen-indicator:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.allergen-description {
+  background-color: var(--allergen-desc-bg-light);
+  border: 1px solid var(--allergen-desc-border-light);
+}
+
+.dark .allergen-description {
+  background-color: var(--allergen-desc-bg-dark);
+  border: 1px solid var(--allergen-desc-border-dark);
+}
+
+/* Add button styles */
+.add-button {
+  position: absolute;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--menu-item-add-light);
+  border: 2px solid var(--menu-item-add-border-light);
+  color: var(--menu-item-add-text-light);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.dark .add-button {
+  background-color: var(--menu-item-add-dark);
+  border-color: var(--menu-item-add-border-dark);
+  color: var(--menu-item-add-text-dark);
+}
+
+.add-button:hover {
+  background-color: var(--menu-item-add-hover-light);
+  color: var(--menu-item-add-text-light);
+  border-color: var(--menu-item-add-border-light);
+  transform: scale(1.1);
+  box-shadow: var(--menu-item-card-shadow);
+}
+
+.dark .add-button:hover {
+  background-color: var(--menu-item-add-hover-dark);
+  color: var(--menu-item-add-text-dark);
+  border-color: var(--menu-item-add-border-dark);
+}
+
+@media (max-width: 767px) {
+  .menu-item-image {
+    display: none;
+  }
+  
+  .item-box {
+    width: 100%;
+    margin: 0.5rem auto;
+    padding: 1rem;
+    position: relative;
+    background-color: var(--menu-item-card-bg);
+    color: var(--menu-item-title);
+    border: 1px solid var(--menu-item-card-border);
+  }
+  
+  .item-details {
+    width: 100%;
+  }
+
+  .grid-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .item-name {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--menu-item-title);
+  }
+
+  .item-description {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: var(--menu-item-desc);
+  }
+
+  /* Hide item images in cards */
+  .item-image {
+    display: none !important;
+  }
+
+  /* Adjust layout for items without images */
+  .item-box {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .item-box .item-details {
+    width: 100%;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .add-button {
+    position: absolute !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    background-color: var(--menu-item-add-light) !important;
+    border: 2px solid var(--menu-item-add-border-light) !important;
+    color: var(--menu-item-add-text-light) !important;
+    font-size: 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    transition: all 0.2s ease !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+  }
+
+  .dark .add-button {
+    background-color: var(--menu-item-add-dark) !important;
+    border-color: var(--menu-item-add-border-dark) !important;
+    color: var(--menu-item-add-text-dark) !important;
+  }
+
+  .add-button:hover {
+    background-color: var(--menu-item-add-hover-light) !important;
+    color: var(--menu-item-add-text-light) !important;
+    border-color: var(--menu-item-add-border-light) !important;
+    transform: scale(1.1) !important;
+    box-shadow: var(--menu-item-card-shadow) !important;
+  }
+
+  .dark .add-button:hover {
+    background-color: var(--menu-item-add-hover-dark) !important;
+    color: var(--menu-item-add-text-dark) !important;
+    border-color: var(--menu-item-add-border-dark) !important;
+  }
+
+  .item-image .add-button {
+    bottom: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+} 

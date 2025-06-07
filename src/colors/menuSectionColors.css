@@ -1,0 +1,132 @@
+:root {
+  /* Menu Section Container Colors */
+  --menu-section-bg-light: #ffffff; /* Background of the entire menu section */
+  --menu-section-bg-dark: #1f2937;
+  --menu-section-border-light: #e5e7eb; /* Border around menu sections */
+  --menu-section-border-dark: #374151;
+  --menu-section-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow for menu sections */
+  --menu-section-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Menu Section Header Colors */
+  --menu-section-header-bg-light: #ffffff; /* Background of category headers */
+  --menu-section-header-bg-dark: #1f2937;
+  --menu-section-header-text-light: #1f2937; /* Category title text */
+  --menu-section-header-text-dark: #f3f4f6;
+  --menu-section-header-border-light: #e5e7eb; /* Border under category headers */
+  --menu-section-header-border-dark: #374151;
+
+  /* Menu Item Card Colors */
+  --menu-item-card-bg-light: #ffffff; /* Background of each menu item card */
+  --menu-item-card-bg-dark: #1f2937;
+  --menu-item-card-border-light: #e5e7eb; /* Border around menu item cards */
+  --menu-item-card-border-dark: #374151;
+  --menu-item-card-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow for menu item cards */
+  --menu-item-card-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --menu-item-card-hover-light: #f9fafb; /* Card background on hover */
+  --menu-item-card-hover-dark: #374151;
+
+  /* Menu Item Text Colors */
+  --menu-item-title: var(--menu-item-title-light); /* Name of the menu item */
+  --menu-item-title-light: #010204;
+  --menu-item-title-dark: #f3f4f6;
+  --menu-item-desc: var(--menu-item-desc-light); /* Description text under item name */
+  --menu-item-desc-light: #6b7280;
+  --menu-item-desc-dark: #9ca3af;
+  --menu-item-price: var(--menu-item-price-light); /* Price of the menu item */
+  --menu-item-price-light: #dc2626;
+  --menu-item-price-dark: #f87171;
+  --menu-item-discount: var(--menu-item-discount-light); /* Original price when discounted */
+  --menu-item-discount-light: #9ca3af;
+  --menu-item-discount-dark: #6b7280;
+
+  /* Menu Item Button Colors */
+  --menu-item-button-bg-light: transparent; /* Background of action buttons in item cards */
+  --menu-item-button-bg-dark: #374151;
+  --menu-item-button-hover-light: #e5e7eb; /* Button background on hover */
+  --menu-item-button-hover-dark: #4b5563;
+  --menu-item-button-text-light: #1f2937; /* Text color of buttons */
+  --menu-item-button-text-dark: #f3f4f6;
+
+  /* Menu Item Add Colors */
+  --menu-item-add-light: transparent;      /* Background of the + button */
+  --menu-item-add-dark: transparent;       /* Lighter red for dark mode */
+  --menu-item-add-border-light: #ffffff; /* Border of the + button */
+  --menu-item-add-border-dark: #ffffff;  /* Lighter red border for dark mode */
+  --menu-item-add-text-light: #ffffff;   /* White text for add button */
+  --menu-item-add-text-dark: #ffffff;    /* White text for dark mode */
+  --menu-item-add-hover-light: #transparent;  /* Hover background color */
+  --menu-item-add-hover-dark: #dc2626;   /* Hover background color in dark mode */
+
+  /* Allergen Colors */
+  /* Gluten */
+  --allergen-gluten-bg: #ffffff; /* Background of gluten indicator circle */
+  --allergen-gluten-border: #f1d580; /* Border of gluten indicator */
+  --allergen-gluten-text: #b6942b; /* Color of G symbol */
+
+  /* Soy */
+  --allergen-soy-bg: #ffffff; /* Background of soy indicator circle */
+  --allergen-soy-border: #c3e6cb; /* Border of soy indicator */
+  --allergen-soy-text: #155724; /* Color of S symbol */
+
+  /* Milk */
+  --allergen-milk-bg: #ffffff; /* Background of milk indicator circle */
+  --allergen-milk-border: #b8daff; /* Border of milk indicator */
+  --allergen-milk-text: #004085; /* Color of L symbol */
+
+  /* Eggs */
+  --allergen-eggs-bg: #ffffff; /* Background of eggs indicator circle */
+  --allergen-eggs-border: #f5c6cb; /* Border of eggs indicator */
+  --allergen-eggs-text: #721c24; /* Color of E symbol */
+}
+
+/* Dark mode overrides */
+.dark {
+  --menu-section-bg: var(--menu-section-bg-dark); /* Dark mode background of menu section */
+  --menu-section-border: var(--menu-section-border-dark);
+  --menu-section-shadow: var(--menu-section-shadow-dark);
+
+  --menu-section-header-bg: var(--menu-section-header-bg-dark); /* Dark mode category header background */
+  --menu-section-header-text: var(--menu-section-header-text-dark);
+  --menu-section-header-border: var(--menu-section-header-border-dark);
+
+  --menu-item-card-bg: var(--menu-item-card-bg-dark); /* Dark mode menu item card background */
+  --menu-item-card-border: var(--menu-item-card-border-dark);
+  --menu-item-card-shadow: var(--menu-item-card-shadow-dark);
+  --menu-item-card-hover: var(--menu-item-card-hover-dark);
+
+  --menu-item-title: var(--menu-item-title-dark); /* Dark mode item name color */
+  --menu-item-desc: var(--menu-item-desc-dark); /* Dark mode description text color */
+  --menu-item-price: var(--menu-item-price-dark); /* Dark mode price color */
+  --menu-item-discount: var(--menu-item-discount-dark); /* Dark mode original price color */
+
+  --menu-item-button-bg: var(--menu-item-button-bg-dark); /* Dark mode button background */
+  --menu-item-button-hover: var(--menu-item-button-hover-dark);
+  --menu-item-button-text: var(--menu-item-button-text-dark);
+
+  --menu-item-add-text: var(--menu-item-add-text-dark); /* Dark mode + button text color */
+  --menu-item-add-border: var(--menu-item-add-border-dark);
+  --menu-item-add-hover: var(--menu-item-add-hover-dark); /* Dark mode + button hover background */
+
+  /* Allergen Colors */
+  /* Gluten */
+  --allergen-gluten-bg: #ffffff; /* Background of gluten indicator circle */
+  --allergen-gluten-border: #f1d580; /* Border of gluten indicator */
+  --allergen-gluten-text: #b6942b; /* Color of G symbol */
+
+  /* Soy */
+  --allergen-soy-bg: #ffffff; /* Background of soy indicator circle */
+  --allergen-soy-border: #c3e6cb; /* Border of soy indicator */
+  --allergen-soy-text: #155724; /* Color of S symbol */
+
+  /* Milk */
+  --allergen-milk-bg: #ffffff; /* Background of milk indicator circle */
+  --allergen-milk-border: #b8daff; /* Border of milk indicator */
+  --allergen-milk-text: #004085; /* Color of L symbol */
+
+  /* Eggs */
+  --allergen-eggs-bg: #ffffff; /* Background of eggs indicator circle */
+  --allergen-eggs-border: #f5c6cb; /* Border of eggs indicator */
+  --allergen-eggs-text: #721c24; /* Color of E symbol */
+}
+
+/* Light mode defaults */

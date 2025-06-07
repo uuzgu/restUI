@@ -1,0 +1,87 @@
+:root {
+  /* Container Colors */
+  --checkout-container-bg: #ffffff; /* Main background color of the checkout page */
+  --checkout-container-border: #e5e7eb; /* Border color around the checkout container */
+
+  /* Form Colors */
+  --checkout-form-bg: #ffffff; /* Background color for form inputs and textareas */
+  --checkout-form-text: #1f2937; /* Text color for form labels and input text */
+  --checkout-form-border: #e5e7eb; /* Border color for form inputs */
+  --checkout-form-focus: #ef4444; /* Border color when form input is focused */
+  --checkout-form-error: #ef4444; /* Text color for error messages */
+  --checkout-form-error-border: #ef4444; /* Border color for inputs with errors */
+  --checkout-form-error-bg: rgba(239, 68, 68, 0.05); /* Background color for inputs with errors */
+
+  /* Button Colors */
+  --checkout-button-primary-bg: #ef4444; /* Background color for the main submit button */
+  --checkout-button-primary-text: #ffffff; /* Text color for the main submit button */
+  --checkout-button-primary-hover: #dc2626; /* Background color when hovering over the main button */
+  --checkout-button-primary-disabled-bg: #fca5a5; /* Background color for disabled main button */
+  --checkout-button-primary-disabled-text: #ffffff; /* Text color for disabled main button */
+  --checkout-button-primary-border: #1a0808; /* Border color for the main submit button */
+  --checkout-button-primary-hover-border: #fecaca; /* Border color when hovering over the main button */
+  --checkout-button-primary-disabled-border: #fca5a5; /* Border color for disabled main button */
+
+  /* Summary Colors */
+  --checkout-summary-bg: #ffffff; /* Background color for the order summary box */
+  --checkout-summary-border: #e5e7eb; /* Border color for the order summary box */
+  --checkout-summary-text: #1f2937; /* Text color for items in the summary */
+  --checkout-summary-total: #ef4444; /* Text color for the total amount */
+
+  /* Terms Colors */
+  --checkout-terms-text: #4b5563; /* Text color for terms and conditions text */
+  --checkout-terms-link: #ef4444; /* Text color for terms and conditions links */
+  --checkout-terms-link-hover: #dc2626; /* Text color when hovering over terms links */
+
+  /* Payment Method Colors */
+  --checkout-payment-bg: #ffffff; /* Background color for payment method options */
+  --checkout-payment-text: #1f2937; /* Text color for payment method options */
+  --checkout-payment-border: #e5e7eb; /* Border color for payment method options */
+  --checkout-payment-hover-border: #ef4444; /* Border color when hovering over payment options */
+  --checkout-payment-selected-bg: #fef2f2; /* Background color for selected payment method */
+  --checkout-payment-selected-border: #ef4444; /* Border color for selected payment method */
+}
+
+.dark {
+  /* Container Colors */
+  --checkout-container-bg: #1a1a1a; /* Dark mode background color of the checkout page */
+  --checkout-container-border: #404040; /* Dark mode border color around the checkout container */
+
+  /* Form Colors */
+  --checkout-form-bg: #2d2d2d; /* Dark mode background color for form inputs */
+  --checkout-form-text: #e5e5e5; /* Dark mode text color for form labels and input text */
+  --checkout-form-border: #404040; /* Dark mode border color for form inputs */
+  --checkout-form-focus: #ef4444; /* Dark mode border color when form input is focused */
+  --checkout-form-error: #f87171; /* Dark mode text color for error messages */
+  --checkout-form-error-border: #f87171; /* Dark mode border color for inputs with errors */
+  --checkout-form-error-bg: rgba(248, 113, 113, 0.1); /* Dark mode background color for inputs with errors */
+
+  /* Button Colors */
+  --checkout-button-primary-bg: #ef4444; /* Dark mode background color for the main submit button */
+  --checkout-button-primary-text: #ffffff; /* Dark mode text color for the main submit button */
+  --checkout-button-primary-hover: #dc2626; /* Dark mode hover color for the main button */
+  --checkout-button-primary-disabled-bg: #fca5a5; /* Dark mode background for disabled main button */
+  --checkout-button-primary-disabled-text: #ffffff; /* Dark mode text color for disabled main button */
+  --checkout-button-primary-border: #ffffff; /* Dark mode border color for the main submit button */
+  --checkout-button-primary-hover-border: #fecaca; /* Dark mode border color when hovering over the main button */
+  --checkout-button-primary-disabled-border: #fca5a5; /* Dark mode border color for disabled main button */
+
+  /* Summary Colors */
+  --checkout-summary-bg: #2d2d2d; /* Dark mode background color for the order summary box */
+  --checkout-summary-border: #404040; /* Dark mode border color for the order summary box */
+  --checkout-summary-text: #e5e5e5; /* Dark mode text color for items in the summary */
+  --checkout-summary-total: #f87171; /* Dark mode text color for the total amount */
+
+  /* Terms Colors */
+  --checkout-terms-text: #9ca3af; /* Dark mode text color for terms and conditions text */
+  --checkout-terms-link: #f87171; /* Dark mode text color for terms and conditions links */
+  --checkout-terms-link-hover: #ef4444; /* Dark mode hover color for terms links */
+
+  /* Payment Method Colors */
+  --checkout-payment-bg: #2d2d2d; /* Dark mode background color for payment method options */
+  --checkout-payment-text: #e5e5e5; /* Dark mode text color for payment method options */
+  --checkout-payment-border: #404040; /* Dark mode border color for payment method options */
+  --checkout-payment-hover-border: #ef4444; /* Dark mode hover border color for payment options */
+  --checkout-payment-selected-bg: #3d1a1a; /* Dark mode background color for selected payment method */
+  --checkout-payment-selected-border: #ef4444; /* Dark mode border color for selected payment method */
+} 

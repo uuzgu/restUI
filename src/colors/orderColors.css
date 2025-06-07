@@ -1,0 +1,140 @@
+:root {
+  /* Order Page Colors */
+  --order-bg-light: #ffffff;
+  --order-bg-dark: #1f2937;
+  --order-text-primary-light: #1f2937;
+  --order-text-primary-dark: #f3f4f6;
+  --order-text-secondary-light: #6b7280;
+  --order-text-secondary-dark: #9ca3af;
+
+  /* Category Header Colors */
+  --category-header-bg-light: #f2eded;
+  --category-header-bg-dark: #37404b;
+  --category-header-text-light: #1f2937;
+  --category-header-text-dark: #f3f4f6;
+  --category-header-active-light: #dc2626;
+  --category-header-active-dark: #f87171;
+  --category-header-shadow-light: 0 4px 12px rgba(0,0,0,0.10);
+  --category-header-shadow-dark: 0 4px 12px rgba(0,0,0,0.25);
+
+  /* Menu Section Colors */
+  --menu-bg-light: #ffffff;
+  --menu-bg-dark: #1f2937;
+  --menu-text-light: #1f2937;
+  --menu-text-dark: #f3f4f6;
+  --menu-border-light: #e5e7eb;
+  --menu-border-dark: #374151;
+
+  /* Item Card Colors */
+  --item-card-bg-light: #ffffff;
+  --item-card-bg-dark: #1f2937;
+  --item-card-text-light: #1f2937;
+  --item-card-text-dark: #f3f4f6;
+  --item-card-border-light: #e5e7eb;
+  --item-card-border-dark: #374151;
+  --item-card-price-light: #dc2626;
+  --item-card-price-dark: #f87171;
+
+  /* Search Colors */
+  --search-bg-light: #f3f4f6;
+  --search-bg-dark: #263753;
+  --search-text-light: #1f2937;
+  --search-text-dark: #f3f4f6;
+  --search-border-light: #e5e7eb;
+  --search-border-dark: #17325e;
+  --search-placeholder-light: #9ca3af;
+  --search-placeholder-dark: #6b7280;
+
+  /* Popup Colors */
+  --popup-bg-light: #ffffff;
+  --popup-bg-dark: #1f2937;
+  --popup-text-light: #1f2937;
+  --popup-text-dark: #f3f4f6;
+  --popup-border-light: #e5e7eb;
+  --popup-border-dark: #374151;
+  --popup-overlay-light: rgba(0, 0, 0, 0.5);
+  --popup-overlay-dark: rgba(0, 0, 0, 0.7);
+}
+
+/* Light mode defaults */
+:root {
+  --order-bg: var(--order-bg-light);
+  --order-text-primary: var(--order-text-primary-light);
+  --order-text-secondary: var(--order-text-secondary-light);
+
+  --category-header-bg: var(--category-header-bg-light);
+  --category-header-text: var(--category-header-text-light);
+  --category-header-active: var(--category-header-active-light);
+  --category-header-shadow: var(--category-header-shadow-light);
+
+  --menu-bg: var(--menu-bg-light);
+  --menu-text: var(--menu-text-light);
+  --menu-border: var(--menu-border-light);
+
+  --item-card-bg: var(--item-card-bg-light);
+  --item-card-text: var(--item-card-text-light);
+  --item-card-border: var(--item-card-border-light);
+  --item-card-price: var(--item-card-price-light);
+
+  --search-bg: var(--search-bg-light);
+  --search-text: var(--search-text-light);
+  --search-border: var(--search-border-light);
+  --search-placeholder: var(--search-placeholder-light);
+
+  --popup-bg: var(--popup-bg-light);
+  --popup-text: var(--popup-text-light);
+  --popup-border: var(--popup-border-light);
+  --popup-overlay: var(--popup-overlay-light);
+}
+
+/* Dark mode overrides */
+.dark {
+  --order-bg: var(--order-bg-dark);
+  --order-text-primary: var(--order-text-primary-dark);
+  --order-text-secondary: var(--order-text-secondary-dark);
+
+  --category-header-bg: var(--category-header-bg-dark);
+  --category-header-text: var(--category-header-text-dark);
+  --category-header-active: var(--category-header-active-dark);
+  --category-header-shadow: var(--category-header-shadow-dark);
+
+  --menu-bg: var(--menu-bg-dark);
+  --menu-text: var(--menu-text-dark);
+  --menu-border: var(--menu-border-dark);
+
+  --item-card-bg: var(--item-card-bg-dark);
+  --item-card-text: var(--item-card-text-dark);
+  --item-card-border: var(--item-card-border-dark);
+  --item-card-price: var(--item-card-price-dark);
+
+  --search-bg: var(--search-bg-dark);
+  --search-text: var(--search-text-dark);
+  --search-border: var(--search-border-dark);
+  --search-placeholder: var(--search-placeholder-dark);
+
+  --popup-bg: var(--popup-bg-dark);
+  --popup-text: var(--popup-text-dark);
+  --popup-border: var(--popup-border-dark);
+  --popup-overlay: var(--popup-overlay-dark);
+}
+
+/* Apply transitions to specific elements */
+[class*="bg-[var(--"] {
+  transition: var(--color-transition);
+  will-change: background-color;
+}
+
+[class*="text-[var(--"] {
+  transition: var(--color-transition);
+  will-change: color;
+}
+
+[class*="border-[var(--"] {
+  transition: var(--color-transition);
+  will-change: border-color;
+}
+
+[class*="shadow-[var(--"] {
+  transition: var(--color-transition);
+  will-change: box-shadow;
+} 

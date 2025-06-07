@@ -1,0 +1,67 @@
+:root {
+  /* Background Colors */
+  --home-bg-light: #ffffff;          /* Home page background color */
+  --home-bg-dark: #171e28;           /* Dark mode background color */
+  --home-card-bg-light: #ffffff;     /* Background for welcome box, image box, and contact section cards */
+  --home-card-bg-dark: #1f2937;      /* Dark mode background for all cards */
+  --home-overlay-gradient: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);  /* Dark gradient overlay on image slider */
+  --home-icon-bg-light: #fee2e2;     /* Background for Clock, Phone, and MapPin icons in contact section */
+  --home-icon-bg-dark: rgba(239, 68, 68, 0.3);  /* Dark mode background for contact section icons */
+
+  /* Text Colors */
+  --home-text-primary-light: #0b53b8;    /* Used for: Navigation arrows, slide indicators, contact section titles */
+  --home-text-primary-dark: #ffffff;      /* Dark mode text for navigation and indicators */
+  --home-text-secondary-light: #4b5563;   /* Used for: Welcome message paragraph, contact section details */
+  --home-text-secondary-dark: #9ca3af;    /* Dark mode text for paragraphs and details */
+  --home-heading-light: #dc2626;          /* Used for: "Welcome to Pizza Vienna" and "Visit Us" headings */
+  --home-heading-dark: #f87171;           /* Dark mode heading color */
+
+  /* Button Colors */
+  --home-button-bg-light: #dc2626;        /* Background for "Order Now" and delivery/pickup buttons */
+  --home-button-bg-dark: #f87171;         /* Dark mode button background */
+  --home-button-hover-light: #b91c1c;     /* Hover state for all buttons */
+  --home-button-hover-dark: #ef4444;      /* Dark mode button hover state */
+  --home-button-text: #ffffff;            /* Text color for all buttons */
+
+  /* Border Colors */
+  --home-border-light: #ebe5e7;           /* Border color for cards and containers */
+  --home-border-dark: #374151;            /* Dark mode border color */
+
+  /* Shadow Colors */
+  --home-shadow-light: rgba(0, 0, 0, 0.1);  /* Shadow for cards and buttons */
+  --home-shadow-dark: rgba(0, 0, 0, 0.2);   /* Dark mode shadow color */
+
+  /* Icon Colors */
+  --home-icon-light: #ef4444;             /* Color for Clock, Phone, and MapPin icons */
+  --home-icon-dark: #f87171;              /* Dark mode icon color */
+}
+
+/* Dark mode overrides */
+.dark {
+  --home-bg: var(--home-bg-dark);                    /* Main page background */
+  --home-card-bg: var(--home-card-bg-dark);          /* All card backgrounds */
+  --home-text-primary: var(--home-text-primary-dark); /* Navigation and indicators */
+  --home-text-secondary: var(--home-text-secondary-dark); /* Paragraphs and details */
+  --home-heading: var(--home-heading-dark);          /* Main headings */
+  --home-button-bg: var(--home-button-bg-dark);      /* Button backgrounds */
+  --home-button-hover: var(--home-button-hover-dark); /* Button hover states */
+  --home-border: var(--home-border-dark);            /* Card borders */
+  --home-shadow: var(--home-shadow-dark);            /* Card and button shadows */
+  --home-icon: var(--home-icon-dark);                /* Contact section icons */
+  --home-icon-bg: var(--home-icon-bg-dark);          /* Icon backgrounds */
+}
+
+/* Light mode defaults */
+:root {
+  --home-bg: var(--home-bg-light);                    /* Main page background */
+  --home-card-bg: var(--home-card-bg-light);          /* All card backgrounds */
+  --home-text-primary: var(--home-text-primary-light); /* Navigation and indicators */
+  --home-text-secondary: var(--home-text-secondary-light); /* Paragraphs and details */
+  --home-heading: var(--home-heading-light);          /* Main headings */
+  --home-button-bg: var(--home-button-bg-light);      /* Button backgrounds */
+  --home-button-hover: var(--home-button-hover-light); /* Button hover states */
+  --home-border: var(--home-border-light);            /* Card borders */
+  --home-shadow: var(--home-shadow-light);            /* Card and button shadows */
+  --home-icon: var(--home-icon-light);                /* Contact section icons */
+  --home-icon-bg: var(--home-icon-bg-light);          /* Icon backgrounds */
+} 
