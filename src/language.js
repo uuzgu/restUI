@@ -7,9 +7,9 @@ const translations = {
       confirmPassword: "Password (repeat) *",
       firstName: "First name *",
       lastName: "Last name *",
-      phoneNumber: "Telephone number *",
+      phoneNumber: "Phone Number",
       postalCode: "Postal code *",
-      address: "Address *",
+      address: "Address",
       house: "House *",
       stairs: "Stairs (optional)",
       stick: "Stick (optional)",
@@ -59,9 +59,7 @@ const translations = {
       openingHours: "Opening Hours",
       openDaily: "Open Daily",
       contact: "Contact",
-      phoneNumber: "+43 123 456 789",
       location: "Location",
-      address: "Vienna, Austria",
       paymentSuccess: {
         title: "Payment Successful!",
         loading: "Loading...",
@@ -165,6 +163,10 @@ const translations = {
       free: "Ücretsiz",
       specialInstructions: "Özel Talimatlar",
       addNote: "Özel talimat veya not ekleyin..."
+    },
+    de: {
+      phoneNumber: 'Telefonnummer',
+      address: 'Adresse',
     }
   };
   
