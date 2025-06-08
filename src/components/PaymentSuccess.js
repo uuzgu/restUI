@@ -457,7 +457,7 @@ const PaymentSuccess = () => {
           </div>
         </div>
       </div>
-      {showOrderDetails && (
+      {showOrderDetails && orderDetails && (
         <OrderDetailsPopup
           orderDetails={orderDetails}
           onClose={() => setShowOrderDetails(false)}
