@@ -273,7 +273,6 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
                       </div>
                     </div>
                   </div>
-                  
                   {/* Selected Items */}
                   {item.SelectedItems && item.SelectedItems.length > 0 && (
                     <div className="mt-2 pl-4 border-l-2 border-[var(--popup-content-border)]">
