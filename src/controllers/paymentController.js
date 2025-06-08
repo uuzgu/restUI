@@ -476,7 +476,7 @@ export const handlePaymentSuccess = async (id) => {
 
     if (paymentMethod === 'cash') {
       // For cash payments, fetch order details directly
-      const orderDetailsUrl = `${getBaseUrl()}/api/Order/get-order/${id}`;
+      const orderDetailsUrl = `${getBaseUrl()}/api/Order/${id}`;
       console.log('Fetching cash order details from:', orderDetailsUrl);
       
       const orderDetailsResponse = await axios.get(orderDetailsUrl);
@@ -585,7 +585,7 @@ export const handlePaymentSuccess = async (id) => {
     }
 
     // Fetch complete order details
-    const orderDetailsUrl = `${getBaseUrl()}/api/Order/get-order/${orderId}`;
+    const orderDetailsUrl = `${getBaseUrl()}/api/Order/${orderId}`;
     console.log('Fetching complete order details from:', orderDetailsUrl);
     
     const orderDetailsResponse = await axios.get(orderDetailsUrl);
