@@ -472,89 +472,9 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
 
 export const handlePaymentSuccess = async (id) => {
   try {
-    console.log('Handling payment success for ID:', id);
-    
-    // Get payment method from localStorage
-    const paymentMethod = localStorage.getItem('paymentMethod') || 'stripe';
-    console.log('Payment method:', paymentMethod);
-
-    if (paymentMethod === 'cash') {
-      // For cash payments, fetch order details directly
-      const orderDetailsUrl = `${getBaseUrl()}/api/Order/${id}`;
-      console.log('Fetching cash order details from:', orderDetailsUrl);
-      
-      const orderDetailsResponse = await axios.get(orderDetailsUrl);
-      console.log('Raw response data:', orderDetailsResponse.data);
-
-      if (!orderDetailsResponse.data) {
-        throw new Error('Failed to fetch complete order details');
-      }
-
-      // Map the order details to ensure all required fields are present
-      const orderDetails = {
-        // Map exact response fields
-        OrderId: orderDetailsResponse.data.OrderId,
-        OrderNumber: orderDetailsResponse.data.OrderNumber,
-        Status: orderDetailsResponse.data.Status,
-        Total: orderDetailsResponse.data.Total,
-        PaymentMethod: orderDetailsResponse.data.PaymentMethod,
-        OrderMethod: orderDetailsResponse.data.OrderMethod,
-        CreatedAt: orderDetailsResponse.data.CreatedAt,
-        DiscountCoupon: orderDetailsResponse.data.DiscountCoupon,
-        
-        // Keep lowercase versions for backward compatibility
-        orderId: orderDetailsResponse.data.OrderId,
-        orderNumber: orderDetailsResponse.data.OrderNumber,
-        status: orderDetailsResponse.data.Status,
-        total: orderDetailsResponse.data.Total,
-        paymentMethod: orderDetailsResponse.data.PaymentMethod,
-        orderMethod: orderDetailsResponse.data.OrderMethod,
-        createdAt: orderDetailsResponse.data.CreatedAt,
-        discountCoupon: orderDetailsResponse.data.DiscountCoupon,
-        
-        // Customer information - updated to use the correct property path
-        CustomerInfo: orderDetailsResponse.data.CustomerInfo,
-        customerInfo: {
-          firstName: orderDetailsResponse.data.CustomerInfo?.FirstName,
-          lastName: orderDetailsResponse.data.CustomerInfo?.LastName,
-          email: orderDetailsResponse.data.CustomerInfo?.Email,
-          phone: orderDetailsResponse.data.CustomerInfo?.Phone,
-          // Delivery information
-          postalCode: orderDetailsResponse.data.CustomerInfo?.PostalCode,
-          street: orderDetailsResponse.data.CustomerInfo?.Street,
-          house: orderDetailsResponse.data.CustomerInfo?.House,
-          stairs: orderDetailsResponse.data.CustomerInfo?.Stairs,
-          stick: orderDetailsResponse.data.CustomerInfo?.Stick,
-          door: orderDetailsResponse.data.CustomerInfo?.Door,
-          bell: orderDetailsResponse.data.CustomerInfo?.Bell,
-          specialNotes: orderDetailsResponse.data.CustomerInfo?.SpecialNotes || orderDetailsResponse.data.SpecialNotes
-        },
-        
-        // Order items
-        items: orderDetailsResponse.data.Items?.map(item => ({
-          id: item.Id,
-          name: item.Name,
-          price: item.Price,
-          quantity: item.Quantity,
-          note: item.Note,
-          selectedItems: item.SelectedItems?.map(selected => ({
-            id: selected.id,
-            name: selected.name,
-            price: selected.price,
-            quantity: selected.quantity || 1,
-            groupName: selected.groupName,
-            type: selected.type
-          })) || []
-        })) || []
-      };
-
-      console.log('Mapped order details:', orderDetails);
-      return orderDetails;
-    }
-
-    // For Stripe payments, continue with session ID logic
+    // Try to get session ID from URL parameters first, then localStorage
     const urlParams = new URLSearchParams(window.location.search);
-    const sessionIdFromUrl = urlParams.get('session_id');
+    const sessionIdFromUrl = urlParams.get('session_id') || urlParams.get('sessionId');
     
     console.log('Session ID from URL:', sessionIdFromUrl);
     console.log('Session ID from props:', id);
@@ -574,29 +494,12 @@ export const handlePaymentSuccess = async (id) => {
     const fullUrl = `${apiUrl}?session_id=${encodeURIComponent(sessionIdToUse)}`;
     console.log('Making request to:', fullUrl);
 
-    // Call the backend to verify the payment
+    // Call the backend to verify the payment and get order details
     const response = await axios.get(fullUrl);
     console.log('Payment success response:', response.data);
 
     if (!response.data) {
       throw new Error('Invalid response from server');
-    }
-
-    // Get the order ID from the response
-    const orderId = response.data.orderId;
-    if (!orderId) {
-      throw new Error('No order ID in response');
-    }
-
-    // Fetch complete order details
-    const orderDetailsUrl = `${getBaseUrl()}/api/Order/${orderId}`;
-    console.log('Fetching complete order details from:', orderDetailsUrl);
-    
-    const orderDetailsResponse = await axios.get(orderDetailsUrl);
-    console.log('Raw response data:', orderDetailsResponse.data);
-
-    if (!orderDetailsResponse.data) {
-      throw new Error('Failed to fetch complete order details');
     }
 
     // Clear the stored session ID
@@ -610,54 +513,46 @@ export const handlePaymentSuccess = async (id) => {
     const checkoutData = storedCheckoutData ? JSON.parse(storedCheckoutData) : null;
     console.log('Stored checkout data:', checkoutData);
 
-    // Calculate original total from items
-    const originalTotal = orderDetailsResponse.data.Items?.reduce((sum, item) => {
-      const itemTotal = (item.Price || 0) * (item.Quantity || 1);
-      const selectedItemsTotal = (item.SelectedItems || []).reduce((selectedSum, selected) => 
-        selectedSum + ((selected.Price || 0) * (selected.Quantity || 1)), 0);
-      return sum + itemTotal + selectedItemsTotal;
-    }, 0) || 0;
-
     // Map the order details to ensure all required fields are present
     const orderDetails = {
       // Map exact response fields
-      OrderId: orderDetailsResponse.data.OrderId,
-      OrderNumber: orderDetailsResponse.data.OrderNumber,
-      Status: orderDetailsResponse.data.Status,
-      Total: orderDetailsResponse.data.Total,
-      PaymentMethod: orderDetailsResponse.data.PaymentMethod,
-      OrderMethod: orderDetailsResponse.data.OrderMethod,
-      CreatedAt: orderDetailsResponse.data.CreatedAt,
-      DiscountCoupon: orderDetailsResponse.data.DiscountCoupon,
-      CustomerInfo: orderDetailsResponse.data.CustomerInfo,
+      OrderId: response.data.OrderId,
+      OrderNumber: response.data.OrderNumber,
+      Status: response.data.Status,
+      Total: response.data.Total,
+      PaymentMethod: response.data.PaymentMethod,
+      OrderMethod: response.data.OrderMethod,
+      CreatedAt: response.data.CreatedAt,
+      DiscountCoupon: response.data.DiscountCoupon,
+      CustomerInfo: response.data.CustomerInfo,
       
       // Keep lowercase versions for backward compatibility
-      orderId: orderDetailsResponse.data.OrderId,
-      orderNumber: orderDetailsResponse.data.OrderNumber,
-      status: orderDetailsResponse.data.Status,
-      total: orderDetailsResponse.data.Total,
-      paymentMethod: orderDetailsResponse.data.PaymentMethod,
-      orderMethod: orderDetailsResponse.data.OrderMethod,
-      createdAt: orderDetailsResponse.data.CreatedAt,
-      discountCoupon: orderDetailsResponse.data.DiscountCoupon,
+      orderId: response.data.OrderId,
+      orderNumber: response.data.OrderNumber,
+      status: response.data.Status,
+      total: response.data.Total,
+      paymentMethod: response.data.PaymentMethod,
+      orderMethod: response.data.OrderMethod,
+      createdAt: response.data.CreatedAt,
+      discountCoupon: response.data.DiscountCoupon,
       customerInfo: {
-        firstName: orderDetailsResponse.data.CustomerInfo?.FirstName,
-        lastName: orderDetailsResponse.data.CustomerInfo?.LastName,
-        email: orderDetailsResponse.data.CustomerInfo?.Email,
-        phone: orderDetailsResponse.data.CustomerInfo?.Phone,
+        firstName: response.data.CustomerInfo?.FirstName,
+        lastName: response.data.CustomerInfo?.LastName,
+        email: response.data.CustomerInfo?.Email,
+        phone: response.data.CustomerInfo?.Phone,
         // Delivery information
-        postalCode: orderDetailsResponse.data.CustomerInfo?.PostalCode,
-        street: orderDetailsResponse.data.CustomerInfo?.Street,
-        house: orderDetailsResponse.data.CustomerInfo?.House,
-        stairs: orderDetailsResponse.data.CustomerInfo?.Stairs,
-        stick: orderDetailsResponse.data.CustomerInfo?.Stick,
-        door: orderDetailsResponse.data.CustomerInfo?.Door,
-        bell: orderDetailsResponse.data.CustomerInfo?.Bell,
-        specialNotes: orderDetailsResponse.data.CustomerInfo?.SpecialNotes || orderDetailsResponse.data.SpecialNotes
+        postalCode: response.data.CustomerInfo?.PostalCode,
+        street: response.data.CustomerInfo?.Street,
+        house: response.data.CustomerInfo?.House,
+        stairs: response.data.CustomerInfo?.Stairs,
+        stick: response.data.CustomerInfo?.Stick,
+        door: response.data.CustomerInfo?.Door,
+        bell: response.data.CustomerInfo?.Bell,
+        specialNotes: response.data.CustomerInfo?.SpecialNotes || response.data.SpecialNotes
       },
       
       // Order items
-      items: orderDetailsResponse.data.Items?.map(item => ({
+      items: response.data.Items?.map(item => ({
         id: item.Id,
         name: item.Name,
         price: item.Price,
