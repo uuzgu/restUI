@@ -203,21 +203,21 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       },
       
       // Order items
-      items: items.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0),
-        quantity: item.quantity || 1,
-        note: item.note || '',
-        selectedItems: item.selectedItems?.map(selected => ({
-          id: selected.id,
-          name: selected.name,
-          price: selected.price || 0,
-          quantity: selected.quantity || 1,
-          groupName: selected.groupName || '',
-          type: selected.type || ''
+      items: response.data.Items?.map(item => ({
+        id: item.Id,
+        name: item.Name,
+        price: item.Price,
+        quantity: item.Quantity,
+        note: item.Note || '',
+        selectedItems: item.SelectedItems?.map(selected => ({
+          id: selected.Id,
+          name: selected.Name,
+          price: selected.Price || 0,
+          quantity: selected.Quantity || 1,
+          groupName: selected.GroupName || '',
+          type: selected.Type || ''
         })) || []
-      }))
+      })) || []
     };
 
     console.log('Mapped order details:', orderDetails);
@@ -555,14 +555,14 @@ export const handlePaymentSuccess = async (id) => {
         name: item.Name,
         price: item.Price,
         quantity: item.Quantity,
-        note: item.Note,
+        note: item.Note || '',
         selectedItems: item.SelectedItems?.map(selected => ({
-          id: selected.id,
-          name: selected.name,
-          price: selected.price,
-          quantity: selected.quantity || 1,
-          groupName: selected.groupName,
-          type: selected.type
+          id: selected.Id,
+          name: selected.Name,
+          price: selected.Price || 0,
+          quantity: selected.Quantity || 1,
+          groupName: selected.GroupName || '',
+          type: selected.Type || ''
         })) || []
       })) || []
     };
