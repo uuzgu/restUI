@@ -381,10 +381,26 @@ const PaymentSuccess = () => {
             Thank you for your order! Your payment has been processed successfully.
           </p>
           {orderDetails && (
-            <div className="mb-6 text-left text-gray-700">
-              <div><span className="font-semibold">Order Number:</span> {orderDetails.orderNumber || orderDetails.OrderNumber}</div>
-              <div><span className="font-semibold">Total Amount:</span> {orderDetails.total !== undefined ? `€${parseFloat(orderDetails.total).toFixed(2)}` : orderDetails.Total !== undefined ? `€${parseFloat(orderDetails.Total).toFixed(2)}` : 'N/A'}</div>
-              <div><span className="font-semibold">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}</div>
+            <div className="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200 shadow-sm text-gray-800">
+              <div className="flex items-center mb-2">
+                <span className="font-bold text-lg mr-2">Order #{orderDetails.orderNumber || orderDetails.OrderNumber}</span>
+                <span className="ml-auto px-2 py-1 rounded bg-blue-200 text-blue-800 text-xs font-semibold">
+                  {orderDetails.orderMethod || orderDetails.OrderMethod}
+                </span>
+              </div>
+              <div className="flex items-center mb-1">
+                <span className="font-medium mr-2">Total:</span>
+                <span className="text-green-700 font-bold text-lg">
+                  {orderDetails.total !== undefined
+                    ? `€${parseFloat(orderDetails.total).toFixed(2)}`
+                    : orderDetails.Total !== undefined
+                    ? `€${parseFloat(orderDetails.Total).toFixed(2)}`
+                    : 'N/A'}
+                </span>
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}
+              </div>
             </div>
           )}
           {error && (
