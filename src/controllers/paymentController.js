@@ -350,32 +350,32 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
     }
 
     // Transform items to match backend expectations
-    const orderItems = items.map(item => {
-      const mappedItem = {
-        Id: parseInt(item.id),
-        Name: item.name,
-        Price: item.price,
-        Quantity: item.quantity,
-        Note: item.note || "",
-        SelectedItems: (item.selectedItems || []).map(opt => ({
-          Id: opt.id,
-          Name: opt.name,
-          GroupName: opt.groupName,
-          Type: opt.type,
-          Price: opt.price,
-          Quantity: opt.quantity,
-        })),
-        GroupOrder: item.groupOrder || [],
-        Image: item.image || "",
-      };
-      console.log('Mapped item:', JSON.stringify(mappedItem, null, 2));
-      return mappedItem;
-    });
+    const orderItems = items.map(item => ({
+      Id: parseInt(item.id),
+      Name: item.name,
+      Price: item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0),
+      Quantity: item.quantity || 1,
+      Note: item.note || "",
+      SelectedItems: (item.selectedItems || []).map(opt => ({
+        Id: opt.id,
+        Name: opt.name,
+        GroupName: opt.groupName,
+        Type: opt.type,
+        Price: opt.price || 0,
+        Quantity: opt.quantity || 1,
+      })),
+      GroupOrder: item.groupOrder || [],
+      Image: item.image || "",
+    }));
 
     // Calculate total amount
-    const totalAmount = orderItems.reduce((sum, item) => {
-      const itemTotal = item.Price * item.Quantity;
-      return sum + itemTotal;
+    const totalAmount = items.reduce((sum, item) => {
+      const itemPrice = item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0);
+      const itemTotal = itemPrice * (item.quantity || 1);
+      const selectedItemsTotal = (item.selectedItems || []).reduce((selectedSum, selected) => {
+        return selectedSum + ((selected.price || 0) * (selected.quantity || 1));
+      }, 0);
+      return sum + itemTotal + selectedItemsTotal;
     }, 0);
 
     // Format customer info for API
