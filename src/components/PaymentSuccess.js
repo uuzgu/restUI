@@ -377,9 +377,16 @@ const PaymentSuccess = () => {
             <i className="fas fa-check-circle"></i>
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Payment Successful</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-2">
             Thank you for your order! Your payment has been processed successfully.
           </p>
+          {orderDetails && (
+            <div className="mb-6 text-left text-gray-700">
+              <div><span className="font-semibold">Order Number:</span> {orderDetails.orderNumber || orderDetails.OrderNumber}</div>
+              <div><span className="font-semibold">Total Amount:</span> {orderDetails.total !== undefined ? `€${parseFloat(orderDetails.total).toFixed(2)}` : orderDetails.Total !== undefined ? `€${parseFloat(orderDetails.Total).toFixed(2)}` : 'N/A'}</div>
+              <div><span className="font-semibold">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}</div>
+            </div>
+          )}
           {error && (
             <p className="text-red-500 mb-4">{error}</p>
           )}
