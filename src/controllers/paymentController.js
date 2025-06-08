@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Configure axios defaults
+axios.defaults.withCredentials = true;
+
 // Helper function to construct full API URLs
 export const getBaseUrl = () => {
   // In development, use localhost
@@ -143,6 +146,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        withCredentials: true
       }
     );
 
