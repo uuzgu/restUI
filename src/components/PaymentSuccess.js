@@ -348,11 +348,64 @@ const PaymentSuccess = () => {
         if (orderId) {
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/${orderId}`);
           const data = await response.json();
-          // Normalize Items to items
-          if (data.Items && !data.items) {
-            data.items = data.Items;
-          }
-          setOrderDetails(data);
+          
+          // Map the response data to match the expected format
+          const mappedData = {
+            ...data,
+            // Map exact response fields
+            OrderId: data.OrderId,
+            OrderNumber: data.OrderNumber,
+            Status: data.Status,
+            Total: data.Total,
+            PaymentMethod: data.PaymentMethod,
+            OrderMethod: data.OrderMethod,
+            CreatedAt: data.CreatedAt,
+            DiscountCoupon: data.DiscountCoupon,
+            CustomerInfo: data.CustomerInfo,
+            
+            // Keep lowercase versions for backward compatibility
+            orderId: data.OrderId,
+            orderNumber: data.OrderNumber,
+            status: data.Status,
+            total: data.Total,
+            paymentMethod: data.PaymentMethod,
+            orderMethod: data.OrderMethod,
+            createdAt: data.CreatedAt,
+            discountCoupon: data.DiscountCoupon,
+            customerInfo: {
+              firstName: data.CustomerInfo?.FirstName,
+              lastName: data.CustomerInfo?.LastName,
+              email: data.CustomerInfo?.Email,
+              phone: data.CustomerInfo?.Phone,
+              postalCode: data.CustomerInfo?.PostalCode,
+              street: data.CustomerInfo?.Street,
+              house: data.CustomerInfo?.House,
+              stairs: data.CustomerInfo?.Stairs,
+              stick: data.CustomerInfo?.Stick,
+              door: data.CustomerInfo?.Door,
+              bell: data.CustomerInfo?.Bell,
+              specialNotes: data.CustomerInfo?.SpecialNotes || data.SpecialNotes
+            },
+            
+            // Order items
+            items: data.Items?.map(item => ({
+              id: item.Id,
+              name: item.Name,
+              price: item.Price,
+              quantity: item.Quantity,
+              note: item.Note || '',
+              selectedItems: item.SelectedItems?.map(selected => ({
+                id: selected.Id,
+                name: selected.Name,
+                price: selected.Price || 0,
+                quantity: selected.Quantity || 1,
+                groupName: selected.GroupName || '',
+                type: selected.Type || ''
+              })) || []
+            })) || []
+          };
+          
+          setOrderDetails(mappedData);
         } else {
           setError('No order ID found for cash payment.');
         }
