@@ -249,28 +249,28 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
           <div className="border-b border-[var(--popup-content-border)] pb-6">
             <h3 className="text-xl font-semibold mb-4 text-[var(--popup-header-text)]">Order Items</h3>
             <div className="space-y-4">
-              {orderDetails.items?.map((item, index) => (
+              {orderDetails.Items?.map((item, index) => (
                 <div key={index} className="bg-[var(--popup-container-bg)] p-4 rounded-lg border border-[var(--popup-content-border)]">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h4 className="font-medium text-[var(--popup-text)]">{item.name}</h4>
-                      {item.note && (
-                        <p className="text-sm text-[var(--popup-text-tertiary)] italic">{item.note}</p>
+                      <h4 className="font-medium text-[var(--popup-text)]">{item.Name}</h4>
+                      {item.Note && (
+                        <p className="text-sm text-[var(--popup-text-tertiary)] italic">{item.Note}</p>
                       )}
                     </div>
                     <div className="text-right">
                       <div className="font-medium text-[var(--popup-text)]">
-                        {formatPrice(item.price * item.quantity)}
+                        {formatPrice(item.Price * item.Quantity)}
                       </div>
                       <div className="text-sm text-[var(--popup-text-tertiary)]">
-                        {item.quantity} x {formatPrice(item.price)}
+                        {item.Quantity} x {formatPrice(item.Price)}
                       </div>
                     </div>
                   </div>
                   {/* Selected Items */}
-                  {item.selectedItems && item.selectedItems.length > 0 && (
+                  {item.SelectedItems && item.SelectedItems.length > 0 && (
                     <div className="mt-2 pl-4 border-l-2 border-[var(--popup-content-border)]">
-                      {Object.entries(groupOptionsByGroupNameWithOrder(item.selectedItems))
+                      {Object.entries(groupOptionsByGroupNameWithOrder(item.SelectedItems))
                         .sort((a, b) => a[1].displayOrder - b[1].displayOrder)
                         .map(([groupName, group]) => (
                           <div key={groupName} className="mb-2">
