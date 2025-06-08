@@ -387,7 +387,7 @@ const PaymentSuccess = () => {
               specialNotes: data.CustomerInfo?.SpecialNotes || data.SpecialNotes
             },
             
-            // Order items
+            // Order items with proper formatting
             items: data.Items?.map(item => ({
               id: item.Id,
               name: item.Name,
@@ -399,8 +399,10 @@ const PaymentSuccess = () => {
                 name: selected.Name,
                 price: selected.Price || 0,
                 quantity: selected.Quantity || 1,
-                groupName: selected.GroupName || '',
-                type: selected.Type || ''
+                groupName: selected.GroupName || 'Other',
+                groupDisplayOrder: selected.GroupDisplayOrder || 9999,
+                type: selected.Type || '',
+                displayOrder: selected.DisplayOrder || 9999
               })) || []
             })) || []
           };
