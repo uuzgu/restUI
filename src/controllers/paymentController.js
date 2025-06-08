@@ -476,7 +476,7 @@ export const handlePaymentSuccess = async (id) => {
 
     if (paymentMethod === 'cash') {
       // For cash payments, fetch order details directly
-      const orderDetailsUrl = `${getBaseUrl()}/api/Order/${id}`;
+      const orderDetailsUrl = `${getBaseUrl()}/api/Order/get-order/${id}`;
       console.log('Fetching cash order details from:', orderDetailsUrl);
       
       const orderDetailsResponse = await axios.get(orderDetailsUrl);
