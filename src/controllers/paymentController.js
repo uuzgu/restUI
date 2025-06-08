@@ -585,7 +585,7 @@ export const handlePaymentSuccess = async (id) => {
     }
 
     // Fetch complete order details
-    const orderDetailsUrl = `${getBaseUrl()}/api/Order/${orderId}`;
+    const orderDetailsUrl = `${getBaseUrl()}/api/Order/get-order/${orderId}`;
     console.log('Fetching complete order details from:', orderDetailsUrl);
     
     const orderDetailsResponse = await axios.get(orderDetailsUrl);
