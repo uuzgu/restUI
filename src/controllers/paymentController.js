@@ -2,9 +2,6 @@ import axios from 'axios';
 
 // Configure axios defaults
 axios.defaults.withCredentials = true;
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
-axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
 
 // Helper function to construct full API URLs
 export const getBaseUrl = () => {
@@ -147,10 +144,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       requestPayload,
       {
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          'Content-Type': 'application/json'
         },
         withCredentials: true
       }
@@ -424,7 +418,7 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
       requestPayload,
       {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
       }
     );
