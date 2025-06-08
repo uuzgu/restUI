@@ -384,10 +384,25 @@ const PaymentSuccess = () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = urlParams.get('session_id');
-      
-      if (sessionId) {
+      const paymentMethod = localStorage.getItem('paymentMethod') || 'stripe';
+
+      if (paymentMethod === 'cash') {
+        // For cash, get orderId from localStorage or URL
+        const orderId = localStorage.getItem('cashOrderId') || urlParams.get('orderId');
+        if (orderId) {
+          // Use your API context or axios directly
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/${orderId}`);
+          const data = await response.json();
+          setOrderDetails(data);
+        } else {
+          setError('No order ID found for cash payment.');
+        }
+      } else if (sessionId) {
+        // Stripe flow
         const result = await handlePaymentSuccess(sessionId);
         setOrderDetails(result);
+      } else {
+        setError('No session ID or order ID found.');
       }
     } catch (err) {
       console.error('Error fetching order details:', err);
