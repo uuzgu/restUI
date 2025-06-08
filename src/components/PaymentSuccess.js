@@ -395,14 +395,14 @@ const PaymentSuccess = () => {
               quantity: item.Quantity,
               note: item.Note || '',
               selectedItems: item.SelectedItems?.map(selected => ({
-                id: selected.Id,
-                name: selected.Name,
-                price: selected.Price || 0,
-                quantity: selected.Quantity || 1,
-                groupName: selected.GroupName || 'Other',
-                groupDisplayOrder: selected.GroupDisplayOrder || 9999,
-                type: selected.Type || '',
-                displayOrder: selected.DisplayOrder || 9999
+                id: selected.id,
+                name: selected.name,
+                price: selected.price || 0,
+                quantity: selected.quantity || 1,
+                groupName: selected.groupName || 'Other',
+                groupDisplayOrder: item.GroupOrder?.indexOf(selected.groupName) ?? 9999,
+                type: selected.type || '',
+                displayOrder: selected.displayOrder || 9999
               })) || []
             })) || []
           };
