@@ -241,12 +241,6 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
                     <div className="font-medium text-[var(--popup-text)]">{orderDetails.CustomerInfo.Bell}</div>
                   </div>
                 )}
-                {orderDetails.customerInfo.bell && (
-                  <div className="space-y-2">
-                    <div className="text-[var(--popup-text-tertiary)]">Bell</div>
-                    <div className="font-medium text-[var(--popup-text)]">{orderDetails.customerInfo.bell}</div>
-                  </div>
-                )}
               </div>
             </div>
           )}
