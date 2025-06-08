@@ -312,58 +312,7 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
             </div>
           )}
 
-          {/* Order Items */}
-          <div className="border-t border-[var(--popup-content-border)] pt-6">
-            <h3 className="text-xl font-semibold mb-4 text-[var(--popup-header-text)]">Order Items</h3>
-            <div className="space-y-4">
-              {orderDetails.items?.map((item, index) => (
-                <div key={index} className="border-b border-[var(--popup-content-border)] pb-4 last:border-b-0">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="font-medium text-[var(--popup-text)]">
-                        {item.quantity}x {item.name}
-                      </div>
-                      {item.note && (
-                        <div className="text-sm text-[var(--popup-text-tertiary)] mt-1">
-                          Note: {item.note}
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-[var(--popup-text)] font-medium">
-                      {formatPrice(calculateItemTotal(item))}
-                    </div>
-                  </div>
-                  
-                  {/* Item Options */}
-                  {item.selectedItems && item.selectedItems.length > 0 && (
-                    <div className="ml-4 mt-2 space-y-2">
-                      {Object.entries(groupOptionsByGroupNameWithOrder(item.selectedItems))
-                        .sort(([, a], [, b]) => a.displayOrder - b.displayOrder)
-                        .map(([groupName, group]) => (
-                          <div key={groupName} className="text-sm">
-                            <div className="text-[var(--popup-text-tertiary)] font-medium mb-1">
-                              {group.name}:
-                            </div>
-                            <div className="space-y-1">
-                              {group.options.map((option, optIndex) => (
-                                <div key={optIndex} className="flex justify-between">
-                                  <span className="text-[var(--popup-text)]">
-                                    {option.quantity > 1 ? `${option.quantity}x ` : ''}{option.name}
-                                  </span>
-                                  <span className="text-[var(--popup-text)]">
-                                    {formatPrice(option.price * option.quantity)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
