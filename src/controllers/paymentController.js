@@ -7,7 +7,7 @@ export const getBaseUrl = () => {
     return 'http://localhost:5019';
   }
   // In production, use the API URL from environment variable
-  return process.env.VITE_API_URL || 'https://restaurant-api-923e.onrender.com';
+  return process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com';
 };
 
 // Centralized API endpoint configuration

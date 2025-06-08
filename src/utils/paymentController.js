@@ -1,13 +1,3 @@
-// Helper function to construct full API URLs
-const getBaseUrl = () => {
-  // In development, use localhost
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:5019';
-  }
-  // In production, use the API URL
-  return 'https://restaurant-api-923e.onrender.com';
-};
-
 // Centralized API endpoint configuration
 const API_ENDPOINTS = {
   STRIPE: {

@@ -36,6 +36,6 @@
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://restaurant-api-923e.onrender.com"
+    "REACT_APP_API_URL": "https://restapi-m5th.onrender.com"
   }
 } 
