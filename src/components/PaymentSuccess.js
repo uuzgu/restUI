@@ -321,6 +321,7 @@ const PaymentSuccess = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   const fetchOrderDetails = async () => {
     try {
@@ -381,16 +382,28 @@ const PaymentSuccess = () => {
             Thank you for your order! Your payment has been processed successfully.
           </p>
           {orderDetails && (
-            <div className="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200 shadow-sm text-gray-800">
+            <div
+              className={`mb-6 p-4 rounded-lg border shadow-sm ${
+                isDarkMode
+                  ? 'bg-gray-800 border-gray-700 text-gray-100'
+                  : 'bg-blue-50 border-blue-200 text-gray-800'
+              }`}
+            >
               <div className="flex items-center mb-2">
                 <span className="font-bold text-lg mr-2">Order #{orderDetails.orderNumber || orderDetails.OrderNumber}</span>
-                <span className="ml-auto px-2 py-1 rounded bg-blue-200 text-blue-800 text-xs font-semibold">
+                <span
+                  className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
+                    isDarkMode
+                      ? 'bg-gray-700 text-blue-200'
+                      : 'bg-blue-200 text-blue-800'
+                  }`}
+                >
                   {orderDetails.orderMethod || orderDetails.OrderMethod}
                 </span>
               </div>
               <div className="flex items-center mb-1">
                 <span className="font-medium mr-2">Total:</span>
-                <span className="text-green-700 font-bold text-lg">
+                <span className={`font-bold text-lg ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>
                   {orderDetails.total !== undefined
                     ? `€${parseFloat(orderDetails.total).toFixed(2)}`
                     : orderDetails.Total !== undefined
@@ -398,7 +411,7 @@ const PaymentSuccess = () => {
                     : 'N/A'}
                 </span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}> 
                 <span className="font-medium">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}
               </div>
             </div>
