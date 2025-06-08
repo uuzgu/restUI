@@ -333,6 +333,10 @@ const PaymentSuccess = () => {
       if (sessionId) {
         // Stripe flow
         const result = await handlePaymentSuccess(sessionId);
+        // Normalize Items to items
+        if (result.Items && !result.items) {
+          result.items = result.Items;
+        }
         setOrderDetails(result);
         // Optionally clear cash order data
         localStorage.removeItem('cashOrderId');
@@ -344,6 +348,10 @@ const PaymentSuccess = () => {
         if (orderId) {
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/${orderId}`);
           const data = await response.json();
+          // Normalize Items to items
+          if (data.Items && !data.items) {
+            data.items = data.Items;
+          }
           setOrderDetails(data);
         } else {
           setError('No order ID found for cash payment.');
