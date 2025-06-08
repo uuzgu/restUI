@@ -375,9 +375,7 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
     // Calculate total amount
     const totalAmount = orderItems.reduce((sum, item) => {
       const itemTotal = item.Price * item.Quantity;
-      const selectedItemsTotal = item.SelectedItems.reduce((itemSum, selectedItem) => 
-        itemSum + (selectedItem.Price * selectedItem.Quantity), 0);
-      return sum + itemTotal + selectedItemsTotal;
+      return sum + itemTotal;
     }, 0);
 
     // Format customer info for API
