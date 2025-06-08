@@ -527,13 +527,13 @@ export const handlePaymentSuccess = async (id) => {
         },
         
         // Order items
-        items: orderDetailsResponse.data.items?.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          note: item.note,
-          selectedItems: item.selectedItems?.map(selected => ({
+        items: orderDetailsResponse.data.Items?.map(item => ({
+          id: item.Id,
+          name: item.Name,
+          price: item.Price,
+          quantity: item.Quantity,
+          note: item.Note,
+          selectedItems: item.SelectedItems?.map(selected => ({
             id: selected.id,
             name: selected.name,
             price: selected.price,
@@ -607,10 +607,10 @@ export const handlePaymentSuccess = async (id) => {
     console.log('Stored checkout data:', checkoutData);
 
     // Calculate original total from items
-    const originalTotal = orderDetailsResponse.data.items?.reduce((sum, item) => {
-      const itemTotal = (item.price || 0) * (item.quantity || 1);
-      const selectedItemsTotal = (item.selectedItems || []).reduce((selectedSum, selected) => 
-        selectedSum + ((selected.price || 0) * (selected.quantity || 1)), 0);
+    const originalTotal = orderDetailsResponse.data.Items?.reduce((sum, item) => {
+      const itemTotal = (item.Price || 0) * (item.Quantity || 1);
+      const selectedItemsTotal = (item.SelectedItems || []).reduce((selectedSum, selected) => 
+        selectedSum + ((selected.Price || 0) * (selected.Quantity || 1)), 0);
       return sum + itemTotal + selectedItemsTotal;
     }, 0) || 0;
 
@@ -653,13 +653,13 @@ export const handlePaymentSuccess = async (id) => {
       },
       
       // Order items
-      items: orderDetailsResponse.data.items?.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        note: item.note,
-        selectedItems: item.selectedItems?.map(selected => ({
+      items: orderDetailsResponse.data.Items?.map(item => ({
+        id: item.Id,
+        name: item.Name,
+        price: item.Price,
+        quantity: item.Quantity,
+        note: item.Note,
+        selectedItems: item.SelectedItems?.map(selected => ({
           id: selected.id,
           name: selected.name,
           price: selected.price,
