@@ -333,7 +333,7 @@ const PaymentSuccess = () => {
         const orderId = localStorage.getItem('cashOrderId') || urlParams.get('orderId');
         if (orderId) {
           // Use your API context or axios directly
-          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/${orderId}`);
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/get-order/${orderId}`);
           const data = await response.json();
           setOrderDetails(data);
         } else {
