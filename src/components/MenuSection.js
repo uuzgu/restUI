@@ -203,6 +203,18 @@ const MenuSection = ({ title, items, fetchIngredients, categoryId }) => {
                             });
                           }}
                           onMouseLeave={() => setTooltip(null)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            setTooltip({
+                              text: description,
+                              position: {
+                                x: rect.left + rect.width / 2,
+                                y: rect.bottom + 8
+                              },
+                              allergen: allergen
+                            });
+                          }}
                         >
                           <span
                             className="allergen-indicator"
