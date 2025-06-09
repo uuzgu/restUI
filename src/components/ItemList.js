@@ -446,7 +446,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   const renderOptionPrice = useCallback((option, group) => {
     if (!option.price) return <span className="min-w-[60px]"></span>;
     
-    const isFree = isItemFree(option, group);
     const selectedItemsInGroup = selectedIngredients.filter(
       ing => ing.groupId === group.id && ing.type === 'selection'
     );
@@ -454,21 +453,29 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     // Count total items in the group
     const totalItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
     
-    // If we've reached or exceeded the threshold, show the price
-    if (totalItems >= group.threshold) {
+    // Find the position of this item in the sorted list
+    const sortedItems = [...selectedItemsInGroup].sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
+    const itemPosition = sortedItems.findIndex(ing => ing.id === option.id);
+    
+    // Calculate how many items are before this one
+    const itemsBefore = sortedItems.slice(0, itemPosition).reduce((sum, ing) => sum + (ing.quantity || 1), 0);
+    
+    // If we haven't reached the threshold yet, show "Free"
+    if (itemsBefore < group.threshold) {
       return (
-        <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[60px] text-right">
-          +{option.price}€
+        <span className="text-sm text-green-600 dark:text-green-400 min-w-[60px] text-right">
+          Free
         </span>
       );
     }
     
+    // If we've reached or exceeded the threshold, show the price
     return (
-      <span className={`text-sm ${isFree ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'} min-w-[60px] text-right`}>
-        {isFree ? 'Free' : `+${option.price}€`}
+      <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[60px] text-right">
+        +{option.price}€
       </span>
     );
-  }, [isItemFree, selectedIngredients]);
+  }, [selectedIngredients]);
 
   // Update the updateIngredientQuantity function to properly handle price updates
   const updateIngredientQuantity = useCallback((ingredient, delta) => {
