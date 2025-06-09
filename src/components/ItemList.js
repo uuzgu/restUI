@@ -282,25 +282,32 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
             return acc;
           }, [])
           .sort((a, b) => a.DisplayOrder - b.DisplayOrder)
-          .map(group => ({
-            id: group.Id,
-            name: group.Name,
-            type: group.Type,
-            isRequired: group.IsRequired,
-            minSelect: group.MinSelect,
-            maxSelect: group.MaxSelect,
-            threshold: group.Threshold,
-            displayOrder: group.DisplayOrder,
-            options: Array.isArray(group.Options) ? group.Options.map(option => ({
-              id: option.Id,
-              name: option.Name,
-              price: Number(option.Price || 0),
-              displayOrder: option.DisplayOrder,
-              selected: false,
-              quantity: 0,
-              type: 'selection'
-            })) : []
-          }))
+          .map(group => {
+            console.log('Processing group:', {
+              name: group.Name,
+              threshold: group.Threshold,
+              type: group.Type
+            });
+            return {
+              id: group.Id,
+              name: group.Name,
+              type: group.Type,
+              isRequired: group.IsRequired,
+              minSelect: group.MinSelect,
+              maxSelect: group.MaxSelect,
+              threshold: group.Threshold,
+              displayOrder: group.DisplayOrder,
+              options: Array.isArray(group.Options) ? group.Options.map(option => ({
+                id: option.Id,
+                name: option.Name,
+                price: Number(option.Price || 0),
+                displayOrder: option.DisplayOrder,
+                selected: false,
+                quantity: 0,
+                type: 'selection'
+              })) : []
+            };
+          })
       };
       
       console.log('Processed selection groups before deduplication:', processedData.selectionGroups);
@@ -450,30 +457,9 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       ing => ing.groupId === group.id && ing.type === 'selection'
     );
     
-    // If no items are selected yet, show Free for the first threshold number of items
-    if (selectedItemsInGroup.length === 0) {
-      const optionIndex = group.options.findIndex(opt => opt.id === option.id);
-      if (optionIndex < group.threshold) {
-        return (
-          <span className="text-sm text-green-600 dark:text-green-400 min-w-[60px] text-right">
-            Free
-          </span>
-        );
-      }
-    }
+    const totalSelectedItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
     
-    // Count total items in the group
-    const totalItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
-    
-    // Find the position of this item in the sorted list
-    const sortedItems = [...selectedItemsInGroup].sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
-    const itemPosition = sortedItems.findIndex(ing => ing.id === option.id);
-    
-    // Calculate how many items are before this one
-    const itemsBefore = sortedItems.slice(0, itemPosition).reduce((sum, ing) => sum + (ing.quantity || 1), 0);
-    
-    // If we haven't reached the threshold yet, show "Free"
-    if (itemsBefore < group.threshold) {
+    if (totalSelectedItems < group.threshold) {
       return (
         <span className="text-sm text-green-600 dark:text-green-400 min-w-[60px] text-right">
           Free
@@ -481,7 +467,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       );
     }
     
-    // If we've reached or exceeded the threshold, show the price
     return (
       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[60px] text-right">
         +{option.price}€
@@ -1163,122 +1148,128 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                     </h3>
 
                     {/* Unified Selection Groups Section */}
-                    {filteredSelectionGroups.map((group) => (
-                      <div key={`${group.id}-${group.name}`} className="mb-6">
-                        <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)]">
-                          {group.name}
-                          <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
-                            ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
-                            {group.type === 'MULTIPLE' && group.threshold > 0 && (
-                              <span className="text-[var(--popup-content-text)] ml-2">
-                                (First {group.threshold} {group.name.toLowerCase().endsWith('s') ? group.name.toLowerCase() : group.name.toLowerCase() + 's'} are free)
-                              </span>
-                            )}
-                          </span>
-                        </h4>
-                        <div className="space-y-2">
-                          {group.options
-                            .sort((a, b) => a.displayOrder - b.displayOrder)
-                            .map((option) => (
-                              <div 
-                                key={`${option.id}-${option.name}`} 
-                                className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
-                                  ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
-                                    ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
-                                    : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
-                                `}
-                                style={{ minHeight: '56px', marginBottom: '8px' }}
-                                onClick={() => toggleIngredient({
-                                  ...option,
-                                  type: 'selection',
-                                  groupId: group.id
-                                })}
-                              >
-                                <div className="flex items-center gap-3">
-                                  {group.type === 'MULTIPLE' ? (
-                                    <input
-                                      type="checkbox"
-                                      checked={selectedIngredients.some(
-                                        ing => ing.id === option.id && ing.type === 'selection'
-                                      )}
-                                      onChange={(e) => {
-                                        e.stopPropagation();
-                                        toggleIngredient({
-                                          ...option,
-                                          type: 'selection',
-                                          groupId: group.id
-                                        });
-                                      }}
-                                      className="w-4 h-4 accent-red-500"
-                                    />
-                                  ) : (
-                                    <input
-                                      type="radio"
-                                      name={`group-${group.id}`}
-                                      checked={selectedIngredients.some(
-                                        ing => ing.id === option.id && ing.type === 'selection'
-                                      )}
-                                      onChange={(e) => {
-                                        e.stopPropagation();
-                                        toggleIngredient({
-                                          ...option,
-                                          type: 'selection',
-                                          groupId: group.id
-                                        });
-                                      }}
-                                      className="w-4 h-4 accent-red-500"
-                                    />
-                                  )}
-                                  <span className="text-[var(--popup-item-text)]">{option.name}</span>
-                                </div>
-                                <div className="flex items-center space-x-2 sm:space-x-4">
-                                  {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
-                                    ing => ing.id === option.id && ing.type === 'selection'
-                                  ) && (
-                                    <div 
-                                      className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <button
-                                        onClick={(e) => {
+                    {filteredSelectionGroups.map((group) => {
+                      console.log('Rendering group:', {
+                        name: group.name,
+                        threshold: group.threshold,
+                        type: group.type,
+                        options: group.options.map(o => o.name)
+                      });
+                      return (
+                        <div key={`${group.id}-${group.name}`} className="mb-6">
+                          <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)]">
+                            {group.name}
+                            <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
+                              ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
+                              {group.type === 'MULTIPLE' && group.threshold > 0 && (
+                                <span className="text-[var(--popup-content-text)] ml-2">
+                                  (First {group.threshold} {group.name.toLowerCase().endsWith('s') ? group.name.toLowerCase() : group.name.toLowerCase() + 's'} are free)
+                                </span>
+                              )}
+                            </span>
+                          </h4>
+                          <div className="space-y-2">
+                            {group.options
+                              .sort((a, b) => a.displayOrder - b.displayOrder)
+                              .map((option) => (
+                                <div 
+                                  key={`${option.id}-${option.name}`} 
+                                  className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
+                                    ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
+                                      ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
+                                      : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
+                                  `}
+                                  style={{ minHeight: '56px', marginBottom: '8px' }}
+                                  onClick={() => toggleIngredient({
+                                    ...option,
+                                    type: 'selection',
+                                    groupId: group.id
+                                  })}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    {group.type === 'MULTIPLE' ? (
+                                      <input
+                                        type="checkbox"
+                                        checked={selectedIngredients.some(
+                                          ing => ing.id === option.id && ing.type === 'selection'
+                                        )}
+                                        onChange={(e) => {
                                           e.stopPropagation();
-                                          updateIngredientQuantity({
+                                          toggleIngredient({
                                             ...option,
                                             type: 'selection',
                                             groupId: group.id
-                                          }, -1);
+                                          });
                                         }}
-                                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                      >
-                                        -
-                                      </button>
-                                      <span className="w-6 text-center text-[var(--popup-item-text)] font-semibold">
-                                        {ingredientQuantities[option.id] || 0}
-                                      </span>
-                                      <button
-                                        onClick={(e) => {
+                                        className="w-4 h-4 accent-red-500"
+                                      />
+                                    ) : (
+                                      <input
+                                        type="radio"
+                                        name={`group-${group.id}`}
+                                        checked={selectedIngredients.some(
+                                          ing => ing.id === option.id && ing.type === 'selection'
+                                        )}
+                                        onChange={(e) => {
                                           e.stopPropagation();
-                                          updateIngredientQuantity({
+                                          toggleIngredient({
                                             ...option,
                                             type: 'selection',
                                             groupId: group.id
-                                          }, 1);
+                                          });
                                         }}
-                                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                        className="w-4 h-4 accent-red-500"
+                                      />
+                                    )}
+                                    <span className="text-[var(--popup-item-text)]">{option.name}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-2 sm:space-x-4">
+                                    {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
+                                      ing => ing.id === option.id && ing.type === 'selection'
+                                    ) && (
+                                      <div 
+                                        className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700"
+                                        onClick={(e) => e.stopPropagation()}
                                       >
-                                        +
-                                      </button>
-                                    </div>
-                                  )}
-                                  {option.price > 0 && (
-                                    <span className="text-[var(--popup-price-text)]">+€{option.price.toFixed(2)}</span>
-                                  )}
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            updateIngredientQuantity({
+                                              ...option,
+                                              type: 'selection',
+                                              groupId: group.id
+                                            }, -1);
+                                          }}
+                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                        >
+                                          -
+                                        </button>
+                                        <span className="w-6 text-center text-[var(--popup-item-text)] font-semibold">
+                                          {ingredientQuantities[option.id] || 0}
+                                        </span>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            updateIngredientQuantity({
+                                              ...option,
+                                              type: 'selection',
+                                              groupId: group.id
+                                            }, 1);
+                                          }}
+                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                        >
+                                          +
+                                        </button>
+                                      </div>
+                                    )}
+                                    {renderOptionPrice(option, group)}
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Add Note Field */}
