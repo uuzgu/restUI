@@ -1142,74 +1142,32 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                             .map((option) => (
                               <div 
                                 key={`${option.id}-${option.name}`} 
-                                className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200
+                                className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
                                   ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
                                     ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
                                     : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
                                 `}
                                 style={{ minHeight: '56px', marginBottom: '8px' }}
+                                onClick={() => toggleIngredient({
+                                  ...option,
+                                  type: 'selection',
+                                  groupId: group.id
+                                })}
                               >
-                                <div className="flex items-center space-x-2">
-                                  {group.type === 'EXCLUSIONS' ? (
-                                    <input
-                                      type="checkbox"
-                                      checked={selectedIngredients.some(
-                                        ing => ing.id === option.id && ing.type === 'exclusion'
-                                      )}
-                                      onChange={() => {
-                                        const isSelected = selectedIngredients.some(
-                                          ing => ing.id === option.id && ing.type === 'exclusion'
-                                        );
-                                        if (!isSelected) {
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'exclusion',
-                                            groupId: group.id,
-                                            quantity: 1
-                                          });
-                                        } else {
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'exclusion',
-                                            groupId: group.id
-                                          });
-                                        }
-                                      }}
-                                      className="w-4 h-4 accent-red-500"
-                                    />
-                                  ) : group.type === 'MULTIPLE' ? (
+                                <div className="flex items-center gap-3">
+                                  {group.type === 'MULTIPLE' ? (
                                     <input
                                       type="checkbox"
                                       checked={selectedIngredients.some(
                                         ing => ing.id === option.id && ing.type === 'selection'
                                       )}
-                                      onChange={() => {
-                                        const isSelected = selectedIngredients.some(
-                                          ing => ing.id === option.id && ing.type === 'selection'
-                                        );
-                                        if (!isSelected) {
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'selection',
-                                            groupId: group.id,
-                                            quantity: 1
-                                          });
-                                          setIngredientQuantities(prev => ({
-                                            ...prev,
-                                            [option.id]: 1
-                                          }));
-                                        } else {
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'selection',
-                                            groupId: group.id
-                                          });
-                                          setIngredientQuantities(prev => {
-                                            const newQuantities = { ...prev };
-                                            delete newQuantities[option.id];
-                                            return newQuantities;
-                                          });
-                                        }
+                                      onChange={(e) => {
+                                        e.stopPropagation();
+                                        toggleIngredient({
+                                          ...option,
+                                          type: 'selection',
+                                          groupId: group.id
+                                        });
                                       }}
                                       className="w-4 h-4 accent-red-500"
                                     />
@@ -1220,11 +1178,14 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                       checked={selectedIngredients.some(
                                         ing => ing.id === option.id && ing.type === 'selection'
                                       )}
-                                      onChange={() => toggleIngredient({
-                                        ...option,
-                                        type: 'selection',
-                                        groupId: group.id
-                                      })}
+                                      onChange={(e) => {
+                                        e.stopPropagation();
+                                        toggleIngredient({
+                                          ...option,
+                                          type: 'selection',
+                                          groupId: group.id
+                                        });
+                                      }}
                                       className="w-4 h-4 accent-red-500"
                                     />
                                   )}
@@ -1234,13 +1195,19 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                   {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
                                     ing => ing.id === option.id && ing.type === 'selection'
                                   ) && (
-                                    <div className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700">
+                                    <div 
+                                      className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
                                       <button
-                                        onClick={() => updateIngredientQuantity({
-                                          ...option,
-                                          type: 'selection',
-                                          groupId: group.id
-                                        }, -1)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateIngredientQuantity({
+                                            ...option,
+                                            type: 'selection',
+                                            groupId: group.id
+                                          }, -1);
+                                        }}
                                         className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                                       >
                                         -
@@ -1249,18 +1216,23 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                         {ingredientQuantities[option.id] || 0}
                                       </span>
                                       <button
-                                        onClick={() => updateIngredientQuantity({
-                                          ...option,
-                                          type: 'selection',
-                                          groupId: group.id
-                                        }, 1)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateIngredientQuantity({
+                                            ...option,
+                                            type: 'selection',
+                                            groupId: group.id
+                                          }, 1);
+                                        }}
                                         className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                                       >
                                         +
                                       </button>
                                     </div>
                                   )}
-                                  {renderOptionPrice(option, group)}
+                                  {option.price > 0 && (
+                                    <span className="text-[var(--popup-price-text)]">+€{option.price.toFixed(2)}</span>
+                                  )}
                                 </div>
                               </div>
                             ))}
