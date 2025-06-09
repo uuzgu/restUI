@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../colors/popupIngredientsColors.css';
 
-const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
+const PopupIngredients = ({ item, onClose, onAddToBasket, onUpdateItem }) => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -70,7 +70,52 @@ const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
               <h3 className="text-lg font-semibold mb-2 text-[var(--popup-header-text)]">
                 Customize Your Order
               </h3>
-              {/* Rest of your ingredient list content */}
+              {item.ingredients && item.ingredients.map((ingredient, index) => (
+                <div 
+                  key={index}
+                  className="ingredient-item flex items-center justify-between p-3 border-b border-[var(--popup-content-border)] cursor-pointer hover:bg-[var(--popup-item-hover-bg)]"
+                  onClick={() => {
+                    // Toggle ingredient selection
+                    const updatedIngredients = [...item.ingredients];
+                    updatedIngredients[index] = {
+                      ...ingredient,
+                      selected: !ingredient.selected
+                    };
+                    // Update the item with new ingredients
+                    const updatedItem = {
+                      ...item,
+                      ingredients: updatedIngredients
+                    };
+                    // Call the update function (you'll need to implement this)
+                    onUpdateItem(updatedItem);
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={ingredient.selected}
+                      onChange={(e) => {
+                        e.stopPropagation(); // Prevent double triggering
+                        const updatedIngredients = [...item.ingredients];
+                        updatedIngredients[index] = {
+                          ...ingredient,
+                          selected: e.target.checked
+                        };
+                        const updatedItem = {
+                          ...item,
+                          ingredients: updatedIngredients
+                        };
+                        onUpdateItem(updatedItem);
+                      }}
+                      className="w-5 h-5 rounded border-[var(--popup-checkbox-border)] text-[var(--popup-checkbox-color)] focus:ring-[var(--popup-checkbox-focus)]"
+                    />
+                    <span className="text-[var(--popup-content-text)]">{ingredient.name}</span>
+                  </div>
+                  {ingredient.price > 0 && (
+                    <span className="text-[var(--popup-price-text)]">+€{ingredient.price.toFixed(2)}</span>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>

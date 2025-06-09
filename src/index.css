@@ -745,3 +745,28 @@ body {
   }
 }
 /* --- End Mobile Full-Screen Basket Drawer (Below Header) --- */
+
+/* Ingredient item styles */
+.ingredient-item {
+  transition: background-color 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ingredient-item:active {
+  background-color: var(--popup-item-active-bg);
+}
+
+.ingredient-item input[type="checkbox"] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ingredient-item input[type="checkbox"]:checked {
+  background-color: var(--popup-checkbox-color);
+  border-color: var(--popup-checkbox-color);
+}
+
+.ingredient-item:hover input[type="checkbox"] {
+  border-color: var(--popup-checkbox-hover-border);
+}
