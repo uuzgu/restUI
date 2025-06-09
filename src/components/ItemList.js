@@ -1186,7 +1186,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                     groupId: group.id
                                   })}
                                 >
-                                  <div className="flex items-center gap-3">
+                                  <div className="flex items-center gap-3 min-w-0 flex-1">
                                     {group.type === 'MULTIPLE' ? (
                                       <input
                                         type="checkbox"
@@ -1201,7 +1201,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                             groupId: group.id
                                           });
                                         }}
-                                        className="w-4 h-4 accent-red-500"
+                                        className="w-4 h-4 accent-red-500 flex-shrink-0"
                                       />
                                     ) : (
                                       <input
@@ -1218,17 +1218,17 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                             groupId: group.id
                                           });
                                         }}
-                                        className="w-4 h-4 accent-red-500"
+                                        className="w-4 h-4 accent-red-500 flex-shrink-0"
                                       />
                                     )}
-                                    <span className="text-[var(--popup-item-text)]">{option.name}</span>
+                                    <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
                                   </div>
-                                  <div className="flex items-center space-x-2 sm:space-x-4">
+                                  <div className="flex items-center gap-2 flex-shrink-0">
                                     {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
                                       ing => ing.id === option.id && ing.type === 'selection'
                                     ) && (
                                       <div 
-                                        className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700"
+                                        className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
                                         onClick={(e) => e.stopPropagation()}
                                       >
                                         <button
@@ -1240,11 +1240,11 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                               groupId: group.id
                                             }, -1);
                                           }}
-                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition sm:w-7 sm:h-7 w-5 h-5 text-base"
+                                          className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                                         >
                                           -
                                         </button>
-                                        <span className="w-6 text-center text-[var(--popup-item-text)] font-semibold sm:text-base text-sm">
+                                        <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
                                           {ingredientQuantities[option.id] || 0}
                                         </span>
                                         <button
@@ -1256,13 +1256,15 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                               groupId: group.id
                                             }, 1);
                                           }}
-                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition sm:w-7 sm:h-7 w-5 h-5 text-base"
+                                          className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                                         >
                                           +
                                         </button>
                                       </div>
                                     )}
-                                    {renderOptionPrice(option, group)}
+                                    <div className="min-w-[60px] text-right">
+                                      {renderOptionPrice(option, group)}
+                                    </div>
                                   </div>
                                 </div>
                               ))}
