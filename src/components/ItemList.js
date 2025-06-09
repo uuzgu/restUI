@@ -1089,7 +1089,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       {showPopup && selectedItem && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-30">
           <div
-            className="w-full max-w-[95vw] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg"
+            className="w-full max-w-[95vw] sm:max-w-[95vw] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg"
             style={{
               position: 'relative',
               top: '110px', // adjust for header height
@@ -1240,11 +1240,11 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                               groupId: group.id
                                             }, -1);
                                           }}
-                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition sm:w-7 sm:h-7 w-5 h-5 text-base"
                                         >
                                           -
                                         </button>
-                                        <span className="w-6 text-center text-[var(--popup-item-text)] font-semibold">
+                                        <span className="w-6 text-center text-[var(--popup-item-text)] font-semibold sm:text-base text-sm">
                                           {ingredientQuantities[option.id] || 0}
                                         </span>
                                         <button
@@ -1256,7 +1256,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                               groupId: group.id
                                             }, 1);
                                           }}
-                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition sm:w-7 sm:h-7 w-5 h-5 text-base"
                                         >
                                           +
                                         </button>
