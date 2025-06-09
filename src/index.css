@@ -436,6 +436,8 @@ body.popup-active {
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
   /* Ensure buttons stay visible */
   margin-top: auto;
+  /* Add bottom border to ensure visibility */
+  border-bottom: 1px solid var(--popup-container-border);
 }
 
 /* Mobile adjustments for popup */
@@ -452,18 +454,28 @@ body.popup-active {
     /* Use dynamic viewport height for better mobile support */
     height: calc(100dvh - env(safe-area-inset-bottom));
     max-height: calc(100dvh - env(safe-area-inset-bottom));
+    /* Add bottom border to container */
+    border-bottom: 1px solid var(--popup-container-border);
   }
 
   .ingredient-popup .popup-content {
     /* Adjust content height to account for mobile browser UI */
     max-height: calc(100dvh - 180px - env(safe-area-inset-bottom));
     padding: 1rem;
+    /* Add padding to ensure content doesn't get hidden behind buttons */
+    padding-bottom: 120px;
   }
 
   .ingredient-popup .sticky {
     padding: 0.75rem;
     /* Add safe area inset padding for devices with notches */
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    /* Ensure sticky footer is always visible */
+    position: sticky;
+    bottom: 0;
+    background-color: var(--popup-container-bg);
+    /* Add stronger shadow for better visibility */
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .ingredient-popup .sticky .flex {
