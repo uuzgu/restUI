@@ -31,7 +31,7 @@ const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
 
   return (
     <div className={`ingredient-popup ${isKeyboardVisible ? 'keyboard-visible' : ''}`}>
-      <div className="w-full max-w-[500px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg">
+      <div className="popup-container">
         {item.image_url && (
           <div className="relative w-full h-[300px] flex-shrink-0">
             <img
@@ -75,7 +75,7 @@ const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] p-4">
+        <div className="sticky">
           <div className="flex flex-col w-full gap-4">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
               <div className="flex items-center border border-[var(--popup-button-border)] rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10 w-full sm:w-auto">

@@ -357,93 +357,79 @@ body {
 /* Ingredient Selection Popup */
 .ingredient-popup {
   position: fixed;
-  top: var(--header-height); /* Position below main header */
+  top: var(--header-height);
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: flex-start; /* Align to top */
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
   overflow-y: auto;
-  transform: translateZ(0);
-  will-change: transform;
 }
 
-.ingredient-popup > div {
+.popup-container {
   width: 100%;
-  max-width: 95vw;
+  max-width: 500px;
   min-width: 0;
   border-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   background-color: var(--popup-container-bg);
-  /* Adjust height to account for header */
   height: calc(100vh - var(--header-height));
   max-height: calc(100vh - var(--header-height));
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .popup-content {
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-  perspective: 1000px;
-  background-color: var(--popup-content-bg);
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  /* Add padding to ensure content doesn't get hidden behind buttons */
   padding-bottom: 100px;
+}
+
+.sticky {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--popup-container-bg);
+  border-top: 1px solid var(--popup-container-border);
+  padding: 1rem;
+  z-index: 10;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile adjustments for popup */
 @media (max-width: 640px) {
   .ingredient-popup {
     padding: 0;
-    align-items: flex-start;
   }
 
-  .ingredient-popup > div {
+  .popup-container {
     max-width: 100%;
     border-radius: 0;
-    margin: 0;
-    /* Adjust height to account for header and safe areas */
     height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
     max-height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
   }
 
-  .ingredient-popup .popup-content {
-    /* Adjust content height */
+  .popup-content {
     max-height: calc(100vh - var(--header-height) - 120px - env(safe-area-inset-bottom));
     padding: 1rem;
     padding-bottom: 80px;
   }
 
-  .ingredient-popup .sticky {
+  .sticky {
     padding: 0.75rem;
-    /* Add safe area inset padding for devices with notches */
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-    /* Ensure sticky footer is always visible */
-    position: sticky;
-    bottom: 0;
-    background-color: var(--popup-container-bg);
-    /* Add stronger shadow for better visibility */
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
-    /* Add border to make it more visible */
-    border-top: 1px solid var(--popup-container-border);
   }
 
   /* When keyboard is visible */
   .ingredient-popup.keyboard-visible .popup-content {
     padding-bottom: 120px;
-  }
-
-  .ingredient-popup.keyboard-visible .sticky {
-    position: sticky;
-    bottom: 0;
   }
 }
 
