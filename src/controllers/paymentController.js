@@ -176,6 +176,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       CreatedAt: response.data.CreatedAt,
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
+      OriginalTotal: response.data.OriginalTotal,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
@@ -186,6 +187,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       orderMethod: response.data.OrderMethod,
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
+      originalTotal: response.data.OriginalTotal,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
@@ -207,6 +209,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
         id: item.Id,
         name: item.Name,
         price: item.Price,
+        originalPrice: item.OriginalPrice,
         quantity: item.Quantity,
         note: item.Note || '',
         selectedItems: item.SelectedItems?.map(selected => ({
@@ -354,6 +357,7 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
       Id: parseInt(item.id),
       Name: item.name,
       Price: item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0),
+      OriginalPrice: item.originalPrice || item.price || 0,
       Quantity: item.quantity || 1,
       Note: item.note || "",
       SelectedItems: (item.selectedItems || []).map(opt => ({
@@ -372,10 +376,7 @@ export const createCheckoutSession = async ({ items, customerInfo, orderMethod, 
     const totalAmount = items.reduce((sum, item) => {
       const itemPrice = item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0);
       const itemTotal = itemPrice * (item.quantity || 1);
-      const selectedItemsTotal = (item.selectedItems || []).reduce((selectedSum, selected) => {
-        return selectedSum + ((selected.price || 0) * (selected.quantity || 1));
-      }, 0);
-      return sum + itemTotal + selectedItemsTotal;
+      return sum + itemTotal;
     }, 0);
 
     // Format customer info for API
@@ -523,6 +524,7 @@ export const handlePaymentSuccess = async (id) => {
       CreatedAt: response.data.CreatedAt,
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
+      OriginalTotal: response.data.OriginalTotal,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
@@ -533,6 +535,7 @@ export const handlePaymentSuccess = async (id) => {
       orderMethod: response.data.OrderMethod,
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
+      originalTotal: response.data.OriginalTotal,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
@@ -550,21 +553,35 @@ export const handlePaymentSuccess = async (id) => {
       },
       
       // Order items
-      items: response.data.Items?.map(item => ({
-        id: item.Id,
-        name: item.Name,
-        price: item.Price,
-        quantity: item.Quantity,
-        note: item.Note || '',
-        selectedItems: item.SelectedItems?.map(selected => ({
-          id: selected.Id,
-          name: selected.Name,
-          price: selected.Price || 0,
-          quantity: selected.Quantity || 1,
-          groupName: selected.GroupName || '',
-          type: selected.Type || ''
-        })) || []
-      })) || []
+      items: response.data.Items?.map(item => {
+        // Parse SelectedItems if it's a string
+        let selectedItems = item.SelectedItems;
+        if (typeof selectedItems === 'string') {
+          try {
+            selectedItems = JSON.parse(selectedItems);
+          } catch (e) {
+            console.error('Error parsing SelectedItems:', e);
+            selectedItems = [];
+          }
+        }
+
+        return {
+          id: item.Id,
+          name: item.Name,
+          price: item.Price,
+          originalPrice: item.OriginalPrice,
+          quantity: item.Quantity,
+          note: item.Note || '',
+          selectedItems: selectedItems?.map(selected => ({
+            id: selected.id || selected.Id,
+            name: selected.name || selected.Name,
+            price: selected.price || selected.Price || 0,
+            quantity: selected.quantity || selected.Quantity || 1,
+            groupName: selected.groupName || selected.GroupName || '',
+            type: selected.type || selected.Type || ''
+          })) || []
+        };
+      }) || []
     };
 
     console.log('Mapped order details:', orderDetails);
