@@ -74,7 +74,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
 
     // Calculate original total using the original prices and options
     const originalTotal = items.reduce((sum, item) => {
-      const base = (item.originalPrice || item.price || 0) * (item.quantity || 1);
+      const base = item.originalPrice * (item.quantity || 1);
       const options = (item.selectedItems || []).reduce(
         (optSum, opt) => optSum + ((opt.price || 0) * (opt.quantity || 1)),
         0
@@ -84,7 +84,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
 
     // Calculate current total (which may include discount)
     const totalAmount = items.reduce((sum, item) => {
-      const itemPrice = item.discountedPrice !== undefined ? item.discountedPrice : (item.originalPrice || item.price || 0);
+      const itemPrice = item.discountedPrice !== undefined ? item.discountedPrice : item.originalPrice;
       const itemTotal = itemPrice * (item.quantity || 1);
       const selectedItemsTotal = (item.selectedItems || []).reduce((selectedSum, selected) => {
         return selectedSum + ((selected.price || 0) * (selected.quantity || 1));
