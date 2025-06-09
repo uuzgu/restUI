@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../colors/popupIngredientsColors.css';
 
 const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      setIsKeyboardVisible(true);
+    };
+
+    const handleBlur = () => {
+      setIsKeyboardVisible(false);
+    };
+
+    // Add event listeners to all input and textarea elements
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('focus', handleFocus);
+      input.addEventListener('blur', handleBlur);
+    });
+
+    return () => {
+      // Clean up event listeners
+      inputs.forEach(input => {
+        input.removeEventListener('focus', handleFocus);
+        input.removeEventListener('blur', handleBlur);
+      });
+    };
+  }, []);
+
   return (
-    <div className="ingredient-popup">
+    <div className={`ingredient-popup ${isKeyboardVisible ? 'keyboard-visible' : ''}`}>
       <div className="w-full max-w-[500px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg">
         {item.image_url && (
           <div className="relative w-full h-[300px] flex-shrink-0">
