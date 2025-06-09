@@ -357,12 +357,12 @@ body {
 /* Ingredient Selection Popup */
 .ingredient-popup {
   position: fixed;
-  top: 0;
+  top: var(--header-height); /* Position below main header */
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Align to top */
   justify-content: center;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.5);
@@ -370,12 +370,6 @@ body {
   overflow-y: auto;
   transform: translateZ(0);
   will-change: transform;
-  /* Ensure the popup takes up the full viewport height */
-  height: 100%;
-  min-height: -webkit-fill-available;
-  /* Android viewport height fix */
-  min-height: 100vh;
-  min-height: 100dvh;
 }
 
 .ingredient-popup > div {
@@ -383,14 +377,12 @@ body {
   max-width: 95vw;
   min-width: 0;
   border-radius: 1.5rem;
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
   background-color: var(--popup-container-bg);
-  /* Ensure the container doesn't exceed viewport height */
-  max-height: calc(100vh - 2rem);
-  /* Android dynamic viewport height */
-  max-height: calc(100dvh - 2rem);
+  /* Adjust height to account for header */
+  height: calc(100vh - var(--header-height));
+  max-height: calc(100vh - var(--header-height));
 }
 
 .popup-content {
@@ -405,89 +397,53 @@ body {
   scroll-behavior: smooth;
   /* Add padding to ensure content doesn't get hidden behind buttons */
   padding-bottom: 100px;
-  /* Prevent Android Chrome address bar from affecting layout */
-  padding-bottom: max(100px, env(safe-area-inset-bottom));
 }
 
 /* Mobile adjustments for popup */
 @media (max-width: 640px) {
   .ingredient-popup {
     padding: 0;
-    align-items: flex-end;
-    /* Ensure popup takes up less vertical space */
-    height: 85vh;
+    align-items: flex-start;
   }
 
   .ingredient-popup > div {
     max-width: 100%;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 0;
     margin: 0;
-    /* Make container shorter to account for browser UI */
-    height: 85vh;
-    max-height: 85vh;
-    /* Add bottom margin to account for phone navigation */
-    margin-bottom: env(safe-area-inset-bottom, 0px);
+    /* Adjust height to account for header and safe areas */
+    height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
+    max-height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
   }
 
   .ingredient-popup .popup-content {
-    /* Make content area shorter */
-    max-height: calc(85vh - 120px);
+    /* Adjust content height */
+    max-height: calc(100vh - var(--header-height) - 120px - env(safe-area-inset-bottom));
     padding: 1rem;
-    /* Add padding to ensure content doesn't get hidden */
     padding-bottom: 80px;
   }
 
   .ingredient-popup .sticky {
-    /* Make sticky footer more compact */
-    padding: 0.5rem;
+    padding: 0.75rem;
     /* Add safe area inset padding for devices with notches */
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     /* Ensure sticky footer is always visible */
     position: sticky;
     bottom: 0;
     background-color: var(--popup-container-bg);
     /* Add stronger shadow for better visibility */
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
-    /* Ensure buttons stay above keyboard */
-    z-index: 1001;
     /* Add border to make it more visible */
     border-top: 1px solid var(--popup-container-border);
   }
 
   /* When keyboard is visible */
-  .ingredient-popup.keyboard-visible {
-    height: 100vh;
-  }
-
-  .ingredient-popup.keyboard-visible > div {
-    height: 100vh;
-    max-height: 100vh;
-  }
-
   .ingredient-popup.keyboard-visible .popup-content {
-    max-height: calc(100vh - 120px);
-    padding-bottom: 100px;
+    padding-bottom: 120px;
   }
 
   .ingredient-popup.keyboard-visible .sticky {
-    position: fixed;
+    position: sticky;
     bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    /* Add extra padding when keyboard is visible */
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Make buttons more compact */
-  .ingredient-popup .sticky .flex {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  .ingredient-popup .sticky button {
-    height: 40px;
-    min-height: 40px;
   }
 }
 
