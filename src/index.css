@@ -411,33 +411,37 @@ body {
 
 /* Mobile adjustments for popup */
 @media (max-width: 640px) {
-  /* Force Vercel deployment */
   .ingredient-popup {
     padding: 0;
     align-items: flex-end;
+    /* Ensure popup takes up less vertical space */
+    height: 85vh;
   }
 
   .ingredient-popup > div {
     max-width: 100%;
     border-radius: 1rem 1rem 0 0;
     margin: 0;
-    /* Use dynamic viewport height for better mobile support */
-    height: calc(100dvh - env(safe-area-inset-bottom));
-    max-height: calc(100dvh - env(safe-area-inset-bottom));
+    /* Make container shorter to account for browser UI */
+    height: 85vh;
+    max-height: 85vh;
+    /* Add bottom margin to account for phone navigation */
+    margin-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .ingredient-popup .popup-content {
-    /* Adjust content height to account for mobile browser UI */
-    max-height: calc(100dvh - 180px - env(safe-area-inset-bottom));
+    /* Make content area shorter */
+    max-height: calc(85vh - 120px);
     padding: 1rem;
-    /* Add extra padding when keyboard is visible */
-    padding-bottom: 160px;
+    /* Add padding to ensure content doesn't get hidden */
+    padding-bottom: 80px;
   }
 
   .ingredient-popup .sticky {
-    padding: 0.75rem;
+    /* Make sticky footer more compact */
+    padding: 0.5rem;
     /* Add safe area inset padding for devices with notches */
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
     /* Ensure sticky footer is always visible */
     position: sticky;
     bottom: 0;
@@ -446,11 +450,23 @@ body {
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
     /* Ensure buttons stay above keyboard */
     z-index: 1001;
+    /* Add border to make it more visible */
+    border-top: 1px solid var(--popup-container-border);
   }
 
   /* When keyboard is visible */
+  .ingredient-popup.keyboard-visible {
+    height: 100vh;
+  }
+
+  .ingredient-popup.keyboard-visible > div {
+    height: 100vh;
+    max-height: 100vh;
+  }
+
   .ingredient-popup.keyboard-visible .popup-content {
-    padding-bottom: 200px;
+    max-height: calc(100vh - 120px);
+    padding-bottom: 100px;
   }
 
   .ingredient-popup.keyboard-visible .sticky {
@@ -459,6 +475,19 @@ body {
     left: 0;
     right: 0;
     width: 100%;
+    /* Add extra padding when keyboard is visible */
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Make buttons more compact */
+  .ingredient-popup .sticky .flex {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .ingredient-popup .sticky button {
+    height: 40px;
+    min-height: 40px;
   }
 }
 
