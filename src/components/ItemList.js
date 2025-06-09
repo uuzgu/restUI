@@ -565,6 +565,12 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
           newIngredients = prev.filter(ing => 
             !(ing.id === ingredient.id && ing.type === ingredient.type)
           );
+          // Remove from ingredientQuantities when deselected
+          setIngredientQuantities(prev => {
+            const newQuantities = { ...prev };
+            delete newQuantities[ingredient.id];
+            return newQuantities;
+          });
         } else {
           newIngredients = prev;
         }
@@ -585,23 +591,38 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
               price: Number(ingredient.price || 0),
               type: 'selection'
             }];
+            // Initialize quantity in ingredientQuantities
+            setIngredientQuantities(prev => ({
+              ...prev,
+              [ingredient.id]: 1
+            }));
           } else {
             newIngredients = [...prev, { 
               ...ingredient, 
               selected: true, 
-              quantity: ingredient.quantity || 1,
+              quantity: 1,
               price: Number(ingredient.price || 0),
               type: ingredient.type || 'selection'
             }];
+            // Initialize quantity in ingredientQuantities
+            setIngredientQuantities(prev => ({
+              ...prev,
+              [ingredient.id]: 1
+            }));
           }
         } else {
           newIngredients = [...prev, { 
             ...ingredient, 
             selected: true, 
-            quantity: ingredient.quantity || 1,
+            quantity: 1,
             price: Number(ingredient.price || 0),
             type: ingredient.type || 'selection'
           }];
+          // Initialize quantity in ingredientQuantities
+          setIngredientQuantities(prev => ({
+            ...prev,
+            [ingredient.id]: 1
+          }));
         }
       }
 
