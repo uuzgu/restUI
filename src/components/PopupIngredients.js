@@ -50,8 +50,8 @@ const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
 
         <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] p-4">
           <div className="flex flex-col w-full gap-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center border border-[var(--popup-button-border)] rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <div className="flex items-center border border-[var(--popup-button-border)] rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10 w-full sm:w-auto">
                 <button
                   onClick={() => {/* Your quantity decrease logic */}}
                   className="text-lg font-bold text-[var(--popup-button-text)] px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)]"
@@ -71,7 +71,7 @@ const PopupIngredients = ({ item, onClose, onAddToBasket }) => {
 
               <button
                 onClick={onAddToBasket}
-                className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-6 h-10 rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-[200px]"
+                className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-6 h-10 rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm w-full sm:w-auto sm:min-w-[200px]"
               >
                 <span className="text-sm flex items-center">
                   Add to Basket
