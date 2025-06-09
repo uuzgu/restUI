@@ -411,6 +411,7 @@ body {
 
 /* Mobile adjustments for popup */
 @media (max-width: 640px) {
+  /* Force Vercel deployment */
   .ingredient-popup {
     padding: 0;
     align-items: flex-end;
