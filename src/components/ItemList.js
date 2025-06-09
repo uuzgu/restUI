@@ -450,6 +450,18 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       ing => ing.groupId === group.id && ing.type === 'selection'
     );
     
+    // If no items are selected yet, show Free for the first threshold number of items
+    if (selectedItemsInGroup.length === 0) {
+      const optionIndex = group.options.findIndex(opt => opt.id === option.id);
+      if (optionIndex < group.threshold) {
+        return (
+          <span className="text-sm text-green-600 dark:text-green-400 min-w-[60px] text-right">
+            Free
+          </span>
+        );
+      }
+    }
+    
     // Count total items in the group
     const totalItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
     
