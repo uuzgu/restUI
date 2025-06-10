@@ -470,7 +470,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
   const validateCoupon = async (code) => {
     if (!code.trim()) {
-      setCouponError(translations[language].enterCouponCode);
+      setCouponError(translations[language].checkout.enterCouponCode);
       return;
     }
 
@@ -493,7 +493,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || translations[language].invalidCoupon);
+        throw new Error(data.message || translations[language].checkout.invalidCoupon);
       }
 
       // Apply coupon to basket
@@ -690,11 +690,11 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                 className="flex items-center text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
-                {translations[language].backToOrder || "Back to Order"}
+                {translations[language].checkout.backToOrder}
               </button>
             </div>
 
-            <h2>{translations[language].checkout.title || "Checkout"}</h2>
+            <h2>{translations[language].checkout.title}</h2>
 
             <form 
               className="checkout-form" 
@@ -836,7 +836,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
               {/* Order Summary */}
               <div className="form-section-group mb-6">
-                <h3 className="text-lg font-semibold mb-4">{translations[language].orderSummary}</h3>
+                <h3 className="text-lg font-semibold mb-4">{translations[language].checkout.orderSummary}</h3>
                 <div className="space-y-4">
                   {localBasket.map((item, index) => (
                     <div key={index} className="flex justify-between items-start">
@@ -928,7 +928,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         type="text"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder={appliedCoupon ? "Coupon already applied" : (translations[language].enterCouponCode || "Enter coupon code")}
+                        placeholder={appliedCoupon ? translations[language].checkout.couponApplied : translations[language].checkout.enterCouponCode}
                         className={`flex-1 h-[42px] px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white ${
                           appliedCoupon ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''
                         }`}
@@ -943,10 +943,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         {isValidatingCoupon ? (
                           <div className="flex items-center">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            {translations[language].validating || "Validating..."}
+                            {translations[language].checkout.validating}
                           </div>
                         ) : (
-                          translations[language].apply || "Apply"
+                          translations[language].checkout.apply
                         )}
                       </button>
                     </div>
@@ -965,7 +965,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                 </div>
               </div>
 
-              {/* Update minimum order value display with ref and highlight effect */}
+              {/* Minimum Order Value Warning */}
               {localOrderMethod === 'delivery' && formData.postalCode && minimumOrderValue > 0 && (
                 <div className="form-section-group mb-6" ref={minimumOrderRef}>
                   <div className={`p-4 rounded-lg transition-all duration-300 ${
@@ -978,10 +978,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         ? 'text-red-800 dark:text-red-200' 
                         : 'text-yellow-800 dark:text-yellow-200'
                     }`}>
-                      {translations[language].minimumOrderValue || "Minimum order value"}: €{minimumOrderValue.toFixed(2)}
+                      {translations[language].checkout.minimumOrderValue}: €{minimumOrderValue.toFixed(2)}
                       {calculateOriginalBasketTotal() < minimumOrderValue && (
                         <span className="block mt-1">
-                          {translations[language].minimumOrderNotMet || "Add more items to meet the minimum order value"}
+                          {translations[language].checkout.minimumOrderNotMet}
                         </span>
                       )}
                     </p>
@@ -991,7 +991,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
               {/* Payment Method Selection */}
               <div className="form-section-group mb-6">
-                <h3 className="text-lg font-semibold mb-4">{translations[language].paymentMethod || "Payment Method"}</h3>
+                <h3 className="text-lg font-semibold mb-4">{translations[language].checkout.paymentMethod}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label 
                     className={`relative block p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
@@ -1016,12 +1016,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                           </svg>
                         </div>
                         <div>
-                          <div className="font-medium">Credit Card</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">Pay with Stripe</div>
+                          <div className="font-medium">{translations[language].checkout.creditCard}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{translations[language].checkout.payWithStripe}</div>
                         </div>
                       </div>
                       <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                        Secure
+                        {translations[language].checkout.secure}
                       </div>
                     </div>
                   </label>
@@ -1049,8 +1049,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                           </svg>
                         </div>
                         <div>
-                          <div className="font-medium">Cash</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">Pay on delivery</div>
+                          <div className="font-medium">{translations[language].checkout.cash}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {localOrderMethod === 'delivery' 
+                              ? translations[language].checkout.payOnDelivery 
+                              : translations[language].checkout.payOnPickup}
+                          </div>
                         </div>
                       </div>
                       <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -1072,9 +1076,9 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       onChange={(e) => setTermsAccepted(e.target.checked)}
                     />
                     <span>
-                      {translations[language].agreeToTerms || "I agree to the "}
+                      {translations[language].checkout.agreeToTerms}
                       <a href="/terms" target="_blank" rel="noopener noreferrer">
-                        terms and conditions
+                        {translations[language].checkout.termsAndConditions}
                       </a>
                       .
                     </span>
@@ -1085,7 +1089,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
               {/* Order Total */}
               <div className="form-section-group">
                 <div className="flex justify-between items-center text-lg font-bold">
-                  <span>{translations[language].total}:</span>
+                  <span>{translations[language].checkout.total}:</span>
                   <div className="flex flex-col items-end">
                     {totalDiscount > 0 && (
                       <>
@@ -1113,10 +1117,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {translations[language].processing || "Processing..."}
+                    {translations[language].checkout.processing}
                   </div>
                 ) : (
-                  translations[language].completeOrder || "Complete Order"
+                  translations[language].completeOrder
                 )}
               </button>
             </form>

@@ -94,6 +94,19 @@ html {
     padding: 0.5rem;
 }
 
+/* Add media query for screens smaller than 641px */
+@media (max-width: 640px) {
+    .contact-fields .input-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .contact-fields .input-container {
+        width: 100%;
+        padding: 0.25rem;
+    }
+}
+
 /* Form Section Group */
 .form-section-group {
     width: 100%;

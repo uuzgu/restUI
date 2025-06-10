@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import emptyBasket from '../assets/emptyBasket.png';
 import { useDarkMode } from "../DarkModeContext";
 import '../Basket.css';
@@ -52,7 +53,7 @@ function groupOptionsByGroupNameWithOrder(selectedItems) {
   return groupMap;
 }
 
-const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index }) => {
+const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index, translations, language }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -109,7 +110,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index 
             onClick={toggleDetails}
             className="info-btn px-2 py-1 text-xs rounded-full border border-[var(--basket-container-border)] hover:bg-[var(--basket-button-hover)] transition-colors"
           >
-            {showDetails ? 'Hide Info' : 'Info'}
+            {showDetails ? translations[language].hideInfo : translations[language].info}
           </button>
         </div>
         <div className="basket-item-controls">
@@ -135,7 +136,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index 
             className="remove-btn"
             aria-label="Remove item"
           >
-            🗑️
+            <TrashIcon className="w-7 h-7" />
           </button>
         </div>
       </div>
@@ -146,7 +147,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index 
         <div className="mt-2 p-3 bg-[var(--basket-container-bg)] rounded-lg">
           {item.selectedItems && item.selectedItems.length > 0 && (
             <div className="mb-2">
-              <span className="text-sm font-medium text-[var(--basket-item-text)]">Selected Options:</span>
+              <span className="text-sm font-medium text-[var(--basket-item-text)]">{translations[language].selectedOptions}:</span>
               <div className="mt-1 space-y-1">
                 {/* Display groups in the order of item.groupOrder, then any remaining groups */}
                 {item.groupOrder && item.groupOrder.length > 0 && (() => {
@@ -201,7 +202,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index 
           )}
           {item.note && (
             <div>
-              <span className="text-sm font-medium text-[var(--basket-item-text)]">Note:</span>
+              <span className="text-sm font-medium text-[var(--basket-item-text)]">{translations[language].note}:</span>
               <p className="mt-1 text-sm text-[var(--basket-item-text)] italic">
                 {item.note}
               </p>
@@ -317,7 +318,7 @@ const Basket = ({
       {/* Basket Header */}
       {basket.length > 0 && (
         <h3 className="text-2xl font-bold text-[var(--basket-item-price)] mb-4">
-          Your Items:
+          {translations[language].yourBasket}
         </h3>
       )}
 
@@ -328,7 +329,7 @@ const Basket = ({
             <div className="empty-basket-icon">
               <FaceFrownIcon className="w-12 h-12" />
             </div>
-            <p>{translations[language].emptyBasket || "Your basket is empty"}</p>
+            <p>{translations[language].basketEmpty}</p>
           </div>
         ) : (
           <ul className="basket-items">
@@ -340,6 +341,8 @@ const Basket = ({
                 increaseQuantity={() => increaseQuantity(index)}
                 decreaseQuantity={() => decreaseQuantity(index)}
                 index={index}
+                translations={translations}
+                language={language}
               />
             ))}
           </ul>
@@ -362,13 +365,13 @@ const Basket = ({
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                {translations[language].basketUpdatedCouponRemoved || "Basket updated. Please apply your coupon again."}
+                {translations[language].basketUpdatedCouponRemoved}
               </p>
             </div>
 
             <div className="flex justify-between items-center">
               <span className="text-base font-semibold">
-                {translations[language].total || "Total"}:
+                {translations[language].total}:
               </span>
               <div className="text-right">
                 {totalDiscount > 0 && (
