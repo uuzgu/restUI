@@ -30,6 +30,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   const [categories, setCategories] = useState([]);
   const [hasMissingRequiredOptions, setHasMissingRequiredOptions] = useState(false);
   const [showRequiredOptionsWarning, setShowRequiredOptionsWarning] = useState(false);
+  const [attentionGroupId, setAttentionGroupId] = useState(null);
   const { darkMode } = useDarkMode();
   const navigate = useNavigate();
   const observer = useRef(null);
@@ -686,19 +687,42 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     });
   }, [selectedItem, popupItemQuantity, calculateTotalPrice]);
 
+  // Add effect to hide warning when selections change
+  useEffect(() => {
+    if (showRequiredOptionsWarning) {
+      setShowRequiredOptionsWarning(false);
+    }
+  }, [selectedIngredients]);
+
+  // Add effect to clear attention group after 2 seconds
+  useEffect(() => {
+    if (attentionGroupId) {
+      const timer = setTimeout(() => {
+        setAttentionGroupId(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [attentionGroupId]);
+
   // Memoize the handleAddToBasket function
   const handleAddToBasket = useCallback(() => {
     if (!selectedItem || !itemOptions) return;
 
-    // Check if all required options are selected
-    const missingRequired = itemOptions.selectionGroups
+    // Check if all required options are selected and find the first missing group
+    const missingRequiredGroup = itemOptions.selectionGroups
       .filter(group => group.isRequired)
-      .some(group => !group.options.some(option => 
+      .find(group => !group.options.some(option => 
         selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
       ));
 
-    if (missingRequired) {
+    if (missingRequiredGroup) {
       setShowRequiredOptionsWarning(true);
+      setAttentionGroupId(missingRequiredGroup.id);
+      // Find the element with the missing group and scroll to it
+      const groupElement = document.getElementById(`group-${missingRequiredGroup.id}`);
+      if (groupElement) {
+        groupElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
@@ -804,13 +828,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     document.body.classList.remove('popup-active');
     setBasketVisible(true);
   }, [selectedItem, itemOptions, popupItemQuantity, setBasketVisible, calculateTotalPrice, basket, selectedIngredients, itemNote]);
-
-  // Add effect to hide warning when selections change
-  useEffect(() => {
-    if (showRequiredOptionsWarning) {
-      setShowRequiredOptionsWarning(false);
-    }
-  }, [selectedIngredients]);
 
   // Create a memoized component for ingredient items to reduce re-renders
   const IngredientItem = useCallback(({ ingredient, isSelected, onToggle, onQuantityChange, quantity }) => {
@@ -1179,9 +1196,16 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                           options: group.options.map(o => o.name)
                         });
                         return (
-                          <div key={`${group.id}-${group.name}`} className="mb-6">
-                            <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)]">
+                          <div 
+                            key={group.id}
+                            id={`group-${group.id}`}
+                            className="mb-6"
+                          >
+                            <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)] flex items-center">
                               {group.name}
+                              {attentionGroupId === group.id && (
+                                <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                              )}
                               <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
                                 ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
                                 {group.type === 'MULTIPLE' && group.threshold > 0 && (

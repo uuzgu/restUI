@@ -44,44 +44,44 @@
 
 .dark {
   /* Container Colors */
-  --checkout-container-bg: #1a1a1a; /* Dark mode background color of the checkout page */
-  --checkout-container-border: #404040; /* Dark mode border color around the checkout container */
+  --checkout-container-bg: #111827; /* Deeper, richer dark background */
+  --checkout-container-border: #1f2937; /* Subtle border for depth */
 
   /* Form Colors */
-  --checkout-form-bg: #2d2d2d; /* Dark mode background color for form inputs */
-  --checkout-form-text: #e5e5e5; /* Dark mode text color for form labels and input text */
-  --checkout-form-border: #404040; /* Dark mode border color for form inputs */
-  --checkout-form-focus: #ef4444; /* Dark mode border color when form input is focused */
-  --checkout-form-error: #f87171; /* Dark mode text color for error messages */
-  --checkout-form-error-border: #f87171; /* Dark mode border color for inputs with errors */
-  --checkout-form-error-bg: rgba(248, 113, 113, 0.1); /* Dark mode background color for inputs with errors */
+  --checkout-form-bg: #1f2937; /* Slightly elevated background for inputs */
+  --checkout-form-text: #f9fafb; /* Crisp white text for maximum readability */
+  --checkout-form-border: #374151; /* Subtle border that doesn't compete */
+  --checkout-form-focus: #f43f5e; /* Vibrant focus state */
+  --checkout-form-error: #fb7185; /* Softer but still noticeable error color */
+  --checkout-form-error-border: #fb7185; /* Matching error border */
+  --checkout-form-error-bg: rgba(251, 113, 133, 0.08); /* Very subtle error background */
 
   /* Button Colors */
-  --checkout-button-primary-bg: #ef4444; /* Dark mode background color for the main submit button */
-  --checkout-button-primary-text: #ffffff; /* Dark mode text color for the main submit button */
-  --checkout-button-primary-hover: #dc2626; /* Dark mode hover color for the main button */
-  --checkout-button-primary-disabled-bg: #fca5a5; /* Dark mode background for disabled main button */
-  --checkout-button-primary-disabled-text: #ffffff; /* Dark mode text color for disabled main button */
-  --checkout-button-primary-border: #ffffff; /* Dark mode border color for the main submit button */
-  --checkout-button-primary-hover-border: #fecaca; /* Dark mode border color when hovering over the main button */
-  --checkout-button-primary-disabled-border: #fca5a5; /* Dark mode border color for disabled main button */
+  --checkout-button-primary-bg: #f43f5e; /* More vibrant primary button */
+  --checkout-button-primary-text: #ffffff; /* Pure white text */
+  --checkout-button-primary-hover: #e11d48; /* Deeper hover state */
+  --checkout-button-primary-disabled-bg: #374151; /* Neutral disabled state */
+  --checkout-button-primary-disabled-text: #9ca3af; /* Muted text */
+  --checkout-button-primary-border: #f43f5e; /* Matching border */
+  --checkout-button-primary-hover-border: #e11d48; /* Matching hover border */
+  --checkout-button-primary-disabled-border: #374151; /* Matching disabled border */
 
   /* Summary Colors */
-  --checkout-summary-bg: #2d2d2d; /* Dark mode background color for the order summary box */
-  --checkout-summary-border: #404040; /* Dark mode border color for the order summary box */
-  --checkout-summary-text: #e5e5e5; /* Dark mode text color for items in the summary */
-  --checkout-summary-total: #f87171; /* Dark mode text color for the total amount */
+  --checkout-summary-bg: #1f2937; /* Elevated background for summary */
+  --checkout-summary-border: #374151; /* Subtle border */
+  --checkout-summary-text: #f9fafb; /* Crisp white text */
+  --checkout-summary-total: #f43f5e; /* Vibrant total amount */
 
   /* Terms Colors */
-  --checkout-terms-text: #9ca3af; /* Dark mode text color for terms and conditions text */
-  --checkout-terms-link: #f87171; /* Dark mode text color for terms and conditions links */
-  --checkout-terms-link-hover: #ef4444; /* Dark mode hover color for terms links */
+  --checkout-terms-text: #e5e7eb; /* Softer white for secondary text */
+  --checkout-terms-link: #f43f5e; /* Matching primary color for links */
+  --checkout-terms-link-hover: #e11d48; /* Deeper hover state */
 
   /* Payment Method Colors */
-  --checkout-payment-bg: #2d2d2d; /* Dark mode background color for payment method options */
-  --checkout-payment-text: #e5e5e5; /* Dark mode text color for payment method options */
-  --checkout-payment-border: #404040; /* Dark mode border color for payment method options */
-  --checkout-payment-hover-border: #ef4444; /* Dark mode hover border color for payment options */
-  --checkout-payment-selected-bg: #3d1a1a; /* Dark mode background color for selected payment method */
-  --checkout-payment-selected-border: #ef4444; /* Dark mode border color for selected payment method */
+  --checkout-payment-bg: #1f2937; /* Elevated background */
+  --checkout-payment-text: #f9fafb; /* Crisp white text */
+  --checkout-payment-border: #374151; /* Subtle border */
+  --checkout-payment-hover-border: #f43f5e; /* Vibrant hover state */
+  --checkout-payment-selected-bg: #881337; /* Rich selected background */
+  --checkout-payment-selected-border: #f43f5e; /* Matching selected border */
 } 

@@ -66,30 +66,32 @@ html {
 /* Form Section for Inputs */
 .checkout-form .form-section {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
     box-sizing: border-box;
+    padding: 1rem;
 }
 
 /* Contact Fields Layout */
 .contact-fields {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     width: 100%;
 }
 
 .contact-fields .input-row {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     width: 100%;
 }
 
 .contact-fields .input-container {
     flex: 1;
     width: 50%;
+    padding: 0.5rem;
 }
 
 /* Form Section Group */
@@ -100,7 +102,10 @@ html {
     box-sizing: border-box;
     position: relative;
     will-change: height, opacity;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: var(--checkout-form-bg);
+    border-radius: 16px;
 }
 
 .form-section-group.hidden {
@@ -115,13 +120,20 @@ html {
 .checkout-form input,
 .checkout-form textarea,
 .checkout-form select {
-    padding: 1rem;
+    padding: 1.25rem;
     border: 1px solid var(--checkout-form-border);
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     background-color: var(--checkout-form-bg);
     color: var(--checkout-form-text);
+    transition: all 0.2s ease-in-out;
+}
+
+.checkout-form input:hover,
+.checkout-form textarea:hover,
+.checkout-form select:hover {
+    border-color: var(--checkout-form-focus);
 }
 
 .dark .checkout-form input,

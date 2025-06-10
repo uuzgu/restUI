@@ -866,7 +866,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                                         const group = groupMap[groupName];
                                         return (
                                           <div key={groupName} className="pl-2">
-                                            <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
                                             {group.options.map((opt, i, arr) => (
                                               <span key={i}>
                                                 {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
@@ -880,7 +880,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                                         .filter(([groupName]) => !renderedGroups.has(groupName))
                                         .map(([groupName, group]) => (
                                           <div key={groupName} className="pl-2">
-                                            <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
                                             {group.options.map((opt, i, arr) => (
                                               <span key={i}>
                                                 {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
@@ -890,20 +890,6 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                                         ))
                                     ];
                                   })()}
-                                  {/* Fallback if no groupOrder: show all groups sorted by displayOrder then name */}
-                                  {(!item.groupOrder || item.groupOrder.length === 0) && Object.values(groupOptionsByGroupNameWithOrder(item.selectedItems)).sort((a, b) => {
-                                    if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder;
-                                    return a.name.localeCompare(b.name);
-                                  }).map(group => (
-                                    <div key={group.name} className="pl-2">
-                                      <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
-                                      {group.options.map((opt, i, arr) => (
-                                        <span key={i}>
-                                          {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  ))}
                                 </div>
                               </div>
                             )}
@@ -1073,15 +1059,6 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                     </div>
                   </label>
                 </div>
-              </div>
-
-              {/* Basket Summary */}
-              <div className="basket-summary-container no-shadow">
-                <BasketSummary
-                  basket={localBasket}
-                  translations={translations}
-                  language={language}
-                />
               </div>
 
               {/* Terms and Conditions */}
