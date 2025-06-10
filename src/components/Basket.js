@@ -352,14 +352,14 @@ const Basket = ({
           <div className="basket-total">
             {/* Coupon Warning Message */}
             <div 
-              className={`mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg transition-all duration-500 ease-in-out transform ${
+              className={`mb-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg transition-all duration-500 ease-in-out transform ${
                 showCouponWarning 
                   ? 'opacity-100 translate-y-0' 
                   : 'opacity-0 -translate-y-4 h-0 overflow-hidden'
               }`}
             >
-              <p className="text-yellow-700 dark:text-yellow-300 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <p className="text-yellow-700 dark:text-yellow-300 flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
                 {translations[language].basketUpdatedCouponRemoved || "Basket updated. Please apply your coupon again."}
@@ -367,22 +367,22 @@ const Basket = ({
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-lg font-semibold">
+              <span className="text-base font-semibold">
                 {translations[language].total || "Total"}:
               </span>
               <div className="text-right">
                 {totalDiscount > 0 && (
                   <>
-                    <span className="text-sm text-gray-500 line-through block">
+                    <span className="text-xs text-gray-500 line-through block">
                       €{totalOriginalPrice.toFixed(2)}
                     </span>
-                    <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                    <span className="text-base font-bold text-green-600 dark:text-green-400">
                       €{subtotal.toFixed(2)}
                     </span>
                   </>
                 )}
                 {totalDiscount === 0 && (
-                  <span className="text-lg font-bold">
+                  <span className="text-base font-bold">
                     €{subtotal.toFixed(2)}
                   </span>
                 )}
@@ -391,7 +391,7 @@ const Basket = ({
           </div>
           <button
             onClick={handleProceedToCheckout}
-            className={`mt-6 w-full py-4 rounded-md text-lg font-bold transition ${
+            className={`w-full py-2 rounded-md text-base font-bold transition ${
               basket.length === 0
                 ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                 : "bg-red-500 text-white hover:bg-green-600"
