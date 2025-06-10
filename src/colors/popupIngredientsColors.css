@@ -161,4 +161,18 @@
   --popup-close-button-text: #d1d5db;
   --popup-close-button-border: #374151;
   --popup-close-button-hover-text: #f87171;
+}
+
+/* Popup Container Responsive Styles */
+.popup-container {
+  position: fixed;
+  top: 110px;
+  max-height: calc(100vh - 120px - 24px);
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .popup-container {
+    top: 80px;
+  }
 } 

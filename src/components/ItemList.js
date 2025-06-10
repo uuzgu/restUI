@@ -1125,13 +1125,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       {showPopup && selectedItem && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-30 overflow-hidden">
           <div
-            className="w-full max-w-[95vw] sm:max-w-[95vw] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg"
-            style={{
-              position: 'fixed',
-              top: '110px', // adjust for header height
-              maxHeight: 'calc(100vh - 120px - 24px)', // header + some padding
-              overflow: 'hidden'
-            }}
+            className="w-full max-w-[95vw] sm:max-w-[95vw] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg popup-container"
           >
             <div className="rounded-[30px] text-[var(--popup-header-text)] w-full flex flex-col relative h-full">
               <div className="overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 180px)' }}>
@@ -1167,7 +1161,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                 </div>
 
                 <div className="px-2 py-2 sm:px-6 sm:py-4 bg-[var(--popup-content-bg)] text-[var(--popup-content-text)]">
-                  <div className="p-2 sm:p-6">
+                  <div className="p-2 sm:p-6 mb-4">
                     <h2 className="text-2xl font-bold text-[var(--popup-header-text)] mb-2 text-left">
                       {selectedItem.name || 'Unnamed Item'}
                     </h2>
