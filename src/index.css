@@ -42,7 +42,8 @@
   --input-error-border: #ef4444;
   
   /* New variables */
-  --header-height: 96px;
+  --header-height: 64px;
+  --popup-scale: 1;
 }
 
 .dark {
@@ -357,17 +358,13 @@ body {
 /* Ingredient Selection Popup */
 .ingredient-popup {
   position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 1rem;
-  overflow-y: auto;
 }
 
 .popup-container {
@@ -378,9 +375,11 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--popup-container-bg);
-  height: calc(100vh - var(--header-height));
-  max-height: calc(100vh - var(--header-height));
+  height: auto;
+  max-height: 90vh;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  overflow: hidden;
 }
 
 .popup-content {
@@ -388,9 +387,85 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  padding-bottom: 100px;
+  padding: clamp(12px, calc(16px * var(--popup-scale)), 16px);
+  font-size: clamp(14px, calc(16px * var(--popup-scale)), 16px);
+  height: auto;
+  max-height: calc(90vh - 180px); /* Account for header and footer */
 }
 
+/* Height-based adjustments */
+@media (max-height: 800px) {
+  :root {
+    --popup-scale: 0.9;
+  }
+  
+  .popup-container {
+    max-height: 85vh;
+  }
+  
+  .popup-content {
+    max-height: calc(85vh - 180px);
+  }
+}
+
+@media (max-height: 700px) {
+  :root {
+    --popup-scale: 0.8;
+  }
+  
+  .popup-container {
+    max-height: 80vh;
+  }
+  
+  .popup-content {
+    max-height: calc(80vh - 180px);
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --popup-scale: 0.7;
+  }
+  
+  .popup-container {
+    max-height: 75vh;
+  }
+  
+  .popup-content {
+    max-height: calc(75vh - 180px);
+  }
+}
+
+/* Mobile adjustments for popup */
+@media (max-width: 640px) {
+  .ingredient-popup {
+    padding: 0.5rem;
+  }
+
+  .popup-container {
+    max-width: 100%;
+    border-radius: 1rem;
+    margin: 0.5rem;
+  }
+
+  .popup-content {
+    padding: 0.75rem;
+    padding-bottom: 80px;
+  }
+}
+
+/* Tablet and larger screens */
+@media (min-width: 641px) {
+  .popup-container {
+    max-height: min(calc(100vh - 2rem), 800px);
+  }
+
+  .popup-content {
+    max-height: calc(100% - 300px - 80px); /* Subtract image height and sticky footer height */
+  }
+}
+
+/* Sticky footer */
 .sticky {
   position: sticky;
   bottom: 0;
@@ -403,34 +478,26 @@ body {
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile adjustments for popup */
-@media (max-width: 640px) {
-  .ingredient-popup {
-    padding: 0;
-  }
+/* Optimize scrolling */
+.popup-content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  transform: translateZ(0);
+  will-change: transform;
+}
 
-  .popup-container {
-    max-width: 100%;
-    border-radius: 0;
-    height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
-    max-height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
-  }
+.popup-content::-webkit-scrollbar {
+  width: 6px;
+}
 
-  .popup-content {
-    max-height: calc(100vh - var(--header-height) - 120px - env(safe-area-inset-bottom));
-    padding: 1rem;
-    padding-bottom: 80px;
-  }
+.popup-content::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  .sticky {
-    padding: 0.75rem;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  }
-
-  /* When keyboard is visible */
-  .ingredient-popup.keyboard-visible .popup-content {
-    padding-bottom: 120px;
-  }
+.popup-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 
 /* Optimize animations */
@@ -447,15 +514,6 @@ body {
 
 .ingredient-popup {
   animation: fadeIn 0.2s ease-out;
-}
-
-/* Optimize scrolling */
-.popup-content {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 /* Optimize button hover states */
@@ -509,7 +567,7 @@ body {
   position: relative;
   width: 100%;
   height: 200px;
-  @apply sm:h-[350px];
+  @apply sm:h-[300px];
   overflow: hidden;
   padding: 0;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -769,4 +827,24 @@ body {
 
 .ingredient-item:hover input[type="checkbox"] {
   border-color: var(--popup-checkbox-hover-border);
+}
+
+/* Popup content scaling */
+.popup-content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.popup-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.popup-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }

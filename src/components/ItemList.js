@@ -968,6 +968,25 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   };
 
   useEffect(() => {
+    if (showPopup) {
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+    return () => {
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [showPopup]);
+
+  useEffect(() => {
     if (!showPopup) {
       document.body.classList.remove('popup-active');
     }
@@ -1087,213 +1106,218 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
         />
       )}
       {showPopup && selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-30">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-30 overflow-hidden">
           <div
             className="w-full max-w-[95vw] sm:max-w-[95vw] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg"
             style={{
-              position: 'relative',
+              position: 'fixed',
               top: '110px', // adjust for header height
               maxHeight: 'calc(100vh - 120px - 24px)', // header + some padding
-              overflowY: 'auto',
+              overflow: 'hidden'
             }}
           >
-            <div className="rounded-[30px] text-[var(--popup-header-text)] w-full overflow-hidden flex flex-col relative">
-              {/* Always show close button in the popup */}
-              <button
-                onClick={() => {
-                  setShowPopup(false);
-                  setShowRequiredOptionsWarning(false);
-                  document.body.classList.remove('popup-active');
-                }}
-                className="absolute top-2 right-2 sm:top-4 sm:right-4 w-11 h-11 min-w-[44px] min-h-[44px] bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] rounded-full border border-[var(--popup-close-button-border)] flex items-center justify-center shadow-md z-10"
-                style={{ zIndex: 100 }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-              {selectedItem.image_url && (
-                <div className="relative w-full h-[180px] sm:h-[220px] md:h-[300px] flex-shrink-0 rounded-[30px] overflow-hidden">
-                  <img
-                    src={selectedItem.image_url}
-                    alt={selectedItem.name || 'Item'}
-                    className="w-full h-full object-cover"
-                  />
-                  {showRequiredOptionsWarning && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 text-white py-2 px-4 text-center animate-fade-in">
-                      Please select required options
+            <div className="rounded-[30px] text-[var(--popup-header-text)] w-full flex flex-col relative h-full">
+              <div className="overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+                {/* Close button and image in scrollable area */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowPopup(false);
+                      setShowRequiredOptionsWarning(false);
+                      document.body.classList.remove('popup-active');
+                    }}
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-11 h-11 min-w-[44px] min-h-[44px] bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] rounded-full border border-[var(--popup-close-button-border)] flex items-center justify-center shadow-md z-10"
+                    style={{ zIndex: 100 }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {selectedItem.image_url && (
+                    <div className="relative w-full h-[180px] sm:h-[220px] md:h-[300px] flex-shrink-0 rounded-t-[30px] overflow-hidden">
+                      <img
+                        src={selectedItem.image_url}
+                        alt={selectedItem.name || 'Item'}
+                        className="w-full h-full object-cover"
+                      />
+                      {showRequiredOptionsWarning && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 text-white py-2 px-4 text-center animate-fade-in">
+                          Please select required options
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              )}
-              <div className="popup-content overflow-y-auto flex-1 px-2 py-2 sm:px-6 sm:py-4 bg-[var(--popup-content-bg)] text-[var(--popup-content-text)]" style={{ maxHeight: 'calc(90vh - 220px)' }}>
-                <div className="p-2 sm:p-6">
-                  <h2 className="text-2xl font-bold text-[var(--popup-header-text)] mb-2 text-left">
-                    {selectedItem.name || 'Unnamed Item'}
-                  </h2>
-                  <div className="flex items-center mb-1">
-                    <span className="text-lg font-bold text-red-500" style={{ textAlign: 'left' }}>
-                      €{selectedItem.price}
-                    </span>
-                  </div>
-                  <p className="text-[var(--popup-content-text)] mb-4 text-left">
-                    {selectedItem.description || 'No description available'}
-                  </p>
 
-                  <hr className="border-[var(--popup-content-border)] mb-4" />
+                <div className="px-2 py-2 sm:px-6 sm:py-4 bg-[var(--popup-content-bg)] text-[var(--popup-content-text)]">
+                  <div className="p-2 sm:p-6">
+                    <h2 className="text-2xl font-bold text-[var(--popup-header-text)] mb-2 text-left">
+                      {selectedItem.name || 'Unnamed Item'}
+                    </h2>
+                    <div className="flex items-center mb-1">
+                      <span className="text-lg font-bold text-red-500" style={{ textAlign: 'left' }}>
+                        €{selectedItem.price}
+                      </span>
+                    </div>
+                    <p className="text-[var(--popup-content-text)] mb-4 text-left">
+                      {selectedItem.description || 'No description available'}
+                    </p>
 
-                  <div className="ingredient-list">
-                    <h3 className="text-lg font-semibold mb-2 text-[var(--popup-header-text)]">
-                      {translations[language].customizeOrder}
-                    </h3>
+                    <hr className="border-[var(--popup-content-border)] mb-4" />
 
-                    {/* Unified Selection Groups Section */}
-                    {filteredSelectionGroups.map((group) => {
-                      console.log('Rendering group:', {
-                        name: group.name,
-                        threshold: group.threshold,
-                        type: group.type,
-                        options: group.options.map(o => o.name)
-                      });
-                      return (
-                        <div key={`${group.id}-${group.name}`} className="mb-6">
-                          <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)]">
-                            {group.name}
-                            <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
-                              ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
-                              {group.type === 'MULTIPLE' && group.threshold > 0 && (
-                                <span className="text-[var(--popup-content-text)] ml-2">
-                                  (First {group.threshold} {group.name.toLowerCase().endsWith('s') ? group.name.toLowerCase() : group.name.toLowerCase() + 's'} are free)
-                                </span>
-                              )}
-                            </span>
-                          </h4>
-                          <div className="space-y-2">
-                            {group.options
-                              .sort((a, b) => a.displayOrder - b.displayOrder)
-                              .map((option) => (
-                                <div 
-                                  key={`${option.id}-${option.name}`} 
-                                  className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
-                                    ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
-                                      ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
-                                      : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
-                                  `}
-                                  style={{ minHeight: '56px', marginBottom: '8px' }}
-                                  onClick={() => toggleIngredient({
-                                    ...option,
-                                    type: 'selection',
-                                    groupId: group.id
-                                  })}
-                                >
-                                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                                    {group.type === 'MULTIPLE' ? (
-                                      <input
-                                        type="checkbox"
-                                        checked={selectedIngredients.some(
-                                          ing => ing.id === option.id && ing.type === 'selection'
-                                        )}
-                                        onChange={(e) => {
-                                          e.stopPropagation();
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'selection',
-                                            groupId: group.id
-                                          });
-                                        }}
-                                        className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                      />
-                                    ) : (
-                                      <input
-                                        type="radio"
-                                        name={`group-${group.id}`}
-                                        checked={selectedIngredients.some(
-                                          ing => ing.id === option.id && ing.type === 'selection'
-                                        )}
-                                        onChange={(e) => {
-                                          e.stopPropagation();
-                                          toggleIngredient({
-                                            ...option,
-                                            type: 'selection',
-                                            groupId: group.id
-                                          });
-                                        }}
-                                        className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                      />
-                                    )}
-                                    <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 flex-shrink-0">
-                                    {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
-                                      ing => ing.id === option.id && ing.type === 'selection'
-                                    ) && (
-                                      <div 
-                                        className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
-                                        onClick={(e) => e.stopPropagation()}
-                                      >
-                                        <button
-                                          onClick={(e) => {
+                    <div className="ingredient-list">
+                      <h3 className="text-lg font-semibold mb-2 text-[var(--popup-header-text)]">
+                        {translations[language].customizeOrder}
+                      </h3>
+
+                      {/* Unified Selection Groups Section */}
+                      {filteredSelectionGroups.map((group) => {
+                        console.log('Rendering group:', {
+                          name: group.name,
+                          threshold: group.threshold,
+                          type: group.type,
+                          options: group.options.map(o => o.name)
+                        });
+                        return (
+                          <div key={`${group.id}-${group.name}`} className="mb-6">
+                            <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)]">
+                              {group.name}
+                              <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
+                                ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
+                                {group.type === 'MULTIPLE' && group.threshold > 0 && (
+                                  <span className="text-[var(--popup-content-text)] ml-2">
+                                    (First {group.threshold} {group.name.toLowerCase().endsWith('s') ? group.name.toLowerCase() : group.name.toLowerCase() + 's'} are free)
+                                  </span>
+                                )}
+                              </span>
+                            </h4>
+                            <div className="space-y-2">
+                              {group.options
+                                .sort((a, b) => a.displayOrder - b.displayOrder)
+                                .map((option) => (
+                                  <div 
+                                    key={`${option.id}-${option.name}`} 
+                                    className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
+                                      ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
+                                        ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
+                                        : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
+                                    `}
+                                    style={{ minHeight: '56px', marginBottom: '8px' }}
+                                    onClick={() => toggleIngredient({
+                                      ...option,
+                                      type: 'selection',
+                                      groupId: group.id
+                                    })}
+                                  >
+                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                      {group.type === 'MULTIPLE' ? (
+                                        <input
+                                          type="checkbox"
+                                          checked={selectedIngredients.some(
+                                            ing => ing.id === option.id && ing.type === 'selection'
+                                          )}
+                                          onChange={(e) => {
                                             e.stopPropagation();
-                                            updateIngredientQuantity({
+                                            toggleIngredient({
                                               ...option,
                                               type: 'selection',
                                               groupId: group.id
-                                            }, -1);
+                                            });
                                           }}
-                                          className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                        >
-                                          -
-                                        </button>
-                                        <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
-                                          {ingredientQuantities[option.id] || 0}
-                                        </span>
-                                        <button
-                                          onClick={(e) => {
+                                          className="w-4 h-4 accent-red-500 flex-shrink-0"
+                                        />
+                                      ) : (
+                                        <input
+                                          type="radio"
+                                          name={`group-${group.id}`}
+                                          checked={selectedIngredients.some(
+                                            ing => ing.id === option.id && ing.type === 'selection'
+                                          )}
+                                          onChange={(e) => {
                                             e.stopPropagation();
-                                            updateIngredientQuantity({
+                                            toggleIngredient({
                                               ...option,
                                               type: 'selection',
                                               groupId: group.id
-                                            }, 1);
+                                            });
                                           }}
-                                          className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          className="w-4 h-4 accent-red-500 flex-shrink-0"
+                                        />
+                                      )}
+                                      <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                      {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
+                                        ing => ing.id === option.id && ing.type === 'selection'
+                                      ) && (
+                                        <div 
+                                          className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
+                                          onClick={(e) => e.stopPropagation()}
                                         >
-                                          +
-                                        </button>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              updateIngredientQuantity({
+                                                ...option,
+                                                type: 'selection',
+                                                groupId: group.id
+                                              }, -1);
+                                            }}
+                                            className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          >
+                                            -
+                                          </button>
+                                          <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
+                                            {ingredientQuantities[option.id] || 0}
+                                          </span>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              updateIngredientQuantity({
+                                                ...option,
+                                                type: 'selection',
+                                                groupId: group.id
+                                              }, 1);
+                                            }}
+                                            className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          >
+                                            +
+                                          </button>
+                                        </div>
+                                      )}
+                                      <div className="min-w-[60px] text-right">
+                                        {renderOptionPrice(option, group)}
                                       </div>
-                                    )}
-                                    <div className="min-w-[60px] text-right">
-                                      {renderOptionPrice(option, group)}
                                     </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
 
-                  {/* Add Note Field */}
-                  <div className="mt-6 mb-4">
-                    <label htmlFor="itemNote" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {translations[language].specialInstructions || "Special Instructions"}
-                    </label>
-                    <textarea
-                      id="itemNote"
-                      value={itemNote}
-                      onChange={(e) => setItemNote(e.target.value)}
-                      placeholder={translations[language].addNote || "Add any special instructions or notes..."}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
-                      rows="2"
-                    />
+                    {/* Add Note Field */}
+                    <div className="mt-6 mb-4">
+                      <label htmlFor="itemNote" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {translations[language].specialInstructions || "Special Instructions"}
+                      </label>
+                      <textarea
+                        id="itemNote"
+                        value={itemNote}
+                        onChange={(e) => setItemNote(e.target.value)}
+                        placeholder={translations[language].addNote || "Add any special instructions or notes..."}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                        rows="2"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] w-full min-w-0">
-                <div className="flex flex-col w-full px-2 sm:px-6 py-4 gap-4">
-                  <div className="flex items-center justify-between gap-4 w-full min-w-0">
+                <div className="flex w-full px-2 sm:px-6">
+                  <div className="flex items-center justify-between w-full">
                     <div className="flex items-center border border-[var(--popup-button-border)] rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10">
                       <button
                         onClick={() => updatePopupItemQuantity(-1)}
@@ -1314,7 +1338,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
                     <button
                       onClick={handleAddToBasket}
-                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-6 h-10 rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 w-full sm:w-auto"
+                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-6 h-10 rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 w-full sm:w-auto ml-2"
                       style={{ maxWidth: '320px' }}
                     >
                       <span className="text-sm flex items-center">
