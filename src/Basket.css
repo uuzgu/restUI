@@ -3,9 +3,7 @@
     right: 1rem;
     width: 100%;
     max-width: 28rem;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    overflow: hidden;
+    height: calc(100vh - 96px);
     display: flex;
     flex-direction: column;
     z-index: 50;
@@ -29,6 +27,20 @@
     box-shadow: var(--basket-container-shadow);
 }
 
+/* Basket header styles */
+.basket-header {
+    padding: 0.75rem 1.5rem 0 1.5rem;
+    border-bottom: 1px solid var(--basket-container-border);
+    margin-bottom: 0.5rem;
+}
+
+.basket-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--basket-item-price);
+    margin-bottom: 0.5rem;
+}
+
 /* Mobile styles */
 @media (max-width: 800px) {
     .basket-panel {
@@ -46,55 +58,39 @@
         border: 1px solid var(--basket-container-border) !important;
         background: var(--basket-container-bg) !important;
         box-shadow: 0 -4px 24px rgba(0,0,0,0.18) !important;
-        padding: 1rem 0.5rem !important;
+        padding: 0 !important;
         margin: 0 !important;
-        overflow: visible !important;
+        overflow: hidden !important;
         max-width: 100vw !important;
     }
-    .order-toggle {
-        margin: 1rem 0 0.5rem 0;
-        padding: 0 0.5rem;
-    }
+
     .basket-content {
-        flex: 1 1 0;
-        min-height: 0;
+        height: auto;
+        max-height: calc(100vh - 300px);
+        padding: 1rem;
         overflow-y: auto;
-        margin-bottom: 0;
-        padding-bottom: 0;
     }
+
     .basket-footer {
+        padding: 0.75rem 1rem;
+        background: var(--basket-container-bg);
+        border-top: 1px solid var(--basket-container-border);
         position: sticky;
         bottom: 0;
-        left: 0;
-        right: 0;
-        background: var(--basket-container-bg);
-        padding: 0.25rem;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-        z-index: 10;
-        border-top: 1px solid var(--basket-container-border);
-        margin-top: 0;
-    }
-    .basket-footer button {
         width: 100%;
-        margin: 0;
-        padding: 0.5rem;
     }
-    .basket-total {
-        padding: 0.25rem;
-        background-color: var(--basket-container-bg);
-        border-top: none;
-        border-radius: 0 0 1rem 1rem;
-        margin-bottom: 0.25rem;
-    }
-    .basket-panel > button {
-        margin: 0 1rem 1rem 1rem;
-    }
-    .basket-items {
-        gap: 0.5rem;
-        padding-bottom: 0;
-    }
+
     .checkout-button {
-        margin-top: 0 !important;
+        margin: 0 !important;
+        padding: 0.75rem !important;
+    }
+
+    .basket-item {
+        padding: 0.75rem 1rem;
+    }
+
+    .basket-header {
+        padding: 1rem 1rem 0 1rem;
     }
 }
 
@@ -140,14 +136,13 @@
 
 /* Basket content styles */
 .basket-content {
-    flex: 1;
+    height: calc(100vh - 400px);
     overflow-y: auto;
-    padding-right: 0.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
     position: relative;
     border: none !important;
     min-height: 200px;
+    max-height: 500px;
 }
 
 /* Add styles for empty basket state */
@@ -158,33 +153,32 @@
     justify-content: center;
 }
 
+.basket-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0.5rem;
+}
+
 .basket-item {
     display: flex;
     flex-direction: column;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     transition: transform 0.2s ease, background-color 0.2s ease;
     background-color: var(--basket-item-bg);
     border: 1px solid var(--basket-item-border);
+    border-bottom: 1px solid var(--basket-item-border) !important;
     color: var(--basket-item-text);
     position: relative;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Remove margin-bottom for the last item since we're using gap in the parent */
 .basket-item:last-child {
     margin-bottom: 0;
-}
-
-/* Add a pseudo-element for the bottom border of the last item */
-.basket-item:last-child::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: var(--basket-item-border);
-    border-radius: 0 0 0.5rem 0.5rem;
 }
 
 .basket-item-header {
@@ -404,15 +398,6 @@
     color: var(--text-primary);
 }
 
-.basket-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding-bottom: 0.75rem;
-    position: relative;
-    margin-bottom: 50px;
-}
-
 .item-details h3 {
     font-size: 1.125rem;
     font-weight: 500;
@@ -540,7 +525,7 @@
 .order-toggle {
     display: flex;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin: 1.5rem 0 2rem 0;
     width: 100%;
     box-sizing: border-box;
     border: none !important;
@@ -600,5 +585,16 @@
 
 .toggle-option:hover:not(.active) {
     background-color: var(--basket-button-hover);
+}
+
+.basket-footer {
+    background: var(--basket-container-bg);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--basket-container-border);
+    z-index: 10;
+}
+
+.basket-total {
+    margin-top: -0.5rem;
 }
   

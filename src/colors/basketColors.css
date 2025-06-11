@@ -1,59 +1,49 @@
 :root {
   /* Basket Container Colors */
-  --basket-container-bg-light: #ffffff;
-  --basket-container-bg-dark: #1f2937;
-  --basket-container-border-light: #e5e7eb;
-  --basket-container-border-dark: #374151;
-  --basket-container-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --basket-container-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --basket-container-bg-light: #ffffff;      /* Main basket background */
+  --basket-container-bg-dark: #1f2937;       /* Main basket background in dark mode */
+  --basket-container-border-light: #e5e7eb;  /* Border color for basket sections */
+  --basket-container-border-dark: #374151;   /* Border color for basket sections in dark mode */
+  --basket-container-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);  /* Subtle shadow for basket container */
+  --basket-container-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);   /* Enhanced shadow for dark mode visibility */
 
   /* Basket Item Colors */
-  --basket-item-bg-light: #ffffff;
-  --basket-item-bg-dark: #1f2937;
-  --basket-item-border-light: #e5e7eb;
-  --basket-item-border-dark: #374151;
-  --basket-item-text-light: #1f2937;
-  --basket-item-text-dark: #f3f4f6;
-  --basket-item-price-light: #dc2626;
-  --basket-item-price-dark: #f87171;
+  --basket-item-bg-light: #ffffff;           /* Individual item background */
+  --basket-item-bg-dark: #1f2937;            /* Individual item background in dark mode */
+  --basket-item-border-light: #dfe3e8;       /* Border between basket items - darker for better visibility */
+  --basket-item-border-dark: #4b5563;        /* Border between basket items in dark mode - lighter for better visibility */
+  --basket-item-text-light: #1f2937;         /* Text color for item names and descriptions */
+  --basket-item-text-dark: #f3f4f6;          /* Text color for item names and descriptions in dark mode */
+  --basket-item-price-light: #dc2626;        /* Price text color */
+  --basket-item-price-dark: #f87171;         /* Price text color in dark mode */
 
   /* Basket Button Colors */
-  --basket-button-bg-light: #f3f4f6;
-  --basket-button-bg-dark: #374151;
-  --basket-button-hover-light: #e5e7eb;
-  --basket-button-hover-dark: #4b5563;
-  --basket-button-text-light: #1f2937;
-  --basket-button-text-dark: #f3f4f6;
-
-  /* Basket Total Section */
-  --basket-total-bg-light: #ffffff;
-  --basket-total-bg-dark: #1f2937;
-  --basket-total-border-light: #e5e7eb;
-  --basket-total-border-dark: #374151;
-  --basket-total-text-light: #1f2937;
-  --basket-total-text-dark: #f3f4f6;
-  --basket-total-price-light: #dc2626;
-  --basket-total-price-dark: #f87171;
-
-  /* Basket Warning Colors */
-  --basket-warning-bg-light: #fef2f2;
-  --basket-warning-bg-dark: #7f1d1d;
-  --basket-warning-text-light: #dc2626;
-  --basket-warning-text-dark: #fecaca;
-  --basket-warning-border-light: #fecaca;
-  --basket-warning-border-dark: #ef4444;
+  --basket-button-bg-light: #f3f4f6;         /* Background for quantity and action buttons */
+  --basket-button-bg-dark: #374151;          /* Background for quantity and action buttons in dark mode */
+  --basket-button-hover-light: #e5e7eb;      /* Hover state for buttons */
+  --basket-button-hover-dark: #4b5563;       /* Hover state for buttons in dark mode */
+  --basket-button-text-light: #1f2937;       /* Text color for buttons */
+  --basket-button-text-dark: #f3f4f6;        /* Text color for buttons in dark mode */
 
   /* Checkout Button Colors */
-  --basket-checkout-bg-light: #dc2626;
-  --basket-checkout-bg-dark: #ef4444;
-  --basket-checkout-text-light: #ffffff;
-  --basket-checkout-text-dark: #ffffff;
-  --basket-checkout-hover-light: #b91c1c;
-  --basket-checkout-hover-dark: #dc2626;
-  --basket-checkout-disabled-bg-light: #d1d5db;
-  --basket-checkout-disabled-bg-dark: #4b5563;
-  --basket-checkout-disabled-text-light: #6b7280;
-  --basket-checkout-disabled-text-dark: #9ca3af;
+  --basket-checkout-bg-light: #ef4444;       /* Checkout button background */
+  --basket-checkout-bg-dark: #ef4444;        /* Checkout button background in dark mode */
+  --basket-checkout-text-light: #ffffff;     /* Checkout button text */
+  --basket-checkout-text-dark: #ffffff;      /* Checkout button text in dark mode */
+  --basket-checkout-hover-light: #dc2626;    /* Checkout button hover state */
+  --basket-checkout-hover-dark: #dc2626;     /* Checkout button hover state in dark mode */
+  --basket-checkout-disabled-bg-light: #d1d5db;  /* Disabled checkout button background */
+  --basket-checkout-disabled-bg-dark: #4b5563;   /* Disabled checkout button background in dark mode */
+  --basket-checkout-disabled-text-light: #6b7280;  /* Disabled checkout button text */
+  --basket-checkout-disabled-text-dark: #9ca3af;   /* Disabled checkout button text in dark mode */
+
+  /* Warning Colors */
+  --basket-warning-bg-light: #fef2f2;        /* Warning message background */
+  --basket-warning-bg-dark: #7f1d1d;         /* Warning message background in dark mode */
+  --basket-warning-text-light: #dc2626;      /* Warning message text */
+  --basket-warning-text-dark: #fecaca;       /* Warning message text in dark mode */
+  --basket-warning-border-light: #fecaca;    /* Warning message border */
+  --basket-warning-border-dark: #ef4444;     /* Warning message border in dark mode */
 }
 
 /* Dark mode overrides */
@@ -71,20 +61,15 @@
   --basket-button-hover: var(--basket-button-hover-dark);
   --basket-button-text: var(--basket-button-text-dark);
 
-  --basket-total-bg: var(--basket-total-bg-dark);
-  --basket-total-border: var(--basket-total-border-dark);
-  --basket-total-text: var(--basket-total-text-dark);
-  --basket-total-price: var(--basket-total-price-dark);
-
-  --basket-warning-bg: var(--basket-warning-bg-dark);
-  --basket-warning-text: var(--basket-warning-text-dark);
-  --basket-warning-border: var(--basket-warning-border-dark);
-
   --basket-checkout-bg: var(--basket-checkout-bg-dark);
   --basket-checkout-text: var(--basket-checkout-text-dark);
   --basket-checkout-hover: var(--basket-checkout-hover-dark);
   --basket-checkout-disabled-bg: var(--basket-checkout-disabled-bg-dark);
   --basket-checkout-disabled-text: var(--basket-checkout-disabled-text-dark);
+
+  --basket-warning-bg: var(--basket-warning-bg-dark);
+  --basket-warning-text: var(--basket-warning-text-dark);
+  --basket-warning-border: var(--basket-warning-border-dark);
 }
 
 /* Light mode defaults */
@@ -102,18 +87,13 @@
   --basket-button-hover: var(--basket-button-hover-light);
   --basket-button-text: var(--basket-button-text-light);
 
-  --basket-total-bg: var(--basket-total-bg-light);
-  --basket-total-border: var(--basket-total-border-light);
-  --basket-total-text: var(--basket-total-text-light);
-  --basket-total-price: var(--basket-total-price-light);
-
-  --basket-warning-bg: var(--basket-warning-bg-light);
-  --basket-warning-text: var(--basket-warning-text-light);
-  --basket-warning-border: var(--basket-warning-border-light);
-
   --basket-checkout-bg: var(--basket-checkout-bg-light);
   --basket-checkout-text: var(--basket-checkout-text-light);
   --basket-checkout-hover: var(--basket-checkout-hover-light);
   --basket-checkout-disabled-bg: var(--basket-checkout-disabled-bg-light);
   --basket-checkout-disabled-text: var(--basket-checkout-disabled-text-light);
+
+  --basket-warning-bg: var(--basket-warning-bg-light);
+  --basket-warning-text: var(--basket-warning-text-light);
+  --basket-warning-border: var(--basket-warning-border-light);
 } 

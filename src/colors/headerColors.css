@@ -1,77 +1,37 @@
 :root {
   /* Header Container Colors */
-  --header-bg-light: #ffffff;
-  --header-bg-dark: #1f2937;
-  --header-border-light: #e5e7eb;
-  --header-border-dark: #374151;
-  --header-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --header-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --header-bg-light: #ffffff;      /* White background for light mode */
+  --header-bg-dark: #1f2937;       /* Dark gray background for dark mode */
+  --header-border-light: #e5e7eb;  /* icon border for light mode */
+  --header-border-dark: #374151;   /* Darker gray border for dark mode */
+  --header-shadow-light: 0 4px 6px -1px rgba(225, 158, 158, 0.2), 0 2px 4px -1px rgba(31, 96, 226, 0.1);  /* Blue shadow for light mode */
+  --header-shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);   /* Stronger shadow for dark mode */
 
   /* Header Text Colors */
-  --header-text-primary-light: #1f2937;
-  --header-text-primary-dark: #f3f4f6;
-  --header-text-hover-light: #dc2626;
-  --header-text-hover-dark: #f87171;
-  --header-text-active-light: #dc2626;
-  --header-text-active-dark: #f87171;
-  --header-border-active-light: #dc2626;
-  --header-border-active-dark: #f87171;
+  --header-text-primary-light: #1f2937;  /* Dark gray text for light mode */
+  --header-text-primary-dark: #f3f4f6;   /* Light gray text for dark mode */
+  --header-text-hover-light: #dc2626;    /* Red hover state for light mode */
+  --header-text-hover-dark: #f87171;     /* Light red hover state for dark mode */
+  --header-text-active-light: #dc2626;   /* Red active state for light mode */
+  --header-text-active-dark: #f87171;    /* Light red active state for dark mode */
+  --header-border-active-light: #dc2626; /* Red line under for active state in light mode */
+  --header-border-active-dark: #f87171;  /* red line  under for active state in dark mode */
 
   /* Header Button Colors */
-  --header-button-bg-light: #f3f4f6;
-  --header-button-bg-dark: #374151;
-  --header-button-hover-light: #e5e7eb;
-  --header-button-hover-dark: #4b5563;
-  --header-button-text-light: #1f2937;
-  --header-button-text-dark: #f3f4f6;
+  --header-button-bg-light: #f3f4f6;    /* small buttons on right background color for light mode */
+  --header-button-bg-dark: #374151;      /* small buttons on right background color for dark mode*/
+  --header-button-hover-light: #e5e7eb;  /* button hover in light mode */
+  --header-button-hover-dark: #4b5563;   /* button hover in dark mode */
 
   /* Header Basket Colors */
-  --header-basket-border-light: #e5e7eb;
-  --header-basket-border-dark: #374151;
-  --header-basket-border-active-light: #dc2626;
-  --header-basket-border-active-dark: #f87171;
-  --header-basket-text-light: #1f2937;
-  --header-basket-text-dark: #f3f4f6;
-  --header-basket-text-active-light: #dc2626;
-  --header-basket-text-active-dark: #f87171;
-
-  /* Header Logo Colors */
-  --header-logo-text-light: #1f2937;
-  --header-logo-text-dark: #f3f4f6;
-  --header-logo-hover-light: #dc2626;
-  --header-logo-hover-dark: #f87171;
-
-  /* Header Navigation Colors */
-  --header-nav-bg-light: #ffffff;
-  --header-nav-bg-dark: #1f2937;
-  --header-nav-text-light: #1f2937;
-  --header-nav-text-dark: #f3f4f6;
-  --header-nav-hover-light: #dc2626;
-  --header-nav-hover-dark: #f87171;
-  --header-nav-active-light: #dc2626;
-  --header-nav-active-dark: #f87171;
-
-  /* Header Cart Icon Colors */
-  --header-cart-bg-light: #f3f4f6;
-  --header-cart-bg-dark: #374151;
-  --header-cart-text-light: #1f2937;
-  --header-cart-text-dark: #f3f4f6;
-  --header-cart-hover-light: #e5e7eb;
-  --header-cart-hover-dark: #4b5563;
-  --header-cart-count-bg-light: #dc2626;
-  --header-cart-count-bg-dark: #ef4444;
-  --header-cart-count-text-light: #ffffff;
-  --header-cart-count-text-dark: #ffffff;
-
-  /* Header Language Selector Colors */
-  --header-lang-bg-light: #f3f4f6;
-  --header-lang-bg-dark: #374151;
-  --header-lang-text-light: #1f2937;
-  --header-lang-text-dark: #f3f4f6;
-  --header-lang-hover-light: #e5e7eb;
-  --header-lang-hover-dark: #4b5563;
-  --header-lang-active-light: #dc2626;
-  --header-lang-active-dark: #f87171;
+  --header-basket-border-light: #e5e7eb;  /* Light gray border for basket in light mode */
+  --header-basket-border-dark: #374151;   /* Dark gray border for basket in dark mode */
+  --header-basket-border-active-light: #dc2626;  /* Red border for active basket in light mode */
+  --header-basket-border-active-dark: #f87171;   /* Light red border for active basket in dark mode */
+  --header-basket-text-light: #1f2937;    /* Dark gray text for basket in light mode */
+  --header-basket-text-dark: #f3f4f6;     /* Light gray text for basket in dark mode */
+  --header-basket-text-active-light: #dc2626;  /* Red text for active basket in light mode */
+  --header-basket-text-active-dark: #f87171;   /* Light red text for active basket in dark mode */
 }
 
 /* Light mode defaults */
@@ -87,7 +47,6 @@
 
   --header-button-bg: var(--header-button-bg-light);
   --header-button-hover: var(--header-button-hover-light);
-  --header-button-text: var(--header-button-text-light);
 
   --header-basket-border: var(--header-basket-border-light);
   --header-basket-border-active: var(--header-basket-border-active-light);
@@ -108,7 +67,6 @@
 
   --header-button-bg: var(--header-button-bg-dark);
   --header-button-hover: var(--header-button-hover-dark);
-  --header-button-text: var(--header-button-text-dark);
 
   --header-basket-border: var(--header-basket-border-dark);
   --header-basket-border-active: var(--header-basket-border-active-dark);
@@ -135,4 +93,9 @@
 [class*="shadow-[var(--header-"] {
   transition: var(--header-transition);
   will-change: box-shadow;
+}
+
+/* Direct shadow application */
+.main-header {
+  box-shadow: var(--header-shadow);
 } 

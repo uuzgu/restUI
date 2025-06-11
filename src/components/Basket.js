@@ -53,7 +53,7 @@ function groupOptionsByGroupNameWithOrder(selectedItems) {
   return groupMap;
 }
 
-const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index, translations, language }) => {
+const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index, translations, language, isLastItem }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -102,7 +102,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
   const quantity = Number(item.quantity) || 1;
 
   return (
-    <li className={`basket-item bg-[var(--basket-container-bg)] border-[var(--basket-container-border)] text-[var(--basket-item-text)]`}>
+    <li className="basket-item">
       <div className="basket-item-header">
         <div className="flex items-center gap-2">
           <span className="basket-item-name">{item.name}</span>
@@ -317,13 +317,13 @@ const Basket = ({
 
       {/* Basket Header */}
       {basket.length > 0 && (
-        <h3 className="text-2xl font-bold text-[var(--basket-item-price)] mb-4">
-          {translations[language].yourBasket}
-        </h3>
+        <div className="basket-header">
+          <h3>{translations[language].yourBasket}</h3>
+        </div>
       )}
 
       {/* Basket Content */}
-      <div className="basket-content flex-1 overflow-y-auto min-h-0">
+      <div className="basket-content flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
         {basket.length === 0 ? (
           <div className="empty-basket">
             <div className="empty-basket-icon">
@@ -343,6 +343,7 @@ const Basket = ({
                 index={index}
                 translations={translations}
                 language={language}
+                isLastItem={index === basket.length - 1}
               />
             ))}
           </ul>
@@ -351,7 +352,7 @@ const Basket = ({
 
       {/* Basket Footer: Total and Checkout Button */}
       {basket.length > 0 && (
-        <div className="basket-footer">
+        <div className="basket-footer" style={{ padding: '0.5rem 1.5rem 1rem 1.5rem' }}>
           <div className="basket-total">
             {/* Coupon Warning Message */}
             <div 
@@ -369,7 +370,7 @@ const Basket = ({
               </p>
             </div>
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center" style={{ marginTop: '-0.75rem' }}>
               <span className="text-base font-semibold">
                 {translations[language].total}:
               </span>
@@ -400,7 +401,7 @@ const Basket = ({
                 : "bg-red-500 text-white hover:bg-green-600"
             }`}
             disabled={basket.length === 0}
-            style={{ flexShrink: 0, margin: 0 }}
+            style={{ flexShrink: 0, margin: '0.5rem 0 0 0' }}
           >
             {translations[language].proceedToCheckout}
           </button>
