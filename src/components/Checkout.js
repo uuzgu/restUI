@@ -239,21 +239,31 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
         return originalItem && originalItem.quantity !== item.quantity;
       });
 
-      if (hasQuantityChanged || location.state?.basketModified) {
+      // Only reset coupon if there's an actual change in the basket
+      if (hasQuantityChanged) {
+        // Store the current basket state before resetting
+        const currentBasket = [...localBasket];
+        
+        // Reset coupon state
         setAppliedCoupon(null);
         setCouponCode('');
         setCouponError('Basket is updated, coupon can be applied again');
         
-        // Reset prices to original
-        const resetBasket = localBasket.map(item => ({
+        // Reset prices to original but maintain the current basket state
+        const resetBasket = currentBasket.map(item => ({
           ...item,
           discountedPrice: undefined,
           discountPercentage: undefined
         }));
+        
+        // Update the basket state
         setBasket(resetBasket);
+        
+        // Update localStorage to persist the changes
+        localStorage.setItem('basket', JSON.stringify(resetBasket));
       }
     }
-  }, [localBasket, appliedCoupon, previousBasketState, location.state?.basketModified, setBasket]);
+  }, [localBasket, appliedCoupon, previousBasketState, setBasket]);
 
   // Store previous basket state for comparison
   useEffect(() => {
