@@ -23,7 +23,7 @@
   --checkout-button-primary-disabled-border: #fca5a5; /* Border color for disabled main button */
 
   /* Summary Colors */
-  --checkout-summary-bg: #ffffff; /* Background color for the order summary box */
+  --checkout-summary-bg: #fcf2f2; /* Background color for the order summary box */
   --checkout-summary-border: #e5e7eb; /* Border color for the order summary box */
   --checkout-summary-text: #1f2937; /* Text color for items in the summary */
   --checkout-summary-total: #ef4444; /* Text color for the total amount */
@@ -84,4 +84,12 @@
   --checkout-payment-hover-border: #f43f5e; /* Vibrant hover state */
   --checkout-payment-selected-bg: #881337; /* Rich selected background */
   --checkout-payment-selected-border: #f43f5e; /* Matching selected border */
+}
+
+/* Add styles for order summary section */
+.form-section-group {
+  background-color: var(--checkout-summary-bg);
+  border: 1px solid var(--checkout-summary-border);
+  padding: 1rem;
+  border-radius: 0.5rem;
 } 
