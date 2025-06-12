@@ -1,39 +1,10 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import emptyBasket from '../assets/emptyBasket.png';
-import { useDarkMode } from "../DarkModeContext";
 import '../Basket.css';
 import '../colors/basketColors.css';
 import { useState, useEffect, useRef } from "react";
 import '../colors/orderColors.css';
-
-// Helper to group selected items by type
-const groupOptionsByType = (selectedItems) => {
-  if (!selectedItems) return {};
-  const groups = {};
-  selectedItems.forEach(option => {
-    const type = option.type || 'Other';
-    if (!groups[type]) groups[type] = [];
-    groups[type].push(option);
-  });
-  return groups;
-};
-
-// Friendly labels and order for option types
-const FRIENDLY_TYPE_LABELS = {
-  size: 'Size',
-  crust: 'Crust',
-  sauce: 'Sauces',
-  selection: 'Toppings',
-  exclusion: 'Removed',
-  Other: 'Other'
-};
-
-function getFriendlyLabel(typeOrName) {
-  // If it's a known type, return the friendly label, else just capitalize
-  return FRIENDLY_TYPE_LABELS[typeOrName?.toLowerCase()] || (typeOrName?.charAt(0).toUpperCase() + typeOrName?.slice(1)) || '';
-}
 
 function groupOptionsByGroupNameWithOrder(selectedItems) {
   if (!selectedItems) return [];
@@ -97,9 +68,9 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
     setShowDetails(!showDetails);
   };
 
-  // Calculate the total price for this item including all selections
-  const lineItemOriginalPrice = Number(item.originalPrice) || 0;
-  const quantity = Number(item.quantity) || 1;
+  // Calculate the total price for this item
+  // originalPrice already includes both options and quantity
+  const totalPrice = Number(item.originalPrice) || 0;
 
   return (
     <li className="basket-item">
@@ -141,7 +112,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
         </div>
       </div>
       <div className="basket-item-price text-[var(--basket-item-price)]">
-        <span>€{(lineItemOriginalPrice * quantity).toFixed(2)}</span>
+        <span>€{totalPrice.toFixed(2)}</span>
       </div>
       {showDetails && (
         <div className="mt-2 p-3 bg-[var(--basket-container-bg)] rounded-lg">
@@ -317,13 +288,19 @@ const Basket = ({
     navigate('/checkout', { state: { basket, orderMethod } });
   };
 
-  // Calculate total price by summing up each item's price (including selections) multiplied by quantity
+  // Calculate total price by summing up each item's price
   const subtotal = basket.reduce((sum, item) => {
+    // Use originalPrice directly since it already includes (item + options) * quantity
     const price = item.discountedPrice !== undefined ? item.discountedPrice : item.originalPrice;
-    return sum + (price * item.quantity);
+    return sum + price;
   }, 0);
-  
-  const totalOriginalPrice = basket.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+
+  // Calculate original total price (before any discounts)
+  const totalOriginalPrice = basket.reduce((sum, item) => {
+    // Use originalPrice directly since it already includes (item + options) * quantity
+    return sum + item.originalPrice;
+  }, 0);
+
   const totalDiscount = totalOriginalPrice - subtotal;
 
   return (

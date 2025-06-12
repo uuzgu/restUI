@@ -36,6 +36,17 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   const observer = useRef(null);
   const { api } = useApi();
 
+  // Add state for app settings
+  const [appSettings, setAppSettings] = useState({
+    currency: '€',
+    defaultPrice: {
+      originalPrice: 0,
+      discountedPrice: 0,
+      discountPercentage: 0,
+      singleItemPrice: 0
+    }
+  });
+
   // Scroll to top when component mounts or location state changes
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,7 +89,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
         labels[id] = name.toUpperCase();
       }
     });
-    labels[0] = "PROMOTIONS";
     return labels;
   }, [categories]);
 
@@ -157,20 +167,15 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
   // Sort categories to match backend ordering
   const sortedCategoryIds = Object.keys(filteredCategorizedItems).sort((a, b) => {
-    const orderMap = {
-      0: 1,  // Promotions
-      1: 2,  // Pizza
-      2: 3,  // Bowls
-      3: 4,  // Hamburgers
-      4: 5,  // Salads
-      5: 6,  // Breakfast
-      6: 7,  // Drinks
-      7: 8,  // Soups
-      8: 9,  // Desserts
-    };
-    const aOrder = orderMap[parseInt(a)] || 10;
-    const bOrder = orderMap[parseInt(b)] || 10;
-    return aOrder - bOrder;
+    // Get categories from API data
+    const categoryA = categories.find(cat => cat.id === parseInt(a));
+    const categoryB = categories.find(cat => cat.id === parseInt(b));
+    
+    // Use DisplayOrder from API, fallback to 999 if not set
+    const orderA = categoryA?.DisplayOrder ?? 999;
+    const orderB = categoryB?.DisplayOrder ?? 999;
+    
+    return orderA - orderB;
   });
 
   const scrollToSection = (categoryId) => {
@@ -335,200 +340,108 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     }
   }, [api]);
 
-  // Update the calculateTotalPrice function to properly handle all types of selections
-  const calculateTotalPrice = useCallback((basePrice, selectedItems, quantity = 1) => {
-    // Separate items by type
-    const ingredients = selectedItems.filter(item => (item.type === 'ingredient' || item.type === 'selection') && item.selected);
-    const drinks = selectedItems.filter(item => item.type === 'drink' && item.selected);
-    const sides = selectedItems.filter(item => item.type === 'side' && item.selected);
-    const offers = selectedItems.filter(item => item.type === 'offer' && item.selected);
+  // Add state for price calculation
+  const [calculatedPrice, setCalculatedPrice] = useState({
+    originalPrice: 0,
+    discountedPrice: 0,
+    discountPercentage: 0,
+    singleItemPrice: 0
+  });
 
-    // Group selections by their group ID to handle thresholds
-    const groupedSelections = ingredients.reduce((acc, item) => {
-      if (item.groupId) {
-        if (!acc[item.groupId]) {
-          acc[item.groupId] = [];
-        }
-        acc[item.groupId].push(item);
+  // Fetch app settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get('/settings');
+        setAppSettings(response.data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
       }
-      return acc;
-    }, {});
-
-    // Calculate total for one item with all selections
-    const ingredientsTotal = Object.entries(groupedSelections).reduce((sum, [groupId, items]) => {
-      const group = itemOptions?.selectionGroups.find(g => g.id === parseInt(groupId));
-      if (!group) return sum;
-
-      // Sort items by quantity to ensure we count the highest quantities first
-      const sortedItems = [...items].sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
-      
-      let totalForGroup = 0;
-      let itemsCounted = 0;
-
-      sortedItems.forEach(item => {
-        const itemQuantity = item.quantity || 1;
-        for (let i = 0; i < itemQuantity; i++) {
-          if (itemsCounted < group.threshold) {
-            // Free items within threshold
-            itemsCounted++;
-          } else {
-            // Charge for items beyond threshold
-            totalForGroup += Number(item.price || 0);
-          }
-        }
-      });
-
-      return sum + totalForGroup;
-    }, 0);
-
-    const drinksTotal = drinks.reduce((sum, drink) => {
-      const price = Number(drink.price || 0);
-      const qty = Number(drink.quantity || 0);
-      return sum + (price * qty);
-    }, 0);
-
-    const sidesTotal = sides.reduce((sum, side) => {
-      const price = Number(side.price || 0);
-      const qty = Number(side.quantity || 0);
-      return sum + (price * qty);
-    }, 0);
-
-    const singleItemTotal = basePrice + ingredientsTotal + drinksTotal + sidesTotal;
-
-    // Find maximum discount from offers
-    const maxDiscount = offers.reduce((max, offer) => 
-      Math.max(max, Number(offer.discountPercentage || 0)), 0
-    );
-
-    // Calculate final price with discount for one item
-    const discount = singleItemTotal * (maxDiscount / 100);
-    const finalPrice = singleItemTotal - discount;
-
-    console.log('Price calculation:', {
-      basePrice,
-      ingredientsTotal,
-      drinksTotal,
-      sidesTotal,
-      singleItemTotal,
-      discount,
-      finalPrice,
-      selectedItems: selectedItems.map(item => ({
-        name: item.name,
-        type: item.type,
-        price: item.price,
-        quantity: item.quantity,
-        selected: item.selected
-      }))
-    });
-
-    return {
-      originalPrice: singleItemTotal,
-      discountedPrice: finalPrice,
-      discountPercentage: maxDiscount,
-      singleItemPrice: singleItemTotal
     };
-  }, [api, itemOptions]);
+    fetchSettings();
+  }, [api]);
 
-  // Add a function to check if an item is free based on threshold
-  const isItemFree = useCallback((item, group) => {
-    if (!group || !group.threshold) return false;
-    
-    const selectedItemsInGroup = selectedIngredients.filter(
-      ing => ing.groupId === group.id && ing.type === 'selection'
-    );
-    
-    // Count total items in the group
-    const totalItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
-    
-    // Find the position of this item in the sorted list
-    const sortedItems = [...selectedItemsInGroup].sort((a, b) => (b.quantity || 0) - (a.quantity || 0));
-    const itemPosition = sortedItems.findIndex(ing => ing.id === item.id);
-    
-    // Calculate how many items are before this one
-    const itemsBefore = sortedItems.slice(0, itemPosition).reduce((sum, ing) => sum + (ing.quantity || 1), 0);
-    
-    return itemsBefore < group.threshold;
-  }, [selectedIngredients]);
+  // Calculate price when dependencies change
+  useEffect(() => {
+    const calculatePrice = async () => {
+      if (!selectedItem || !itemOptions) return;
 
-  // Update the option display to show free/paid status
-  const renderOptionPrice = useCallback((option, group) => {
-    if (!option.price) return <span className="min-w-[60px]"></span>;
-    
-    const selectedItemsInGroup = selectedIngredients.filter(
-      ing => ing.groupId === group.id && ing.type === 'selection'
-    );
-    
-    const totalSelectedItems = selectedItemsInGroup.reduce((sum, ing) => sum + (ing.quantity || 1), 0);
-    
-    if (totalSelectedItems < group.threshold) {
-      return (
-        <span className="text-sm text-green-600 dark:text-green-400 min-w-[60px] text-right">
-          Free
-        </span>
-      );
-    }
-    
-    return (
-      <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[60px] text-right">
-        +{option.price}€
-      </span>
-    );
-  }, [selectedIngredients]);
+      try {
+        const response = await api.post(`/items/${selectedItem.id}/calculate-price`, {
+          selectedItems: selectedIngredients,
+          quantity: 1  // Calculate for single item first
+        });
+        
+        // Store the single item price
+        setCalculatedPrice({
+          ...response.data,
+          singleItemPrice: response.data.originalPrice
+        });
+      } catch (error) {
+        console.error('Error calculating price:', error);
+        // Use basic fallback if API fails
+        const basePrice = Number(selectedItem?.price || 0);
+        
+        // Process selected items to handle free options within threshold
+        const processedItems = itemOptions.selectionGroups.reduce((acc, group) => {
+          if (!group.options || !Array.isArray(group.options)) return acc;
 
-  // Update the updateIngredientQuantity function to properly handle price updates
-  const updateIngredientQuantity = useCallback((ingredient, delta) => {
-    setSelectedIngredients(prev => {
-      const newIngredients = prev.map(ing => {
-        // Check both ID and type to find the correct item
-        if (ing.id === ingredient.id) {
-          const newQuantity = Math.max(0, (ing.quantity || 0) + delta);
-          if (newQuantity === 0) {
-            return { ...ing, selected: false };
-          }
-          return { ...ing, quantity: newQuantity, selected: true };
-        }
-        return ing;
-      }).filter(ing => ing.selected);
+          // Get all selected options in this group with their quantities
+          const selectedOptions = group.options
+            .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
+            .map(opt => {
+              const quantity = ingredientQuantities[opt.id] || 1;
+              return { ...opt, quantity };
+            });
 
-      // Update ingredientQuantities state
-      setIngredientQuantities(prev => {
-        const newQuantities = { ...prev };
-        const changedIngredient = newIngredients.find(ing => ing.id === ingredient.id);
-        if (changedIngredient) {
-          newQuantities[ingredient.id] = changedIngredient.quantity;
-        } else {
-          delete newQuantities[ingredient.id];
-        }
-        return newQuantities;
-      });
+          // Sort selected options by their order in the group
+          selectedOptions.sort((a, b) => {
+            const aIndex = group.options.findIndex(opt => opt.id === a.id);
+            const bIndex = group.options.findIndex(opt => opt.id === b.id);
+            return aIndex - bIndex;
+          });
 
-      // Calculate new price immediately
-      const newPrice = calculateTotalPrice(
-        Number(selectedItem?.price || 0),
-        newIngredients,
-        Number(popupItemQuantity || 1)
-      );
+          // Calculate total quantity of selected options
+          const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
 
-      // Log the price change
-      const changedIngredient = prev.find(ing => ing.id === ingredient.id);
-      if (changedIngredient) {
-        const newQuantity = newIngredients.find(ing => ing.id === ingredient.id)?.quantity || 0;
-        console.log(`${changedIngredient.name} x${newQuantity} | Price: $${changedIngredient.price} | TNP: $${newPrice.discountedPrice}`);
+          // Process options based on threshold
+          let remainingFreeQuantity = group.threshold || 0;
+          const processedOptions = selectedOptions.map(opt => {
+            // Calculate how many of this option are free
+            const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
+            remainingFreeQuantity -= freeQuantity;
+            
+            // Calculate how many of this option are paid
+            const paidQuantity = opt.quantity - freeQuantity;
+            
+            return {
+              ...opt,
+              price: Number(opt.price || 0),
+              quantity: opt.quantity,
+              freeQuantity,
+              paidQuantity
+            };
+          });
+
+          return [...acc, ...processedOptions];
+        }, []);
+
+        // Calculate total price including only paid quantities
+        const selectedItemsTotal = processedItems.reduce((sum, item) => {
+          return sum + (Number(item.price || 0) * (item.paidQuantity || 0));
+        }, 0);
+
+        setCalculatedPrice({
+          originalPrice: basePrice + selectedItemsTotal,
+          discountedPrice: basePrice + selectedItemsTotal,
+          discountPercentage: 0,
+          singleItemPrice: basePrice + selectedItemsTotal
+        });
       }
+    };
 
-      return newIngredients;
-    });
-  }, [selectedItem, popupItemQuantity, calculateTotalPrice]);
-
-  // Memoize the calculated total price
-  const calculatedTotalPrice = useMemo(() => {
-    if (!selectedItem || !itemOptions) return { originalPrice: 0, discountedPrice: 0, discountPercentage: 0 };
-    return calculateTotalPrice(
-      Number(selectedItem?.price || 0),
-      selectedIngredients,
-      Number(popupItemQuantity || 1)
-    );
-  }, [selectedItem, selectedIngredients, calculateTotalPrice, popupItemQuantity]);
+    calculatePrice();
+  }, [selectedItem, selectedIngredients, itemOptions, api, ingredientQuantities]);
 
   // Add a state for the displayed price
   const [displayPrice, setDisplayPrice] = useState({
@@ -537,10 +450,10 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     discountPercentage: 0
   });
 
-  // Update display price whenever calculatedTotalPrice changes
+  // Update display price whenever calculated price changes
   useEffect(() => {
-    setDisplayPrice(calculatedTotalPrice);
-  }, [calculatedTotalPrice]);
+    setDisplayPrice(calculatedPrice);
+  }, [calculatedPrice]);
 
   // Add a function to check for missing required options
   const checkRequiredOptions = useCallback(() => {
@@ -556,7 +469,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     return missingRequired;
   }, [itemOptions, selectedIngredients]);
 
-  // Update the toggleIngredient function to check required options after changes
+  // Update the toggleIngredient function to trigger price recalculation
   const toggleIngredient = useCallback((ingredient) => {
     setSelectedIngredients(prev => {
       // Find existing ingredient by both ID and type
@@ -638,19 +551,10 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     });
   }, [itemOptions, checkRequiredOptions]);
 
-  // Update the popupItemQuantity state to trigger price recalculation
-  const updatePopupItemQuantity = useCallback((delta) => {
-    setPopupItemQuantity(prev => {
-      const newQuantity = Math.max(1, prev + delta);
-      return newQuantity;
-    });
-  }, []);
-
-  // Add a new function to handle quantity updates with both ID and type
+  // Update the updateItemQuantity function to trigger price recalculation
   const updateItemQuantity = useCallback((itemId, itemType, delta) => {
     setSelectedIngredients(prev => {
       const newIngredients = prev.map(ing => {
-        // Check both ID and type to find the correct item
         if (ing.id === itemId && ing.type === itemType) {
           const newQuantity = Math.max(0, (ing.quantity || 1) + delta);
           if (newQuantity === 0) {
@@ -671,21 +575,9 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
         return newQuantities;
       });
 
-      // Log the price change
-      const changedItem = prev.find(ing => ing.id === itemId && ing.type === itemType);
-      if (changedItem) {
-        const newPrice = calculateTotalPrice(
-          Number(selectedItem?.price || 0),
-          newIngredients,
-          Number(popupItemQuantity || 1)
-        );
-        const newQuantity = newIngredients.find(ing => ing.id === itemId && ing.type === itemType)?.quantity || 0;
-        console.log(`${changedItem.name} x${newQuantity} | TNP: $${newPrice.discountedPrice}`);
-      }
-
       return newIngredients;
     });
-  }, [selectedItem, popupItemQuantity, calculateTotalPrice]);
+  }, []);
 
   // Add effect to hide warning when selections change
   useEffect(() => {
@@ -704,7 +596,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     }
   }, [attentionGroupId]);
 
-  // Memoize the handleAddToBasket function
+  // Update handleAddToBasket
   const handleAddToBasket = useCallback(() => {
     if (!selectedItem || !itemOptions) return;
 
@@ -718,7 +610,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     if (missingRequiredGroup) {
       setShowRequiredOptionsWarning(true);
       setAttentionGroupId(missingRequiredGroup.id);
-      // Find the element with the missing group and scroll to it
       const groupElement = document.getElementById(`group-${missingRequiredGroup.id}`);
       if (groupElement) {
         groupElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -726,19 +617,51 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       return;
     }
 
-    // Get all selected items from selection groups, attaching groupName
     const selectedItems = [
-      // Include items from selection groups
       ...itemOptions.selectionGroups.reduce((acc, group) => {
-        const selectedOptions = group.options.filter(opt => opt.selected).map(opt => ({
-          ...opt,
-          groupName: group.name
-        }));
-        return [...acc, ...selectedOptions];
+        if (!group.options || !Array.isArray(group.options)) return acc;
+
+        // Get all selected options in this group with their quantities
+        const selectedOptions = group.options
+          .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
+          .map(opt => {
+            const quantity = ingredientQuantities[opt.id] || 1;
+            return { ...opt, quantity };
+          });
+
+        // Sort selected options by their order in the group
+        selectedOptions.sort((a, b) => {
+          const aIndex = group.options.findIndex(opt => opt.id === a.id);
+          const bIndex = group.options.findIndex(opt => opt.id === b.id);
+          return aIndex - bIndex;
+        });
+
+        // Calculate total quantity of selected options
+        const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
+
+        // Process options based on threshold
+        let remainingFreeQuantity = group.threshold || 0;
+        const processedOptions = selectedOptions.map(opt => {
+          // Calculate how many of this option are free
+          const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
+          remainingFreeQuantity -= freeQuantity;
+          
+          // Calculate how many of this option are paid
+          const paidQuantity = opt.quantity - freeQuantity;
+          
+          return {
+            ...opt,
+            groupName: group.name,
+            price: Number(opt.price || 0),
+            quantity: opt.quantity,
+            freeQuantity,
+            paidQuantity
+          };
+        });
+
+        return [...acc, ...processedOptions];
       }, []),
-      // Include items from selectedIngredients, attach groupName if possible
       ...selectedIngredients.map(ing => {
-        // Try to find the group for this ingredient
         let groupName = undefined;
         if (ing.groupId && itemOptions.selectionGroups) {
           const group = itemOptions.selectionGroups.find(g => g.id === ing.groupId);
@@ -746,38 +669,41 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
         }
         return {
           ...ing,
-          groupName: groupName || ing.groupName // fallback to existing groupName if present
+          groupName: groupName || ing.groupName,
+          quantity: ingredientQuantities[ing.id] || 1
         };
       })
     ];
 
     const quantity = Number(popupItemQuantity || 1);
-    const basePrice = Number(selectedItem?.price || 0);
     
-    // Calculate price for a single item first
-    const priceCalculation = calculateTotalPrice(
-      basePrice,
-      selectedItems,
-      1  // Calculate for single item first
-    );
+    // Calculate the base price for a single item (including only paid quantities)
+    const basePrice = selectedItem.price + selectedItems.reduce((sum, item) => {
+      return sum + (Number(item.price || 0) * (item.paidQuantity || 0));
+    }, 0);
+
+    // Total price is base price multiplied by quantity
+    const totalPrice = basePrice * quantity;
 
     const basketItem = {
       id: selectedItem.id,
       name: selectedItem.name,
       basePrice: basePrice,
-      originalPrice: priceCalculation.originalPrice,
+      originalPrice: totalPrice,
       quantity: quantity,
       note: itemNote.trim(),
       selectedItems: selectedItems.map(item => ({ 
         ...item, 
         quantity: item.quantity || 1,
-        price: Number(item.price || 0)
+        price: item.price,
+        freeQuantity: item.freeQuantity || 0,
+        paidQuantity: item.paidQuantity || 0
       })),
       image: selectedItem.image_url,
       selectionKey: JSON.stringify(selectedItems.map(item => ({
         id: item.id,
         type: item.type,
-        quantity: item.quantity
+        quantity: item.quantity || 1
       }))),
       groupOrder: itemOptions.selectionGroups.map(g => g.name)
     };
@@ -793,35 +719,24 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     if (existingItemIndex !== -1) {
       // Update quantity if item exists with the same selections and note
       setBasket(prevBasket => {
-        // Remove discounts from all items first
-        const newBasket = prevBasket.map(item => ({
-          ...item,
-          discountedPrice: undefined,
-          discountPercentage: undefined
-        }));
-        
-        // Then update the quantity of the existing item
+        const newBasket = [...prevBasket];
         const existingItem = newBasket[existingItemIndex];
         const newQuantity = existingItem.quantity + basketItem.quantity;
+        
+        // Calculate new total price based on the base price and new quantity
+        const updatedPrice = basePrice * newQuantity;
         
         newBasket[existingItemIndex] = {
           ...existingItem,
           quantity: newQuantity,
-          originalPrice: existingItem.originalPrice
+          originalPrice: updatedPrice,
+          basePrice: basePrice
         };
         return newBasket;
       });
     } else {
       // Add new item if it doesn't exist or has different selections/note
-      setBasket(prevBasket => {
-        // Remove discounts from all items
-        const newBasket = prevBasket.map(item => ({
-          ...item,
-          discountedPrice: undefined,
-          discountPercentage: undefined
-        }));
-        return [...newBasket, basketItem];
-      });
+      setBasket(prevBasket => [...prevBasket, basketItem]);
     }
 
     setSelectedIngredients([]);
@@ -831,7 +746,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     setShowRequiredOptionsWarning(false);
     document.body.classList.remove('popup-active');
     setBasketVisible(true);
-  }, [selectedItem, itemOptions, popupItemQuantity, setBasketVisible, calculateTotalPrice, basket, selectedIngredients, itemNote]);
+  }, [selectedItem, itemOptions, popupItemQuantity, setBasketVisible, basket, selectedIngredients, itemNote, ingredientQuantities]);
 
   // Create a memoized component for ingredient items to reduce re-renders
   const IngredientItem = useCallback(({ ingredient, isSelected, onToggle, onQuantityChange, quantity }) => {
@@ -911,19 +826,13 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
       const newQuantity = (item.quantity || 1) + 1;
       
-      // Calculate total price including selected items
-      const selectedItemsTotal = item.selectedItems?.reduce((sum, selected) => {
-        return sum + (selected.price * (selected.quantity || 1));
-      }, 0) || 0;
+      // Calculate total price based on the original base price and new quantity
+      const totalPrice = item.basePrice * newQuantity;
 
       newBasket[index] = {
         ...item,
         quantity: newQuantity,
-        originalPrice: item.basePrice + selectedItemsTotal,
-        selectedItems: item.selectedItems || [],
-        // Remove discount
-        discountedPrice: undefined,
-        discountPercentage: undefined
+        originalPrice: totalPrice
       };
       return newBasket;
     });
@@ -938,19 +847,13 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
       const newQuantity = Math.max(1, (item.quantity || 1) - 1);
       
-      // Calculate total price including selected items
-      const selectedItemsTotal = item.selectedItems?.reduce((sum, selected) => {
-        return sum + (selected.price * (selected.quantity || 1));
-      }, 0) || 0;
+      // Calculate total price based on the original base price and new quantity
+      const totalPrice = item.basePrice * newQuantity;
 
       newBasket[index] = {
         ...item,
         quantity: newQuantity,
-        originalPrice: item.basePrice + selectedItemsTotal,
-        selectedItems: item.selectedItems || [],
-        // Remove discount
-        discountedPrice: undefined,
-        discountPercentage: undefined
+        originalPrice: totalPrice
       };
       return newBasket;
     });
@@ -1072,6 +975,14 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+  }, []);
+
+  // Update the popupItemQuantity state to trigger price recalculation
+  const updatePopupItemQuantity = useCallback((delta) => {
+    setPopupItemQuantity(prev => {
+      const newQuantity = Math.max(1, prev + delta);
+      return newQuantity;
+    });
   }, []);
 
   return (
@@ -1216,6 +1127,13 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                           type: group.type,
                           options: group.options.map(o => o.name)
                         });
+
+                        // Count selected options in this group
+                        const selectedCount = selectedIngredients.filter(ing => 
+                          ing.type === 'selection' && 
+                          group.options.some(opt => opt.id === ing.id)
+                        ).length;
+
                         return (
                           <div 
                             key={group.id}
@@ -1239,103 +1157,142 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                             <div className="space-y-2">
                               {group.options
                                 .sort((a, b) => a.displayOrder - b.displayOrder)
-                                .map((option) => (
-                                  <div 
-                                    key={`${option.id}-${option.name}`} 
-                                    className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
-                                      ${selectedIngredients.some(ing => ing.id === option.id && ing.type === 'selection')
-                                        ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
-                                        : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
-                                    `}
-                                    style={{ minHeight: '56px', marginBottom: '8px' }}
-                                    onClick={() => toggleIngredient({
-                                      ...option,
-                                      type: 'selection',
-                                      groupId: group.id
-                                    })}
-                                  >
-                                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                                      {group.type === 'MULTIPLE' ? (
-                                        <input
-                                          type="checkbox"
-                                          checked={selectedIngredients.some(
-                                            ing => ing.id === option.id && ing.type === 'selection'
-                                          )}
-                                          onChange={(e) => {
-                                            e.stopPropagation();
-                                            toggleIngredient({
-                                              ...option,
-                                              type: 'selection',
-                                              groupId: group.id
-                                            });
-                                          }}
-                                          className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                        />
-                                      ) : (
-                                        <input
-                                          type="radio"
-                                          name={`group-${group.id}`}
-                                          checked={selectedIngredients.some(
-                                            ing => ing.id === option.id && ing.type === 'selection'
-                                          )}
-                                          onChange={(e) => {
-                                            e.stopPropagation();
-                                            toggleIngredient({
-                                              ...option,
-                                              type: 'selection',
-                                              groupId: group.id
-                                            });
-                                          }}
-                                          className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                        />
-                                      )}
-                                      <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 flex-shrink-0">
-                                      {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && selectedIngredients.some(
-                                        ing => ing.id === option.id && ing.type === 'selection'
-                                      ) && (
-                                        <div 
-                                          className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
-                                          onClick={(e) => e.stopPropagation()}
-                                        >
-                                          <button
-                                            onClick={(e) => {
+                                .map((option) => {
+                                  // Check if this option is selected
+                                  const isSelected = selectedIngredients.some(
+                                    ing => ing.id === option.id && ing.type === 'selection'
+                                  );
+                                  
+                                  // Get all selected options in this group with their quantities
+                                  const selectedOptionsInGroup = selectedIngredients
+                                    .filter(ing => ing.type === 'selection' && 
+                                      group.options.some(opt => opt.id === ing.id))
+                                    .map(ing => ({
+                                      ...ing,
+                                      quantity: ingredientQuantities[ing.id] || 1
+                                    }))
+                                    .sort((a, b) => {
+                                      const aIndex = group.options.findIndex(opt => opt.id === a.id);
+                                      const bIndex = group.options.findIndex(opt => opt.id === b.id);
+                                      return aIndex - bIndex;
+                                    });
+
+                                  // Calculate total quantity of selected options
+                                  const totalSelectedQuantity = selectedOptionsInGroup.reduce((sum, opt) => sum + opt.quantity, 0);
+
+                                  // Calculate how many of this option are free
+                                  let remainingFreeQuantity = group.threshold || 0;
+                                  let freeQuantity = 0;
+                                  let paidQuantity = 0;
+
+                                  if (isSelected) {
+                                    const optionQuantity = ingredientQuantities[option.id] || 1;
+                                    const optionIndex = selectedOptionsInGroup.findIndex(ing => ing.id === option.id);
+                                    
+                                    // Calculate free quantity based on position and remaining free quantity
+                                    if (optionIndex !== -1) {
+                                      const previousOptionsQuantity = selectedOptionsInGroup
+                                        .slice(0, optionIndex)
+                                        .reduce((sum, opt) => sum + opt.quantity, 0);
+                                      
+                                      const remainingAfterPrevious = Math.max(0, group.threshold - previousOptionsQuantity);
+                                      freeQuantity = Math.min(remainingAfterPrevious, optionQuantity);
+                                      paidQuantity = optionQuantity - freeQuantity;
+                                    }
+                                  }
+
+                                  const isPartiallyFree = freeQuantity > 0 && paidQuantity > 0;
+                                  const isFullyFree = freeQuantity === (ingredientQuantities[option.id] || 1);
+                                  const isFullyPaid = paidQuantity === (ingredientQuantities[option.id] || 1);
+
+                                  return (
+                                    <div 
+                                      key={`${option.id}-${option.name}`} 
+                                      className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
+                                          ${isSelected
+                                          ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
+                                          : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
+                                      `}
+                                      style={{ minHeight: '56px', marginBottom: '8px' }}
+                                      onClick={() => toggleIngredient({
+                                        ...option,
+                                        type: 'selection',
+                                        groupId: group.id
+                                      })}
+                                    >
+                                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                                        {group.type === 'MULTIPLE' ? (
+                                          <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={(e) => {
                                               e.stopPropagation();
-                                              updateIngredientQuantity({
+                                              toggleIngredient({
                                                 ...option,
                                                 type: 'selection',
                                                 groupId: group.id
-                                              }, -1);
+                                              });
                                             }}
-                                            className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                          >
-                                            -
-                                          </button>
-                                          <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
-                                            {ingredientQuantities[option.id] || 0}
-                                          </span>
-                                          <button
-                                            onClick={(e) => {
+                                            className="w-4 h-4 accent-red-500 flex-shrink-0"
+                                          />
+                                        ) : (
+                                          <input
+                                            type="radio"
+                                            name={`group-${group.id}`}
+                                            checked={isSelected}
+                                            onChange={(e) => {
                                               e.stopPropagation();
-                                              updateIngredientQuantity({
+                                              toggleIngredient({
                                                 ...option,
                                                 type: 'selection',
                                                 groupId: group.id
-                                              }, 1);
+                                              });
                                             }}
-                                            className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                            className="w-4 h-4 accent-red-500 flex-shrink-0"
+                                          />
+                                        )}
+                                        <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && isSelected && (
+                                          <div 
+                                            className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
+                                            onClick={(e) => e.stopPropagation()}
                                           >
-                                            +
-                                          </button>
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                updateItemQuantity(option.id, option.type, -1);
+                                              }}
+                                              className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                            >
+                                              -
+                                            </button>
+                                            <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
+                                              {ingredientQuantities[option.id] || 0}
+                                            </span>
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                updateItemQuantity(option.id, option.type, 1);
+                                              }}
+                                              className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                            >
+                                              +
+                                            </button>
+                                          </div>
+                                        )}
+                                        <div className="min-w-[60px] text-right">
+                                          {option.price > 0 && (
+                                            <span className={`text-sm ${isFullyFree ? 'text-green-600 dark:text-green-400' : isPartiallyFree ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500'}`}>
+                                              {isFullyFree ? 'Free' : isPartiallyFree ? `Free x${freeQuantity}` : `+€${option.price.toFixed(2)}`}
+                                            </span>
+                                          )}
                                         </div>
-                                      )}
-                                      <div className="min-w-[60px] text-right">
-                                        {renderOptionPrice(option, group)}
                                       </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  );
+                                })}
                             </div>
                           </div>
                         );
@@ -1392,11 +1349,11 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                       <div className="flex flex-col items-end ml-4 justify-center">
                         {displayPrice.discountPercentage > 0 && (
                           <span className="text-sm text-gray-500 line-through">
-                            €{(displayPrice.originalPrice * popupItemQuantity).toFixed(2)}
+                            {selectedItem?.currency || '€'}{(displayPrice.originalPrice * popupItemQuantity).toFixed(2)}
                           </span>
                         )}
                         <span className="font-bold">
-                          €{(displayPrice.discountedPrice * popupItemQuantity).toFixed(2)}
+                          {selectedItem?.currency || '€'}{(displayPrice.discountedPrice * popupItemQuantity).toFixed(2)}
                         </span>
                       </div>
                     </button>

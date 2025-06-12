@@ -5,30 +5,19 @@ import pizzaLogoDark from "../assets/pizzalogodark.png";
 import { Instagram, Twitter, Moon, Sun, ShoppingCart } from 'lucide-react';
 import { useDarkMode } from '../DarkModeContext';
 import '../colors/headerColors.css';
-
-// Reusable button styles
-const buttonBaseClasses = "w-9 h-9 sm:w-10 sm:h-10 p-2 flex items-center justify-center border border-[var(--header-border)] bg-[var(--header-button-bg)] text-[var(--header-text-primary)] rounded-full hover:bg-[var(--header-button-hover)] transition-colors duration-200";
-
-// Base button styles without border (for basket button)
-const buttonBaseNoBorderClasses = "w-9 h-9 sm:w-10 sm:h-10 p-2 flex items-center justify-center bg-[var(--header-button-bg)] rounded-full hover:bg-[var(--header-button-hover)] transition-colors duration-200";
+import './Header.css';
 
 // Navigation link component
 const NavLink = ({ to, isActive, children }) => (
-  <div className="relative inline-block">
+  <div className="nav-link">
     <Link
       to={to}
-      className={`text-base sm:text-lg font-semibold font-sans truncate ${
-        isActive
-          ? "text-[var(--header-text-active)]"
-          : "text-[var(--header-text-primary)] hover:text-[var(--header-text-hover)]"
-      }`}
+      className={isActive ? "active" : ""}
     >
       {children}
     </Link>
     <div 
-      className={`absolute bottom-0 left-0 h-0.5 bg-[var(--header-border-active)] ${
-        isActive ? "w-full" : "w-0"
-      }`}
+      className={`nav-link-indicator ${isActive ? "active" : ""}`}
     />
   </div>
 );
@@ -40,24 +29,24 @@ const Header = ({ toggleBasket, basketVisible }) => {
   const { darkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className={`main-header bg-[var(--header-bg)] fixed top-0 left-0 w-full z-[2000] ${darkMode ? 'dark' : ''}`}>
-      <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 flex flex-wrap items-center justify-between h-20 sm:h-24 gap-y-2">
+    <div className={`main-header ${darkMode ? 'dark' : ''}`}>
+      <div className="header-container">
         {/* 🔴 LEFT: Logo + Navigation */}
-        <div className="flex items-center space-x-2 sm:space-x-6 md:space-x-8">
-          <div className="relative h-16 sm:h-24 flex items-center mr-2 sm:mr-6">
+        <div className="nav-container">
+          <div className="logo-container">
             <img
               src={pizzaLogo}
               alt="Pizza Logo"
-              className="h-12 sm:h-20 w-auto object-contain block dark:hidden"
+              className="logo-image block dark:hidden"
             />
             <img
               src={pizzaLogoDark}
               alt="Pizza Logo Dark"
-              className="h-12 sm:h-20 w-auto object-contain hidden dark:block"
+              className="logo-image hidden dark:block"
             />
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-6 md:space-x-8">
+          <div className="nav-container">
             <NavLink to="/" isActive={location.pathname === "/"}>
               {translations[language].home || "HOME"}
             </NavLink>
@@ -68,11 +57,11 @@ const Header = ({ toggleBasket, basketVisible }) => {
         </div>
 
         {/* 🟢 RIGHT: Language, Theme Toggle, and Basket/Socials */}
-        <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="right-section">
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
-            className={buttonBaseClasses}
+            className="button-base"
           >
             {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
@@ -80,7 +69,7 @@ const Header = ({ toggleBasket, basketVisible }) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={buttonBaseClasses}
+            className="button-base"
           >
             <span className="text-xl sm:text-2xl">{language === "en" ? "🇬🇧" : "🇹🇷"}</span>
           </button>
@@ -89,7 +78,7 @@ const Header = ({ toggleBasket, basketVisible }) => {
           {isOrderPage && (
             <button
               onClick={toggleBasket}
-              className={`${buttonBaseNoBorderClasses} border ${
+              className={`button-base-no-border border ${
                 basketVisible 
                   ? 'border-[var(--header-basket-border-active)] text-[var(--header-basket-text-active)]' 
                   : 'border-[var(--header-basket-border)] text-[var(--header-basket-text)]'
@@ -101,12 +90,12 @@ const Header = ({ toggleBasket, basketVisible }) => {
 
           {/* Social Links - Only on home page and not on mobile */}
           {!isOrderPage && (
-            <div className="hidden sm:flex space-x-2">
+            <div className="social-links">
               <a
                 href="https://instagram.com/YOUR_PAGE"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonBaseClasses}
+                className="button-base"
               >
                 <Instagram className="w-5 h-5" />
               </a>
@@ -114,7 +103,7 @@ const Header = ({ toggleBasket, basketVisible }) => {
                 href="https://twitter.com/YOUR_PAGE"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonBaseClasses}
+                className="button-base"
               >
                 <Twitter className="w-5 h-5" />
               </a>
