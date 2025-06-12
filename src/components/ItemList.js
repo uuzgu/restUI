@@ -1051,6 +1051,29 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     });
   };
 
+  // Add effect to handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        // On mobile, ensure basket is properly positioned
+        const basketPanel = document.querySelector('.basket-panel');
+        if (basketPanel) {
+          basketPanel.style.top = '96px';
+          basketPanel.style.right = '0';
+          basketPanel.style.width = '100%';
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Initial call
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--order-bg)] text-[var(--order-text-primary)]">
       <div className="content-container">

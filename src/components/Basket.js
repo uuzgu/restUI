@@ -332,6 +332,14 @@ const Basket = ({
       className={`basket-panel transition-transform duration-300 bg-[var(--basket-container-bg)] border border-[var(--basket-container-border)] shadow-lg rounded-lg overflow-hidden flex flex-col ${
         basketVisible ? 'translate-y-0' : 'translate-y-full'
       }`}
+      style={{
+        position: 'fixed',
+        top: '96px',
+        right: window.innerWidth <= 768 ? '0' : '1.5rem',
+        width: window.innerWidth <= 768 ? '100%' : '28rem',
+        height: `calc(100vh - 96px)`,
+        zIndex: 1050
+      }}
     >
       {/* Order Method Toggle */}
       <div className="order-toggle">
