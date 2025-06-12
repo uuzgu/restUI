@@ -72,12 +72,13 @@
     }
 
     .basket-footer {
-        padding: 0.75rem 1rem;
         background: var(--basket-container-bg);
+        padding: 1rem 1.5rem;
         border-top: 1px solid var(--basket-container-border);
         position: sticky;
         bottom: 0;
         width: 100%;
+        margin-bottom: calc(env(safe-area-inset-bottom, 20px) + 1rem); /* Add space for Android buttons */
     }
 
     .checkout-button {
@@ -660,6 +661,7 @@
     padding: 1rem 1.5rem;
     border-top: 1px solid var(--basket-container-border);
     z-index: 10;
+    margin-bottom: calc(env(safe-area-inset-bottom, 20px) + 1rem); /* Add space for Android buttons */
 }
 
 .basket-total {
