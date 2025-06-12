@@ -274,11 +274,43 @@ const Basket = ({
   // Set --vh CSS variable for mobile viewport height
   useEffect(() => {
     const setVh = () => {
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      // Get the viewport height and multiply it by 1% to get a value for a vh unit
+      const vh = window.innerHeight * 0.01;
+      // Set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty('--vh', `${vh}`);
     };
+
+    // Initial set
     setVh();
+
+    // Add event listener
     window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+    };
+  }, []);
+
+  // Add effect to handle safe area insets
+  useEffect(() => {
+    const updateSafeAreaInsets = () => {
+      const safeAreaBottom = window.visualViewport?.height 
+        ? window.innerHeight - window.visualViewport.height + (window.visualViewport.offsetTop || 0)
+        : 0;
+      document.documentElement.style.setProperty('--safe-area-inset-bottom', `${safeAreaBottom}px`);
+    };
+
+    updateSafeAreaInsets();
+    window.addEventListener('resize', updateSafeAreaInsets);
+    window.addEventListener('orientationchange', updateSafeAreaInsets);
+
+    return () => {
+      window.removeEventListener('resize', updateSafeAreaInsets);
+      window.removeEventListener('orientationchange', updateSafeAreaInsets);
+    };
   }, []);
 
   const handleProceedToCheckout = () => {
