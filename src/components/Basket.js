@@ -197,7 +197,8 @@ const Basket = ({
   basketVisible,
   orderMethod,
   onOrderMethodChange,
-  toggleBasket
+  toggleBasket,
+  setBasket
 }) => {
   const navigate = useNavigate();
   const [showCouponWarning, setShowCouponWarning] = useState(false);
@@ -229,7 +230,22 @@ const Basket = ({
       const hasCoupon = basket.some(item => item.discountedPrice !== undefined);
       const basketModified = JSON.stringify(previousBasketState) !== JSON.stringify(basket);
       
-      if (hadCoupon && (!hasCoupon || basketModified)) {
+      if (hadCoupon && basketModified) {
+        // Remove discounts from all items
+        const updatedBasket = basket.map(item => ({
+          ...item,
+          discountedPrice: undefined,
+          discountPercentage: undefined
+        }));
+        
+        // Update the basket state
+        if (typeof setBasket === 'function') {
+          setBasket(updatedBasket);
+        }
+        
+        // Update localStorage to persist the changes
+        localStorage.setItem('basket', JSON.stringify(updatedBasket));
+        
         setShowCouponWarning(true);
         warningShownRef.current = true;
         const timer = setTimeout(() => {
@@ -240,7 +256,7 @@ const Basket = ({
     }
 
     setPreviousBasketState(basket);
-  }, [basket, location.state, previousBasketState]);
+  }, [basket, location.state, previousBasketState, setBasket]);
 
   // Set --vh CSS variable for mobile viewport height
   useEffect(() => {

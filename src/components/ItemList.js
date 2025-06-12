@@ -1058,6 +1058,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
           orderMethod={orderMethod}
           onOrderMethodChange={handleOrderMethodChange}
           toggleBasket={setBasketVisible.bind(null, false)}
+          setBasket={setBasket}
         />
       )}
       {showPopup && selectedItem && (
@@ -1205,6 +1206,10 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                   const isFullyFree = freeQuantity === (ingredientQuantities[option.id] || 1);
                                   const isFullyPaid = paidQuantity === (ingredientQuantities[option.id] || 1);
 
+                                  // Calculate total selected quantity in this group
+                                  const totalSelectedInGroup = selectedOptionsInGroup.reduce((sum, opt) => sum + opt.quantity, 0);
+                                  const isWithinThreshold = totalSelectedInGroup <= group.threshold;
+
                                   return (
                                     <div 
                                       key={`${option.id}-${option.name}`} 
@@ -1284,8 +1289,14 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                                         )}
                                         <div className="min-w-[60px] text-right">
                                           {option.price > 0 && (
-                                            <span className={`text-sm ${isFullyFree ? 'text-green-600 dark:text-green-400' : isPartiallyFree ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-500'}`}>
-                                              {isFullyFree ? 'Free' : isPartiallyFree ? `Free x${freeQuantity}` : `+€${option.price.toFixed(2)}`}
+                                            <span className={`text-sm ${
+                                              group.threshold > 0 && totalSelectedInGroup < group.threshold
+                                                ? 'text-green-600 dark:text-green-400' 
+                                                : 'text-gray-500'
+                                            }`}>
+                                              {group.threshold > 0 && totalSelectedInGroup < group.threshold
+                                                ? 'Free' 
+                                                : `+€${option.price.toFixed(2)}`}
                                             </span>
                                           )}
                                         </div>

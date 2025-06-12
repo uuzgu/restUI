@@ -43,20 +43,6 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
   console.log('OrderDetailsPopup - CreatedAt:', orderDetails.CreatedAt);
   console.log('OrderDetailsPopup - createdAt:', orderDetails.createdAt);
 
-  // Helper function to calculate item total
-  const calculateItemTotal = (item) => {
-    if (!item) return 0;
-    try {
-      const baseTotal = (item.price || 0) * (item.quantity || 1);
-      const optionsTotal = item.selectedItems?.reduce((sum, option) => 
-        sum + ((option.price || 0) * (option.quantity || 1)), 0) || 0;
-      return baseTotal + optionsTotal;
-    } catch (e) {
-      console.error('Error calculating item total:', e);
-      return 0;
-    }
-  };
-
   // Helper function to format date
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -349,6 +335,10 @@ const PaymentSuccess = () => {
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://restapi-m5th.onrender.com'}/api/Order/${orderId}`);
           const data = await response.json();
           
+          // Get the stored cash order details which has the correct total
+          const storedCashOrderDetails = localStorage.getItem('cashOrderDetails');
+          const cashOrderDetails = storedCashOrderDetails ? JSON.parse(storedCashOrderDetails) : null;
+          
           // Map the response data to match the expected format
           const mappedData = {
             ...data,
@@ -356,22 +346,24 @@ const PaymentSuccess = () => {
             OrderId: data.OrderId,
             OrderNumber: data.OrderNumber,
             Status: data.Status,
-            Total: data.Total,
+            Total: cashOrderDetails?.Total || data.Total,
             PaymentMethod: data.PaymentMethod,
             OrderMethod: data.OrderMethod,
             CreatedAt: data.CreatedAt,
             DiscountCoupon: data.DiscountCoupon,
             CustomerInfo: data.CustomerInfo,
+            OriginalTotal: cashOrderDetails?.OriginalTotal,
             
             // Keep lowercase versions for backward compatibility
             orderId: data.OrderId,
             orderNumber: data.OrderNumber,
             status: data.Status,
-            total: data.Total,
+            total: cashOrderDetails?.Total || data.Total,
             paymentMethod: data.PaymentMethod,
             orderMethod: data.OrderMethod,
             createdAt: data.CreatedAt,
             discountCoupon: data.DiscountCoupon,
+            originalTotal: cashOrderDetails?.OriginalTotal,
             customerInfo: {
               firstName: data.CustomerInfo?.FirstName,
               lastName: data.CustomerInfo?.LastName,

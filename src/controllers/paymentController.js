@@ -74,22 +74,14 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
 
     // Calculate original total using the original prices and options
     const originalTotal = items.reduce((sum, item) => {
-      const base = item.originalPrice * (item.quantity || 1);
-      const options = (item.selectedItems || []).reduce(
-        (optSum, opt) => optSum + ((opt.price || 0) * (opt.quantity || 1)),
-        0
-      );
-      return sum + base + options;
+      return sum + item.originalPrice;
     }, 0);
 
     // Calculate current total (which may include discount)
     const totalAmount = items.reduce((sum, item) => {
       const itemPrice = item.discountedPrice !== undefined ? item.discountedPrice : item.originalPrice;
-      const itemTotal = itemPrice * (item.quantity || 1);
-      const selectedItemsTotal = (item.selectedItems || []).reduce((selectedSum, selected) => {
-        return selectedSum + ((selected.price || 0) * (selected.quantity || 1));
-      }, 0);
-      return sum + itemTotal + selectedItemsTotal;
+      // Price already includes quantity and options, so we just add it directly
+      return sum + itemPrice;
     }, 0);
 
     // Check if any item has a discount applied
@@ -160,6 +152,8 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       localStorage.setItem('paymentMethod', 'cash');
       localStorage.setItem('cashOrderDetails', JSON.stringify({
         ...response.data,
+        Total: totalAmount,
+        total: totalAmount,
         OriginalTotal: originalTotal
       }));
     }
@@ -170,24 +164,24 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       OrderId: response.data.OrderId,
       OrderNumber: response.data.OrderNumber,
       Status: response.data.Status,
-      Total: response.data.Total,
+      Total: totalAmount,
       PaymentMethod: response.data.PaymentMethod,
       OrderMethod: response.data.OrderMethod,
       CreatedAt: response.data.CreatedAt,
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
-      OriginalTotal: response.data.OriginalTotal,
+      OriginalTotal: originalTotal,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
       orderNumber: response.data.OrderNumber,
       status: response.data.Status,
-      total: response.data.Total,
+      total: totalAmount,
       paymentMethod: response.data.PaymentMethod,
       orderMethod: response.data.OrderMethod,
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
-      originalTotal: response.data.OriginalTotal,
+      originalTotal: originalTotal,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
@@ -507,10 +501,17 @@ export const handlePaymentSuccess = async (id) => {
     // Clear stored checkout data on successful payment
     clearStoredCheckoutData();
 
-    // Get the stored checkout data to check for discounts
-    const storedCheckoutData = localStorage.getItem('checkoutData');
-    const checkoutData = storedCheckoutData ? JSON.parse(storedCheckoutData) : null;
-    console.log('Stored checkout data:', checkoutData);
+    // Calculate total amount from items
+    const totalAmount = response.data.Items?.reduce((sum, item) => {
+      const itemPrice = item.Price || 0;
+      return sum + itemPrice;
+    }, 0) || 0;
+
+    // Calculate original total
+    const originalTotal = response.data.Items?.reduce((sum, item) => {
+      const itemPrice = item.OriginalPrice || item.Price || 0;
+      return sum + itemPrice;
+    }, 0) || 0;
 
     // Map the order details to ensure all required fields are present
     const orderDetails = {
@@ -518,24 +519,24 @@ export const handlePaymentSuccess = async (id) => {
       OrderId: response.data.OrderId,
       OrderNumber: response.data.OrderNumber,
       Status: response.data.Status,
-      Total: response.data.Total,
+      Total: totalAmount,
       PaymentMethod: response.data.PaymentMethod,
       OrderMethod: response.data.OrderMethod,
       CreatedAt: response.data.CreatedAt,
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
-      OriginalTotal: response.data.OriginalTotal,
+      OriginalTotal: originalTotal,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
       orderNumber: response.data.OrderNumber,
       status: response.data.Status,
-      total: response.data.Total,
+      total: totalAmount,
       paymentMethod: response.data.PaymentMethod,
       orderMethod: response.data.OrderMethod,
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
-      originalTotal: response.data.OriginalTotal,
+      originalTotal: originalTotal,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
