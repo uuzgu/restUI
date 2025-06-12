@@ -7,6 +7,25 @@
   --basket-container-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);  /* Subtle shadow for basket container */
   --basket-container-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.3);   /* Enhanced shadow for dark mode visibility */
 
+  /* Delivery/Pickup Toggle Colors */
+  --delivery-bg-light: #e0f2fe;              /* Light blue background for delivery button */
+  --delivery-bg-dark: #0c4a6e;               /* Dark blue background for delivery button */
+  --delivery-active-bg-light: #cf3946;       /* Active state background for delivery */
+  --delivery-active-bg-dark: #cf3946;        /* Active state background for delivery in dark mode */
+  --delivery-text-light: #0369a1;            /* Text color for delivery button */
+  --delivery-text-dark: #bae6fd;             /* Text color for delivery button in dark mode */
+  --delivery-active-text-light: #ffffff;     /* Active state text color for delivery */
+  --delivery-active-text-dark: #ffffff;      /* Active state text color for delivery in dark mode */
+
+  --pickup-bg-light: #f0fdf4;                /* Light green background for pickup button */
+  --pickup-bg-dark: #0c4a6e;                 /* Dark green background for pickup button */
+  --pickup-active-bg-light: #cf3946;         /* Active state background for pickup */
+  --pickup-active-bg-dark: #cf3946;          /* Active state background for pickup in dark mode */
+  --pickup-text-light: #166534;              /* Text color for pickup button */
+  --pickup-text-dark: #bbf7d0;               /* Text color for pickup button in dark mode */
+  --pickup-active-text-light: #ffffff;       /* Active state text color for pickup */
+  --pickup-active-text-dark: #ffffff;        /* Active state text color for pickup in dark mode */
+
   /* Basket Item Colors */
   --basket-item-bg-light: #ffffff;           /* Individual item background */
   --basket-item-bg-dark: #1f2937;            /* Individual item background in dark mode */

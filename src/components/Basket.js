@@ -306,6 +306,7 @@ const Basket = ({
         <div className="toggle-wrapper-long" data-selected={orderMethod}>
           <button
             type="button"
+            data-type="delivery"
             className={`toggle-option ${orderMethod === "delivery" ? "active" : ""}`}
             onClick={() => onOrderMethodChange("delivery")}
           >
@@ -313,6 +314,7 @@ const Basket = ({
           </button>
           <button
             type="button"
+            data-type="pickup"
             className={`toggle-option ${orderMethod === "selfCollection" ? "active" : ""}`}
             onClick={() => onOrderMethodChange("selfCollection")}
           >

@@ -456,7 +456,8 @@ html {
     transform: translateX(100%);
 }
 
-.toggle-option.active {
+/* Remove conflicting styles */
+/* .toggle-option.active {
     color: #9b2c2c;
 }
 
@@ -470,7 +471,7 @@ html {
 
 .dark .toggle-option:hover:not(.active) {
     background-color: #4b5563;
-}
+} */
 
 @media (max-width: 640px) {
     .toggle-wrapper-long {
