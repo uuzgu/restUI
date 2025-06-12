@@ -793,17 +793,21 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     if (existingItemIndex !== -1) {
       // Update quantity if item exists with the same selections and note
       setBasket(prevBasket => {
-        const newBasket = [...prevBasket];
+        // Remove discounts from all items first
+        const newBasket = prevBasket.map(item => ({
+          ...item,
+          discountedPrice: undefined,
+          discountPercentage: undefined
+        }));
+        
+        // Then update the quantity of the existing item
         const existingItem = newBasket[existingItemIndex];
         const newQuantity = existingItem.quantity + basketItem.quantity;
         
         newBasket[existingItemIndex] = {
           ...existingItem,
           quantity: newQuantity,
-          originalPrice: existingItem.originalPrice,
-          // Remove discount if it existed
-          discountedPrice: undefined,
-          discountPercentage: undefined
+          originalPrice: existingItem.originalPrice
         };
         return newBasket;
       });

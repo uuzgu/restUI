@@ -224,8 +224,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     navigate('/order', { 
       state: { 
         basket: localBasket, // Pass the basket with discounted prices
-        orderMethod: localOrderMethod,
-        showCouponWarning: false // Don't show warning since we're preserving the discount
+        orderMethod: localOrderMethod
       } 
     });
   };
@@ -481,6 +480,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
   const validateCoupon = async (code) => {
     if (!code.trim()) {
       setCouponError(translations[language].checkout.enterCouponCode);
+      return;
+    }
+
+    // Check if email is filled
+    if (!formData.email.trim()) {
+      setCouponError(translations[language].checkout.emailRequired);
       return;
     }
 
