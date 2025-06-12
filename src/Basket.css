@@ -522,13 +522,17 @@
 
     /* Make Info and quantity buttons smaller on mobile */
     .info-btn {
-        font-size: 0.7rem !important;
-        padding: 0.15rem 0.5rem !important;
-        min-width: 1.5rem !important;
-        min-height: 1.5rem !important;
-        height: 1.5rem !important;
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.5rem !important;
+        min-width: 2rem !important;
+        min-height: 1.75rem !important;
+        height: 1.75rem !important;
         width: auto !important;
         border-radius: 1rem !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     .quantity-btn {
         width: 1.75rem !important;
