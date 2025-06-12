@@ -246,6 +246,12 @@ const Basket = ({
       return () => clearTimeout(timer);
     }
 
+    // Reset warning state when basket becomes empty
+    if (basket.length === 0) {
+      warningShownRef.current = false;
+      setShowCouponWarning(false);
+    }
+
     // Check if basket was modified (items added, removed, or quantities changed)
     if (previousBasketState && !warningShownRef.current) {
       const hadCoupon = previousBasketState.some(item => item.discountedPrice !== undefined);

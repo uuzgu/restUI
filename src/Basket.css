@@ -519,6 +519,30 @@
         width: 1.25rem;
         height: 1.25rem;
     }
+
+    /* Make Info and quantity buttons smaller on mobile */
+    .info-btn {
+        font-size: 0.7rem !important;
+        padding: 0.15rem 0.5rem !important;
+        min-width: 1.5rem !important;
+        min-height: 1.5rem !important;
+        height: 1.5rem !important;
+        width: auto !important;
+        border-radius: 1rem !important;
+    }
+    .quantity-btn {
+        width: 1.75rem !important;
+        height: 1.75rem !important;
+        font-size: 1rem !important;
+        padding: 0 !important;
+        min-width: 1.5rem !important;
+        min-height: 1.5rem !important;
+        border-radius: 0.75rem !important;
+    }
+    .quantity-display {
+        font-size: 1rem !important;
+        min-width: 1.5rem !important;
+    }
 }
 
 /* Order Toggle */
