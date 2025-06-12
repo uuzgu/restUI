@@ -587,19 +587,19 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     const hasDiscount = discountedPrice < originalPrice;
 
     return (
-      <div className="flex justify-between items-start py-2">
+      <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="font-medium">{item.name} x{quantity}</span>
             <button
-              onClick={(e) => toggleItemDetails(e, item.id)}
+              onClick={toggleDetails}
               className="info-btn px-2 py-1 text-xs rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               {showDetails ? 'Hide Info' : 'Info'}
             </button>
           </div>
           {showDetails && (
-            <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               {item.selectedItems && item.selectedItems.length > 0 && (
                 <div className="mb-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Selected Options:</span>
@@ -667,19 +667,13 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
           )}
         </div>
         <div className="text-right">
-          {hasDiscount ? (
-            <>
-              <span className="text-sm text-gray-500 line-through mr-2">
-                €{(originalPrice * quantity).toFixed(2)}
-              </span>
-              <span className="font-medium text-green-600 dark:text-green-400">
-                €{(discountedPrice * quantity).toFixed(2)}
-              </span>
-            </>
+          {item.discountedPrice ? (
+            <div className="flex flex-col items-end">
+              <span className="text-sm text-gray-500 line-through">€{item.originalPrice.toFixed(2)}</span>
+              <span className="text-green-600 dark:text-green-400">€{item.discountedPrice.toFixed(2)}</span>
+            </div>
           ) : (
-            <span className="font-medium">
-              €{(originalPrice * quantity).toFixed(2)}
-            </span>
+            <span>€{item.originalPrice.toFixed(2)}</span>
           )}
         </div>
       </div>
@@ -687,12 +681,17 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
   };
 
   // Calculate totals with discount
-  const totalOriginalPrice = localBasket.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
-  const subtotal = localBasket.reduce((sum, item) => {
-    const price = item.discountedPrice !== undefined ? item.discountedPrice : item.originalPrice;
-    return sum + (price * item.quantity);
-  }, 0);
-  const totalDiscount = totalOriginalPrice - subtotal;
+  const calculateTotals = () => {
+    const totalOriginalPrice = localBasket.reduce((sum, item) => sum + item.originalPrice, 0);
+    const subtotal = localBasket.reduce((sum, item) => {
+      const price = item.discountedPrice !== undefined ? item.discountedPrice : item.originalPrice;
+      return sum + price;
+    }, 0);
+    const totalDiscount = totalOriginalPrice - subtotal;
+    return { totalOriginalPrice, subtotal, totalDiscount };
+  };
+
+  const { totalOriginalPrice, subtotal, totalDiscount } = calculateTotals();
 
   return (
     <ApiProvider>
@@ -922,11 +921,11 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       <div className="text-right">
                         {item.discountedPrice ? (
                           <div className="flex flex-col items-end">
-                            <span className="text-sm text-gray-500 line-through">€{(item.originalPrice * item.quantity).toFixed(2)}</span>
-                            <span className="text-green-600 dark:text-green-400">€{(item.discountedPrice * item.quantity).toFixed(2)}</span>
+                            <span className="text-sm text-gray-500 line-through">€{item.originalPrice.toFixed(2)}</span>
+                            <span className="text-green-600 dark:text-green-400">€{item.discountedPrice.toFixed(2)}</span>
                           </div>
                         ) : (
-                          <span>€{(item.originalPrice * item.quantity).toFixed(2)}</span>
+                          <span>€{item.originalPrice.toFixed(2)}</span>
                         )}
                       </div>
                     </div>
