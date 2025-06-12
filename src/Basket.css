@@ -65,13 +65,13 @@
     }
 
     .basket-content {
-        padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 6rem);
+        padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 8rem);
     }
 
     .basket-footer {
         width: 100vw;
         max-width: 100vw;
-        padding: 1rem 1.5rem 1.5rem 1.5rem;
+        padding: 1rem 1.5rem calc(env(safe-area-inset-bottom, 20px) + 2.5rem) 1.5rem;
         position: static;
     }
 
