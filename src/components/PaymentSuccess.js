@@ -246,10 +246,10 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
                     </div>
                     <div className="text-right">
                       <div className="font-medium text-[var(--popup-text)]">
-                        {formatPrice(item.price * item.quantity)}
+                        {formatPrice(item.price)}
                       </div>
                       <div className="text-sm text-[var(--popup-text-tertiary)]">
-                        {item.quantity} x {formatPrice(item.price)}
+                        {item.quantity} x {formatPrice(item.price / item.quantity)}
                       </div>
                     </div>
                   </div>

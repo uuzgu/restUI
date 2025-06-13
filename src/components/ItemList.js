@@ -36,17 +36,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   const observer = useRef(null);
   const { api } = useApi();
 
-  // Add state for app settings
-  const [appSettings, setAppSettings] = useState({
-    currency: '€',
-    defaultPrice: {
-      originalPrice: 0,
-      discountedPrice: 0,
-      discountPercentage: 0,
-      singleItemPrice: 0
-    }
-  });
-
   // Scroll to top when component mounts or location state changes
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -348,19 +337,6 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     singleItemPrice: 0
   });
 
-  // Fetch app settings
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const response = await api.get('/settings');
-        setAppSettings(response.data);
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-      }
-    };
-    fetchSettings();
-  }, [api]);
-
   // Calculate price when dependencies change
   useEffect(() => {
     const calculatePrice = async () => {
@@ -617,63 +593,50 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       return;
     }
 
-    const selectedItems = [
-      ...itemOptions.selectionGroups.reduce((acc, group) => {
-        if (!group.options || !Array.isArray(group.options)) return acc;
+    // Get all selected items from selectionGroups only
+    const selectedItems = itemOptions.selectionGroups.reduce((acc, group) => {
+      if (!group.options || !Array.isArray(group.options)) return acc;
 
-        // Get all selected options in this group with their quantities
-        const selectedOptions = group.options
-          .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
-          .map(opt => {
-            const quantity = ingredientQuantities[opt.id] || 1;
-            return { ...opt, quantity };
-          });
-
-        // Sort selected options by their order in the group
-        selectedOptions.sort((a, b) => {
-          const aIndex = group.options.findIndex(opt => opt.id === a.id);
-          const bIndex = group.options.findIndex(opt => opt.id === b.id);
-          return aIndex - bIndex;
+      // Get all selected options in this group with their quantities
+      const selectedOptions = group.options
+        .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
+        .map(opt => {
+          const quantity = ingredientQuantities[opt.id] || 1;
+          return { ...opt, quantity };
         });
 
-        // Calculate total quantity of selected options
-        const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
+      // Sort selected options by their order in the group
+      selectedOptions.sort((a, b) => {
+        const aIndex = group.options.findIndex(opt => opt.id === a.id);
+        const bIndex = group.options.findIndex(opt => opt.id === b.id);
+        return aIndex - bIndex;
+      });
 
-        // Process options based on threshold
-        let remainingFreeQuantity = group.threshold || 0;
-        const processedOptions = selectedOptions.map(opt => {
-          // Calculate how many of this option are free
-          const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
-          remainingFreeQuantity -= freeQuantity;
-          
-          // Calculate how many of this option are paid
-          const paidQuantity = opt.quantity - freeQuantity;
-          
-          return {
-            ...opt,
-            groupName: group.name,
-            price: Number(opt.price || 0),
-            quantity: opt.quantity,
-            freeQuantity,
-            paidQuantity
-          };
-        });
+      // Calculate total quantity of selected options
+      const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
 
-        return [...acc, ...processedOptions];
-      }, []),
-      ...selectedIngredients.map(ing => {
-        let groupName = undefined;
-        if (ing.groupId && itemOptions.selectionGroups) {
-          const group = itemOptions.selectionGroups.find(g => g.id === ing.groupId);
-          if (group) groupName = group.name;
-        }
+      // Process options based on threshold
+      let remainingFreeQuantity = group.threshold || 0;
+      const processedOptions = selectedOptions.map(opt => {
+        // Calculate how many of this option are free
+        const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
+        remainingFreeQuantity -= freeQuantity;
+        
+        // Calculate how many of this option are paid
+        const paidQuantity = opt.quantity - freeQuantity;
+        
         return {
-          ...ing,
-          groupName: groupName || ing.groupName,
-          quantity: ingredientQuantities[ing.id] || 1
+          ...opt,
+          groupName: group.name,
+          price: Number(opt.price || 0),
+          quantity: opt.quantity,
+          freeQuantity,
+          paidQuantity
         };
-      })
-    ];
+      });
+
+      return [...acc, ...processedOptions];
+    }, []);
 
     const quantity = Number(popupItemQuantity || 1);
     
