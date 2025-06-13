@@ -69,20 +69,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
       };
     }
     
-    // Finally check localStorage
-    const storedData = localStorage.getItem('checkoutData');
-    if (storedData) {
-      try {
-        const data = JSON.parse(storedData);
-        return {
-          basket: data.items || [],
-          orderMethod: data.orderMethod || 'delivery',
-          customerInfo: data.customerInfo || {}
-        };
-      } catch (e) {
-        console.error('Error parsing stored checkout data:', e);
-      }
-    }
+    // Clear all stored data when starting a new order
+    localStorage.removeItem('checkoutData');
+    localStorage.removeItem('basket');
+    localStorage.removeItem('cashOrderId');
+    localStorage.removeItem('cashOrderDetails');
+    localStorage.removeItem('stripeSessionId');
     
     // Default values
     return {
@@ -182,17 +174,6 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
   useEffect(() => {
     localStorage.setItem('basket', JSON.stringify(localBasket));
   }, [localBasket]);
-
-  // Initialize form with stored data
-  useEffect(() => {
-    const storedCheckoutData = localStorage.getItem('checkoutData');
-    if (storedCheckoutData) {
-      const checkoutData = JSON.parse(storedCheckoutData);
-      if (checkoutData.customerInfo) {
-        setFormData(checkoutData.customerInfo);
-      }
-    }
-  }, []);
 
   // Fetch minimum order value when postal code changes
   useEffect(() => {
@@ -307,10 +288,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
       // First check - if it's a delivery order, postal code and address are mandatory
       if (localOrderMethod === 'delivery') {
-        if (!formData.postalCode || !formData.street) {
+        if (!formData.postalCode || !formData.street || !formData.house) {
           setIsProcessing(false);
           setFormErrors({
-            submit: 'Please select both postal code and address to proceed with payment'
+            submit: 'Please enter complete delivery address (postal code, street, and house number) to proceed with payment'
           });
           
           // Highlight the missing fields
@@ -321,6 +302,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
           if (!formData.street && addressRef.current) {
             addressRef.current.classList.add('highlight-error');
             addressRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          if (!formData.house && houseRef.current) {
+            houseRef.current.classList.add('highlight-error');
+            houseRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
           return;
         }
