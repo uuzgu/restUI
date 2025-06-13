@@ -68,8 +68,26 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
         customerInfo: {}
       };
     }
+
+    // Check if this is a Stripe payment retry
+    const stripeSessionId = localStorage.getItem('stripeSessionId');
+    const storedCheckoutData = localStorage.getItem('checkoutData');
     
-    // Clear all stored data when starting a new order
+    if (stripeSessionId && storedCheckoutData) {
+      try {
+        const data = JSON.parse(storedCheckoutData);
+        // Only use stored data if it's from a Stripe payment retry
+        return {
+          basket: data.items || [],
+          orderMethod: data.orderMethod || 'delivery',
+          customerInfo: data.customerInfo || {}
+        };
+      } catch (e) {
+        console.error('Error parsing stored checkout data:', e);
+      }
+    }
+    
+    // If not a retry, clear all stored data for a new order
     localStorage.removeItem('checkoutData');
     localStorage.removeItem('basket');
     localStorage.removeItem('cashOrderId');
@@ -277,6 +295,15 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     return localBasket.reduce((sum, item) => sum + item.originalPrice * item.quantity, 0);
   };
 
+  // Add a function to clear data after successful order completion
+  const clearOrderData = () => {
+    localStorage.removeItem('checkoutData');
+    localStorage.removeItem('basket');
+    localStorage.removeItem('cashOrderId');
+    localStorage.removeItem('cashOrderDetails');
+    localStorage.removeItem('stripeSessionId');
+  };
+
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault();
@@ -429,11 +456,14 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
         if (!result.url) {
           throw new Error('No Stripe checkout URL received');
         }
+        // Don't clear data for Stripe payments as we need it for potential retry
         window.location.href = result.url;
       } else if (paymentMethod === 'cash') {
         if (!result.orderDetails) {
           throw new Error('No order details received for cash payment');
         }
+        // Clear data for cash payments as they're completed immediately
+        clearOrderData();
         navigate('/payment/success', { 
           state: { 
             orderDetails: result.orderDetails,
