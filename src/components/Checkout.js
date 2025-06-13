@@ -473,13 +473,18 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
         if (!result.orderDetails) {
           throw new Error('No order details received for cash payment');
         }
-        // Clear data for cash payments as they're completed immediately
-        localStorage.removeItem('checkoutData');
-        localStorage.removeItem('basket');
-        localStorage.removeItem('cashOrderId');
-        localStorage.removeItem('cashOrderDetails');
-        localStorage.removeItem('stripeSessionId');
         
+        // Store cash order details before navigation
+        localStorage.setItem('cashOrderId', result.orderDetails.id);
+        localStorage.setItem('cashOrderDetails', JSON.stringify({
+          ...result.orderDetails,
+          Total: result.orderDetails.total,
+          total: result.orderDetails.total,
+          OriginalTotal: result.orderDetails.originalTotal,
+          originalTotal: result.orderDetails.originalTotal
+        }));
+        
+        // Don't clear data until after successful navigation
         navigate('/payment/success', { 
           state: { 
             orderDetails: result.orderDetails,
