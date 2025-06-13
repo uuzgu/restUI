@@ -70,13 +70,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     }
 
     // Check if this is a Stripe payment retry
-    const stripeSessionId = localStorage.getItem('stripeSessionId');
     const storedCheckoutData = localStorage.getItem('checkoutData');
     
-    if (stripeSessionId && storedCheckoutData) {
+    if (storedCheckoutData) {
       try {
         const data = JSON.parse(storedCheckoutData);
-        // Only use stored data if it's from a Stripe payment retry
+        // Use stored data if it exists
         return {
           basket: data.items || [],
           orderMethod: data.orderMethod || 'delivery',
@@ -87,7 +86,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
       }
     }
     
-    // If not a retry, clear all stored data for a new order
+    // If no stored data exists, clear everything and start fresh
     localStorage.removeItem('checkoutData');
     localStorage.removeItem('basket');
     localStorage.removeItem('cashOrderId');
@@ -441,6 +440,15 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
       console.log('localBasket at checkout:', localBasket);
       console.log('mappedItems to send:', mappedItems);
 
+      // Store checkout data before processing payment
+      const checkoutData = {
+        items: mappedItems,
+        customerInfo,
+        orderMethod: localOrderMethod,
+        paymentMethod
+      };
+      localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+
       const result = await createCheckoutSession({
         items: mappedItems,
         customerInfo,
@@ -456,14 +464,22 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
         if (!result.url) {
           throw new Error('No Stripe checkout URL received');
         }
-        // Don't clear data for Stripe payments as we need it for potential retry
+        // Store session ID for Stripe payments
+        if (result.sessionId) {
+          localStorage.setItem('stripeSessionId', result.sessionId);
+        }
         window.location.href = result.url;
       } else if (paymentMethod === 'cash') {
         if (!result.orderDetails) {
           throw new Error('No order details received for cash payment');
         }
         // Clear data for cash payments as they're completed immediately
-        clearOrderData();
+        localStorage.removeItem('checkoutData');
+        localStorage.removeItem('basket');
+        localStorage.removeItem('cashOrderId');
+        localStorage.removeItem('cashOrderDetails');
+        localStorage.removeItem('stripeSessionId');
+        
         navigate('/payment/success', { 
           state: { 
             orderDetails: result.orderDetails,
