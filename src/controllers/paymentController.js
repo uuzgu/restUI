@@ -171,6 +171,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
       OriginalTotal: originalTotal,
+      SpecialNotes: response.data.SpecialNotes,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
@@ -182,6 +183,7 @@ export const createCashOrder = async ({ items, customerInfo, orderMethod }) => {
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
       originalTotal: originalTotal,
+      specialNotes: response.data.SpecialNotes,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
@@ -528,6 +530,7 @@ export const handlePaymentSuccess = async (id) => {
       DiscountCoupon: response.data.DiscountCoupon,
       CustomerInfo: response.data.CustomerInfo,
       OriginalTotal: originalTotal,
+      SpecialNotes: response.data.SpecialNotes,
       
       // Keep lowercase versions for backward compatibility
       orderId: response.data.OrderId,
@@ -539,6 +542,7 @@ export const handlePaymentSuccess = async (id) => {
       createdAt: response.data.CreatedAt,
       discountCoupon: response.data.DiscountCoupon,
       originalTotal: originalTotal,
+      specialNotes: response.data.SpecialNotes,
       customerInfo: {
         firstName: response.data.CustomerInfo?.FirstName,
         lastName: response.data.CustomerInfo?.LastName,
