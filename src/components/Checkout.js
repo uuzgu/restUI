@@ -54,7 +54,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     // First check location state (for retry or from order page)
     if (location.state?.basket) {
       return {
-        basket: location.state.basket,
+        basket: location.state.basket.map(item => ({
+          ...item,
+          basePrice: item.basePrice || (item.originalPrice / (item.quantity || 1))
+        })),
         orderMethod: location.state.orderMethod || 'delivery',
         customerInfo: location.state.customerInfo || {}
       };
@@ -63,7 +66,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     // Then check props
     if (propBasket) {
       return {
-        basket: propBasket,
+        basket: propBasket.map(item => ({
+          ...item,
+          basePrice: item.basePrice || (item.originalPrice / (item.quantity || 1))
+        })),
         orderMethod: propOrderMethod || 'delivery',
         customerInfo: {}
       };

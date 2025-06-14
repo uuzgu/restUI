@@ -339,85 +339,70 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
   // Calculate price when dependencies change
   useEffect(() => {
-    const calculatePrice = async () => {
+    const calculatePrice = () => {
       if (!selectedItem || !itemOptions) return;
 
-      try {
-        const response = await api.post(`/items/${selectedItem.id}/calculate-price`, {
-          selectedItems: selectedIngredients,
-          quantity: 1  // Calculate for single item first
-        });
-        
-        // Store the single item price
-        setCalculatedPrice({
-          ...response.data,
-          singleItemPrice: response.data.originalPrice
-        });
-      } catch (error) {
-        console.error('Error calculating price:', error);
-        // Use basic fallback if API fails
-        const basePrice = Number(selectedItem?.price || 0);
-        
-        // Process selected items to handle free options within threshold
-        const processedItems = itemOptions.selectionGroups.reduce((acc, group) => {
-          if (!group.options || !Array.isArray(group.options)) return acc;
+      const basePrice = Number(selectedItem?.price || 0);
+      
+      // Process selected items to handle free options within threshold
+      const processedItems = itemOptions.selectionGroups.reduce((acc, group) => {
+        if (!group.options || !Array.isArray(group.options)) return acc;
 
-          // Get all selected options in this group with their quantities
-          const selectedOptions = group.options
-            .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
-            .map(opt => {
-              const quantity = ingredientQuantities[opt.id] || 1;
-              return { ...opt, quantity };
-            });
-
-          // Sort selected options by their order in the group
-          selectedOptions.sort((a, b) => {
-            const aIndex = group.options.findIndex(opt => opt.id === a.id);
-            const bIndex = group.options.findIndex(opt => opt.id === b.id);
-            return aIndex - bIndex;
+        // Get all selected options in this group with their quantities
+        const selectedOptions = group.options
+          .filter(opt => selectedIngredients.some(ing => ing.id === opt.id && ing.type === 'selection'))
+          .map(opt => {
+            const quantity = ingredientQuantities[opt.id] || 1;
+            return { ...opt, quantity };
           });
 
-          // Calculate total quantity of selected options
-          const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
-
-          // Process options based on threshold
-          let remainingFreeQuantity = group.threshold || 0;
-          const processedOptions = selectedOptions.map(opt => {
-            // Calculate how many of this option are free
-            const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
-            remainingFreeQuantity -= freeQuantity;
-            
-            // Calculate how many of this option are paid
-            const paidQuantity = opt.quantity - freeQuantity;
-            
-            return {
-              ...opt,
-              price: Number(opt.price || 0),
-              quantity: opt.quantity,
-              freeQuantity,
-              paidQuantity
-            };
-          });
-
-          return [...acc, ...processedOptions];
-        }, []);
-
-        // Calculate total price including only paid quantities
-        const selectedItemsTotal = processedItems.reduce((sum, item) => {
-          return sum + (Number(item.price || 0) * (item.paidQuantity || 0));
-        }, 0);
-
-        setCalculatedPrice({
-          originalPrice: basePrice + selectedItemsTotal,
-          discountedPrice: basePrice + selectedItemsTotal,
-          discountPercentage: 0,
-          singleItemPrice: basePrice + selectedItemsTotal
+        // Sort selected options by their order in the group
+        selectedOptions.sort((a, b) => {
+          const aIndex = group.options.findIndex(opt => opt.id === a.id);
+          const bIndex = group.options.findIndex(opt => opt.id === b.id);
+          return aIndex - bIndex;
         });
-      }
+
+        // Calculate total quantity of selected options
+        const totalSelectedQuantity = selectedOptions.reduce((sum, opt) => sum + opt.quantity, 0);
+
+        // Process options based on threshold
+        let remainingFreeQuantity = group.threshold || 0;
+        const processedOptions = selectedOptions.map(opt => {
+          // Calculate how many of this option are free
+          const freeQuantity = Math.min(remainingFreeQuantity, opt.quantity);
+          remainingFreeQuantity -= freeQuantity;
+          
+          // Calculate how many of this option are paid
+          const paidQuantity = opt.quantity - freeQuantity;
+          
+          return {
+            ...opt,
+            price: Number(opt.price || 0),
+            quantity: opt.quantity,
+            freeQuantity,
+            paidQuantity
+          };
+        });
+
+        return [...acc, ...processedOptions];
+      }, []);
+
+      // Calculate total price including only paid quantities
+      const selectedItemsTotal = processedItems.reduce((sum, item) => {
+        return sum + (Number(item.price || 0) * (item.paidQuantity || 0));
+      }, 0);
+
+      setCalculatedPrice({
+        originalPrice: basePrice + selectedItemsTotal,
+        discountedPrice: basePrice + selectedItemsTotal,
+        discountPercentage: 0,
+        singleItemPrice: basePrice + selectedItemsTotal
+      });
     };
 
     calculatePrice();
-  }, [selectedItem, selectedIngredients, itemOptions, api, ingredientQuantities]);
+  }, [selectedItem, selectedIngredients, itemOptions, ingredientQuantities]);
 
   // Add a state for the displayed price
   const [displayPrice, setDisplayPrice] = useState({

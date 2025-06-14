@@ -244,6 +244,8 @@ export const storeCheckoutData = (data) => {
       ...item,
       originalPrice: item.originalPrice || item.price,
       price: item.price,
+      basePrice: item.basePrice || (item.originalPrice / (item.quantity || 1)),
+      note: item.note || "",
       selectedItems: (item.selectedItems || []).map(opt => ({
         ...opt,
         price: opt.price || 0
