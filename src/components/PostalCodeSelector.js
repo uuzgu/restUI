@@ -80,6 +80,7 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
   const handlePostcodeChange = (postcodeId) => {
     setSelectedPostcode(postcodeId);
     setSelectedAddress('');
+    setAddresses([]);
     const newFormValues = {
       street: '',
       house: '',
@@ -199,11 +200,13 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
               disabled={loading}
             >
               <option value="">{selectAddressLabel}</option>
-              {addresses.map((address) => (
-                <option key={address.Id} value={address.Id}>
-                  {formatAddress(address)}
-                </option>
-              ))}
+              {addresses
+                .filter(address => address.Id >= 1 && address.Id <= 10)
+                .map((address) => (
+                  <option key={address.Id} value={address.Id}>
+                    {formatAddress(address)}
+                  </option>
+                ))}
             </select>
             {loading && (
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
