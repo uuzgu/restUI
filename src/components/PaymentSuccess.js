@@ -135,11 +135,11 @@ const OrderDetailsPopup = ({ orderDetails, onClose }) => {
                 <div className="font-medium text-[var(--popup-text)]">
                   {orderDetails.OriginalTotal && orderDetails.DiscountCoupon === 1 ? (
                     <span>
-                      Original Total: €{orderDetails.OriginalTotal?.toFixed(2)}<br />
-                      Final Total: €{orderDetails.Total?.toFixed(2)}
+                      Original Total: €{parseFloat(orderDetails.OriginalTotal).toFixed(2)}<br />
+                      Final Total: €{parseFloat(orderDetails.Total).toFixed(2)}
                     </span>
                   ) : (
-                    <span>€{orderDetails.Total?.toFixed(2)}</span>
+                    <span>€{parseFloat(orderDetails.Total).toFixed(2)}</span>
                   )}
                 </div>
               </div>
@@ -353,7 +353,7 @@ const PaymentSuccess = () => {
             CreatedAt: data.CreatedAt,
             DiscountCoupon: data.DiscountCoupon,
             CustomerInfo: data.CustomerInfo,
-            OriginalTotal: cashOrderDetails?.OriginalTotal,
+            OriginalTotal: data.OriginalTotal,  // Use data.OriginalTotal directly
             
             // Keep lowercase versions for backward compatibility
             orderId: data.OrderId,
@@ -364,7 +364,7 @@ const PaymentSuccess = () => {
             orderMethod: data.OrderMethod,
             createdAt: data.CreatedAt,
             discountCoupon: data.DiscountCoupon,
-            originalTotal: cashOrderDetails?.OriginalTotal,
+            originalTotal: data.OriginalTotal,  // Use data.OriginalTotal directly
             customerInfo: {
               firstName: data.CustomerInfo?.FirstName,
               lastName: data.CustomerInfo?.LastName,
@@ -472,11 +472,7 @@ const PaymentSuccess = () => {
               <div className="flex items-center mb-1">
                 <span className="font-medium mr-2" style={{ color: 'var(--payment-success-text)' }}>Total:</span>
                 <span className="font-bold text-lg" style={{ color: 'var(--payment-success-total)' }}>
-                  {orderDetails.total !== undefined
-                    ? `€${parseFloat(orderDetails.total).toFixed(2)}`
-                    : orderDetails.Total !== undefined
-                    ? `€${parseFloat(orderDetails.Total).toFixed(2)}`
-                    : 'N/A'}
+                  €{parseFloat(orderDetails.total || orderDetails.Total).toFixed(2)}
                 </span>
               </div>
               <div className="text-sm" style={{ color: 'var(--payment-success-text)' }}> 

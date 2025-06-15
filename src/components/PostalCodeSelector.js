@@ -105,11 +105,11 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
     if (address) {
       const newFormValues = {
         street: address.Street || '',
-        house: address.House || '',
-        stairs: address.Stairs || '',
-        stick: address.Stick || '',
-        door: address.Door || '',
-        bell: address.Bell || '',
+        house: '', // House number will be entered by user
+        stairs: '',
+        stick: '',
+        door: '',
+        bell: '',
         specialNotes: ''
       };
       setFormValues(newFormValues);
@@ -142,14 +142,7 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
 
   const formatAddress = (address) => {
     console.log('Formatting address:', address);
-    const parts = [];
-    if (address.Street) parts.push(address.Street);
-    if (address.House && address.House !== 'null') parts.push(address.House);
-    if (address.Stairs && address.Stairs !== 'null') parts.push(`Stiege ${address.Stairs}`);
-    if (address.Stick && address.Stick !== 'null') parts.push(`${address.Stick}. Stock`);
-    if (address.Door && address.Door !== 'null') parts.push(`Tür ${address.Door}`);
-    if (address.Bell && address.Bell !== 'null') parts.push(`Klingel ${address.Bell}`);
-    return parts.join(', ');
+    return address.Street || '';
   };
 
   const postcodeLabel = translations[language]?.checkout?.postalCode || 'Postal Code';
@@ -200,13 +193,11 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
               disabled={loading}
             >
               <option value="">{selectAddressLabel}</option>
-              {addresses
-                .filter(address => address.Id >= 1 && address.Id <= 10)
-                .map((address) => (
-                  <option key={address.Id} value={address.Id}>
-                    {formatAddress(address)}
-                  </option>
-                ))}
+              {addresses.map((address) => (
+                <option key={address.Id} value={address.Id}>
+                  {formatAddress(address)}
+                </option>
+              ))}
             </select>
             {loading && (
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -215,79 +206,86 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="h-[72px]">
-              <label htmlFor="house" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {houseLabel}
-              </label>
-              <input
-                type="text"
-                id="house"
-                value={formValues.house}
-                onChange={(e) => handleFieldChange('house', e.target.value)}
-                onBlur={handleFieldBlur}
-                ref={houseRef}
-                className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                placeholder="Nr."
-              />
+          {selectedAddress && (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="h-[72px]">
+                <label htmlFor="house" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {houseLabel}
+                </label>
+                <input
+                  type="text"
+                  id="house"
+                  value={formValues.house}
+                  onChange={(e) => handleFieldChange('house', e.target.value)}
+                  onBlur={handleFieldBlur}
+                  ref={houseRef}
+                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  placeholder="Nr."
+                  required
+                />
+              </div>
+
+              <div className="h-[72px]">
+                <label htmlFor="stairs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {stairsLabel}
+                </label>
+                <input
+                  type="text"
+                  id="stairs"
+                  value={formValues.stairs}
+                  onChange={(e) => handleFieldChange('stairs', e.target.value)}
+                  onBlur={handleFieldBlur}
+                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  placeholder="Stiege"
+                />
+              </div>
+
+              <div className="h-[72px]">
+                <label htmlFor="stick" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {stickLabel}
+                </label>
+                <input
+                  type="text"
+                  id="stick"
+                  value={formValues.stick}
+                  onChange={(e) => handleFieldChange('stick', e.target.value)}
+                  onBlur={handleFieldBlur}
+                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  placeholder="Stock"
+                />
+              </div>
+
+              <div className="h-[72px]">
+                <label htmlFor="door" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {doorLabel}
+                </label>
+                <input
+                  type="text"
+                  id="door"
+                  value={formValues.door}
+                  onChange={(e) => handleFieldChange('door', e.target.value)}
+                  onBlur={handleFieldBlur}
+                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  placeholder="Tür"
+                />
+              </div>
+
+              <div className="h-[72px]">
+                <label htmlFor="bell" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {bellLabel}
+                </label>
+                <input
+                  type="text"
+                  id="bell"
+                  value={formValues.bell}
+                  onChange={(e) => handleFieldChange('bell', e.target.value)}
+                  onBlur={handleFieldBlur}
+                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  placeholder="Klingel"
+                />
+              </div>
             </div>
-            <div className="h-[72px]">
-              <label htmlFor="stairs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {stairsLabel}
-              </label>
-              <input
-                type="text"
-                id="stairs"
-                value={formValues.stairs}
-                onChange={(e) => handleFieldChange('stairs', e.target.value)}
-                onBlur={handleFieldBlur}
-                className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                placeholder="Stiege"
-              />
-            </div>
-            <div className="h-[72px]">
-              <label htmlFor="stick" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {stickLabel}
-              </label>
-              <input
-                type="text"
-                id="stick"
-                value={formValues.stick}
-                onChange={(e) => handleFieldChange('stick', e.target.value)}
-                onBlur={handleFieldBlur}
-                className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                placeholder="Stock"
-              />
-            </div>
-            <div className="h-[72px]">
-              <label htmlFor="door" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {doorLabel}
-              </label>
-              <input
-                type="text"
-                id="door"
-                value={formValues.door}
-                onChange={(e) => handleFieldChange('door', e.target.value)}
-                onBlur={handleFieldBlur}
-                className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                placeholder="Tür"
-              />
-            </div>
-            <div className="h-[72px]">
-              <label htmlFor="bell" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {bellLabel}
-              </label>
-              <input
-                type="text"
-                id="bell"
-                value={formValues.bell}
-                onChange={(e) => handleFieldChange('bell', e.target.value)}
-                onBlur={handleFieldBlur}
-                className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                placeholder="Klingel"
-              />
-            </div>
-          </div>
+          )}
         </div>
       )}
 
