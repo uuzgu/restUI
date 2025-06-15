@@ -4,6 +4,7 @@ import { handlePaymentSuccess } from '../controllers/paymentController';
 import { useDarkMode } from '../DarkModeContext';
 import { useLanguage } from '../LanguageContext';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import '../colors/paymentSuccessColors.css';
 import './PaymentSuccess.css';
 
 // Helper function to format price
@@ -420,49 +421,57 @@ const PaymentSuccess = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading order details...</p>
+          <p className="mt-4" style={{ color: 'var(--payment-success-text)' }}>Loading order details...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
+      <div className="max-w-md w-full rounded-lg shadow-lg p-8" style={{ 
+        backgroundColor: 'var(--payment-success-content-bg)',
+        borderColor: 'var(--payment-success-content-border)'
+      }}>
         <div className="text-center">
-          <div className="text-green-500 text-6xl mb-4">
+          <div className="text-6xl mb-4" style={{ color: 'var(--payment-success-icon)' }}>
             <i className="fas fa-check-circle"></i>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Payment Successful</h2>
-          <p className="text-gray-600 mb-2">
+          <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--payment-success-heading)' }}>
+            Payment Successful
+          </h2>
+          <p className="mb-2" style={{ color: 'var(--payment-success-text)' }}>
             Thank you for your order! Your payment has been processed successfully.
           </p>
           {orderDetails && (
             <div
-              className={`mb-6 p-4 rounded-lg border shadow-sm ${
-                isDarkMode
-                  ? 'bg-gray-800 border-gray-700 text-gray-100'
-                  : 'bg-blue-50 border-blue-200 text-gray-800'
-              }`}
+              className="mb-6 p-4 rounded-lg border shadow-sm"
+              style={{
+                backgroundColor: 'var(--payment-success-details-bg)',
+                borderColor: 'var(--payment-success-details-border)',
+                color: 'var(--payment-success-details-text)'
+              }}
             >
               <div className="flex items-center mb-2">
-                <span className="font-bold text-lg mr-2">Order #{orderDetails.orderNumber || orderDetails.OrderNumber}</span>
+                <span className="font-bold text-lg mr-2" style={{ color: 'var(--payment-success-heading)' }}>
+                  Order #{orderDetails.orderNumber || orderDetails.OrderNumber}
+                </span>
                 <span
-                  className={`ml-auto px-2 py-1 rounded text-xs font-semibold ${
-                    isDarkMode
-                      ? 'bg-gray-700 text-blue-200'
-                      : 'bg-blue-200 text-blue-800'
-                  }`}
+                  className="ml-auto px-2 py-1 rounded text-xs font-semibold"
+                  style={{
+                    backgroundColor: 'var(--payment-success-details-bg)',
+                    color: 'var(--payment-success-text)'
+                  }}
                 >
                   {orderDetails.orderMethod || orderDetails.OrderMethod}
                 </span>
               </div>
               <div className="flex items-center mb-1">
-                <span className="font-medium mr-2">Total:</span>
-                <span className={`font-bold text-lg ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>
+                <span className="font-medium mr-2" style={{ color: 'var(--payment-success-text)' }}>Total:</span>
+                <span className="font-bold text-lg" style={{ color: 'var(--payment-success-total)' }}>
                   {orderDetails.total !== undefined
                     ? `€${parseFloat(orderDetails.total).toFixed(2)}`
                     : orderDetails.Total !== undefined
@@ -470,7 +479,7 @@ const PaymentSuccess = () => {
                     : 'N/A'}
                 </span>
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}> 
+              <div className="text-sm" style={{ color: 'var(--payment-success-text)' }}> 
                 <span className="font-medium">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}
               </div>
             </div>
@@ -481,13 +490,25 @@ const PaymentSuccess = () => {
           <div className="space-y-4">
             <button
               onClick={() => setShowOrderDetails(true)}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+              className="w-full py-2 px-4 rounded-md transition duration-200"
+              style={{
+                backgroundColor: 'var(--payment-success-primary-bg)',
+                color: 'var(--payment-success-primary-text)'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = 'var(--payment-success-primary-hover)'}
+              onMouseOut={(e) => e.target.style.backgroundColor = 'var(--payment-success-primary-bg)'}
             >
               View Order Details
             </button>
             <button
               onClick={() => navigate('/')}
-              className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200"
+              className="w-full py-2 px-4 rounded-md transition duration-200"
+              style={{
+                backgroundColor: 'var(--payment-success-secondary-bg)',
+                color: 'var(--payment-success-secondary-text)'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = 'var(--payment-success-secondary-hover)'}
+              onMouseOut={(e) => e.target.style.backgroundColor = 'var(--payment-success-secondary-bg)'}
             >
               Return to Home
             </button>

@@ -1,0 +1,85 @@
+:root {
+  /* Container Colors */
+  --payment-success-container-bg-light: #f3f4f6;  /* Light gray background */
+  --payment-success-container-bg-dark: #111827;   /* Dark gray background */
+  
+  /* Content Box Colors */
+  --payment-success-content-bg-light: #ffffff;    /* White background */
+  --payment-success-content-bg-dark: #1f2937;     /* Dark gray background */
+  --payment-success-content-border-light: #e5e7eb; /* Light border */
+  --payment-success-content-border-dark: #374151;  /* Dark border */
+  
+  /* Text Colors */
+  --payment-success-heading-light: #1f2937;       /* Dark gray for headings */
+  --payment-success-heading-dark: #f9fafb;        /* White for headings */
+  --payment-success-text-light: #4b5563;          /* Medium gray for text */
+  --payment-success-text-dark: #d1d5db;           /* Light gray for text */
+  
+  /* Order Details Box Colors */
+  --payment-success-details-bg-light: #eff6ff;    /* Light blue background */
+  --payment-success-details-bg-dark: #1f2937;     /* Dark gray background */
+  --payment-success-details-border-light: #bfdbfe; /* Light blue border */
+  --payment-success-details-border-dark: #374151;  /* Dark border */
+  --payment-success-details-text-light: #1f2937;   /* Dark text */
+  --payment-success-details-text-dark: #f3f4f6;    /* Light text */
+  
+  /* Button Colors */
+  --payment-success-primary-bg-light: #2563eb;    /* Blue background */
+  --payment-success-primary-bg-dark: #3b82f6;     /* Slightly lighter blue */
+  --payment-success-primary-hover-light: #1d4ed8; /* Darker blue on hover */
+  --payment-success-primary-hover-dark: #2563eb;  /* Darker blue on hover */
+  --payment-success-primary-text: #ffffff;        /* White text */
+  
+  --payment-success-secondary-bg-light: #e5e7eb;  /* Light gray background */
+  --payment-success-secondary-bg-dark: #374151;   /* Dark gray background */
+  --payment-success-secondary-hover-light: #d1d5db; /* Darker gray on hover */
+  --payment-success-secondary-hover-dark: #4b5563;  /* Lighter gray on hover */
+  --payment-success-secondary-text-light: #1f2937;  /* Dark text */
+  --payment-success-secondary-text-dark: #e5e7eb;   /* Light text */
+  
+  /* Success Icon Colors */
+  --payment-success-icon-light: #10b981;          /* Green for success icon */
+  --payment-success-icon-dark: #34d399;           /* Lighter green for dark mode */
+  
+  /* Total Amount Colors */
+  --payment-success-total-light: #059669;         /* Dark green for total */
+  --payment-success-total-dark: #34d399;          /* Light green for total */
+}
+
+/* Dark mode overrides */
+.dark {
+  --payment-success-container-bg: var(--payment-success-container-bg-dark);
+  --payment-success-content-bg: var(--payment-success-content-bg-dark);
+  --payment-success-content-border: var(--payment-success-content-border-dark);
+  --payment-success-heading: var(--payment-success-heading-dark);
+  --payment-success-text: var(--payment-success-text-dark);
+  --payment-success-details-bg: var(--payment-success-details-bg-dark);
+  --payment-success-details-border: var(--payment-success-details-border-dark);
+  --payment-success-details-text: var(--payment-success-details-text-dark);
+  --payment-success-primary-bg: var(--payment-success-primary-bg-dark);
+  --payment-success-primary-hover: var(--payment-success-primary-hover-dark);
+  --payment-success-secondary-bg: var(--payment-success-secondary-bg-dark);
+  --payment-success-secondary-hover: var(--payment-success-secondary-hover-dark);
+  --payment-success-secondary-text: var(--payment-success-secondary-text-dark);
+  --payment-success-icon: var(--payment-success-icon-dark);
+  --payment-success-total: var(--payment-success-total-dark);
+}
+
+/* Light mode defaults */
+:root {
+  --payment-success-container-bg: var(--payment-success-container-bg-light);
+  --payment-success-content-bg: var(--payment-success-content-bg-light);
+  --payment-success-content-border: var(--payment-success-content-border-light);
+  --payment-success-heading: var(--payment-success-heading-light);
+  --payment-success-text: var(--payment-success-text-light);
+  --payment-success-details-bg: var(--payment-success-details-bg-light);
+  --payment-success-details-border: var(--payment-success-details-border-light);
+  --payment-success-details-text: var(--payment-success-details-text-light);
+  --payment-success-primary-bg: var(--payment-success-primary-bg-light);
+  --payment-success-primary-hover: var(--payment-success-primary-hover-light);
+  --payment-success-secondary-bg: var(--payment-success-secondary-bg-light);
+  --payment-success-secondary-hover: var(--payment-success-secondary-hover-light);
+  --payment-success-secondary-text: var(--payment-success-secondary-text-light);
+  --payment-success-icon: var(--payment-success-icon-light);
+  --payment-success-total: var(--payment-success-total-light);
+} 
