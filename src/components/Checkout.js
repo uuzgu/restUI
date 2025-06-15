@@ -235,10 +235,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
   // Update basket when items change
   useEffect(() => {
-    if (appliedCoupon) {
+    if (appliedCoupon && previousBasketState) {
       // Check if any item's quantity has changed from its original state
       const hasQuantityChanged = localBasket.some(item => {
-        const originalItem = previousBasketState?.find(prevItem => prevItem.id === item.id);
+        const originalItem = previousBasketState.find(prevItem => prevItem.id === item.id);
         return originalItem && originalItem.quantity !== item.quantity;
       });
 
@@ -268,9 +268,13 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     }
   }, [localBasket, appliedCoupon, previousBasketState, setBasket]);
 
-  // Store previous basket state for comparison
+  // Store previous basket state for comparison, but only after initial load
   useEffect(() => {
-    setPreviousBasketState(localBasket);
+    const timer = setTimeout(() => {
+      setPreviousBasketState(localBasket);
+    }, 1000); // Wait 1 second after component mount before tracking changes
+
+    return () => clearTimeout(timer);
   }, [localBasket]);
 
   const handleInputChange = (e) => {
