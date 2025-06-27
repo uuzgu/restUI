@@ -112,29 +112,29 @@ const SignUp = () => {
   };
 
   return (
-    <div className="bg-white-500 min-h-screen flex items-center justify-center">
+    <div className="bg-white-500 min-h-responsive-screen flex items-center justify-center">
       <Header showAuthButtons={false} />
 
       {/* Centered Registration Form */}
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-bold text-gray-600 text-center mb-6">
+      <div className="bg-white p-responsive rounded-lg shadow-lg w-full max-w-lg">
+        <h2 className="text-responsive-2xl font-bold text-gray-600 text-center mb-responsive">
           {translations[language].registration}
         </h2>
 
         {/* Start of the Form Tag */}
         <form onSubmit={handleSignUp}>
           {/* Phone & Email */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-responsive">
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].phoneNumber}
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
             <input
               type="email"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].email}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -142,11 +142,11 @@ const SignUp = () => {
           </div>
 
           {/* Password & Confirm Password */}
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-2 gap-responsive mt-responsive">
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm pr-10"
+                className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm pr-10"
                 placeholder={translations[language].password}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -154,16 +154,16 @@ const SignUp = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-sm"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-responsive-sm"
               >
-                {showPassword ? <EyeIcon className="h-5 w-5" /> : <EyeSlashIcon className="h-5 w-5" />}
+                {showPassword ? <EyeIcon className="h-responsive-icon w-responsive-icon" /> : <EyeSlashIcon className="h-responsive-icon w-responsive-icon" />}
               </button>
             </div>
 
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm pr-10"
+                className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm pr-10"
                 placeholder={translations[language].confirmPassword}
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -171,25 +171,25 @@ const SignUp = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-sm"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 text-responsive-sm"
               >
-                {showConfirmPassword ? <EyeIcon className="h-5 w-5" /> : <EyeSlashIcon className="h-5 w-5" />}
+                {showConfirmPassword ? <EyeIcon className="h-responsive-icon w-responsive-icon" /> : <EyeSlashIcon className="h-responsive-icon w-responsive-icon" />}
               </button>
             </div>
           </div>
 
           {/* First & Last Name */}
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-2 gap-responsive mt-responsive">
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].firstName}
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             />
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].lastName}
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -197,17 +197,17 @@ const SignUp = () => {
           </div>
 
           {/* Postal Code & Address */}
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-2 gap-responsive mt-responsive">
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].postalCode}
               value={formData.postalCode}
               onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
             />
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].address}
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -215,41 +215,41 @@ const SignUp = () => {
           </div>
 
           {/* Optional Fields */}
-          <div className="grid grid-cols-3 gap-3 mt-3">
+          <div className="grid grid-cols-3 gap-responsive mt-responsive">
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].house}
               value={formData.house}
               onChange={(e) => setFormData({ ...formData, house: e.target.value })}
             />
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-xs"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-xs"
               placeholder={translations[language].stairs}
               value={formData.stairs}
               onChange={(e) => setFormData({ ...formData, stairs: e.target.value })}
             />
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-xs"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-xs"
               placeholder={translations[language].stick}
               value={formData.stick}
               onChange={(e) => setFormData({ ...formData, stick: e.target.value })}
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-3 mt-3">
+          <div className="grid grid-cols-3 gap-responsive mt-responsive">
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-sm"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-sm"
               placeholder={translations[language].door}
               value={formData.door}
               onChange={(e) => setFormData({ ...formData, door: e.target.value })}
             />
             <input
               type="text"
-              className="border px-3 py-2 rounded-md w-full placeholder-gray-400 text-xs"
+              className="border px-responsive py-responsive rounded-md w-full placeholder-gray-400 text-responsive-xs"
               placeholder={translations[language].bell}
               value={formData.bell}
               onChange={(e) => setFormData({ ...formData, bell: e.target.value })}
@@ -257,9 +257,9 @@ const SignUp = () => {
           </div>
 
           {/* COMMENT BOX */}
-          <div className="mt-4">
+          <div className="mt-responsive">
             <textarea
-              className="border px-3 py-2 rounded-md w-full h-24 placeholder-gray-400 text-xs"
+              className="border px-responsive py-responsive rounded-md w-full h-responsive-textarea placeholder-gray-400 text-responsive-xs"
               placeholder={translations[language].comment}
               value={formData.comment}
               onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
@@ -267,7 +267,7 @@ const SignUp = () => {
           </div>
 
           {/* Terms & Conditions */}
-          <label className="flex items-center text-sm text-gray-600 mt-3">
+          <label className="flex items-center text-responsive-sm text-gray-600 mt-responsive">
             <input
               type="checkbox"
               className="mr-2"
@@ -278,12 +278,12 @@ const SignUp = () => {
           </label>
 
           {/* Buttons */}
-          <div className="flex justify-between mt-5">
-            <div className="flex space-x-3">
+          <div className="flex justify-between mt-responsive">
+            <div className="flex space-x-responsive">
               <button
                 type="button"
                 onClick={resetForm}
-                className="text-sm border border-gray-500 bg-white px-4 py-2 rounded-lg hover:bg-gray-200"
+                className="text-responsive-sm border border-gray-500 bg-white px-responsive py-responsive rounded-lg hover:bg-gray-200"
               >
                 {translations[language].reset}
               </button>
@@ -291,7 +291,7 @@ const SignUp = () => {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="text-sm border border-gray-500 bg-white px-4 py-2 rounded-lg hover:bg-red-200"
+                className="text-responsive-sm border border-gray-500 bg-white px-responsive py-responsive rounded-lg hover:bg-red-200"
               >
                 {translations[language].cancel}
               </button>
@@ -299,7 +299,7 @@ const SignUp = () => {
 
             <button
               type="submit"
-              className="text-sm border border-gray-500 bg-white px-4 py-2 rounded-lg hover:bg-green-200"
+              className="text-responsive-sm border border-gray-500 bg-white px-responsive py-responsive rounded-lg hover:bg-green-200"
             >
               {translations[language].completeRegistration}
             </button>

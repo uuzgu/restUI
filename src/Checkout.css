@@ -3,12 +3,12 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    min-height: 100vh;
+    min-height: var(--container-min-height);
     background-color: var(--checkout-container-bg);
-    padding: 120px 20px 20px;
+    padding: var(--spacing-responsive);
     gap: 2rem;
     flex-wrap: wrap;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
@@ -17,6 +17,8 @@
     padding-right: calc(20px + 17px);
     border: 1px solid var(--checkout-container-border);
     box-shadow: var(--checkout-container-shadow);
+    border-radius: clamp(8px, 2vw, 12px);
+    overflow-y: auto;
 }
 
 /* Add this to ensure the body doesn't shift when toggling */
@@ -27,13 +29,14 @@ html {
 /* Remove the body transition since it's handled in index.css */
 .dark .checkout-container {
     background-color: var(--checkout-container-bg);
+    border-color: var(--checkout-container-border);
 }
 
 /* Checkout Form Container */
 .checkout-form-container {
     flex: 1;
-    max-width: 850px;
-    padding: 0;
+    max-width: 100%;
+    padding: var(--spacing-responsive);
     overflow-x: hidden;
     position: relative;
     overflow-y: auto;
@@ -41,10 +44,10 @@ html {
 }
 
 .checkout-form-container h2 {
-    font-size: 2rem;
+    font-size: var(--text-2xl);
     text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: bold;
+    margin-bottom: var(--spacing-responsive);
+    font-weight: 700;
     color: var(--checkout-form-text);
 }
 
@@ -56,7 +59,7 @@ html {
 .checkout-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-responsive);
     width: 100%;
     box-sizing: border-box;
     background-color: var(--checkout-form-bg);
@@ -65,82 +68,96 @@ html {
 
 /* Form Section for Inputs */
 .checkout-form .form-section {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 1rem;
+    margin-bottom: var(--spacing-responsive);
+    padding: var(--spacing-responsive);
+    border-radius: 8px;
+    background-color: var(--checkout-form-bg);
+    border: 1px solid var(--checkout-form-border);
 }
 
 /* Contact Fields Layout */
-.contact-fields {
+.checkout-form .contact-fields {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-responsive);
     width: 100%;
 }
 
-.contact-fields .input-row {
+.checkout-form .contact-fields .input-row {
     display: flex;
-    gap: 1.5rem;
-    width: 100%;
+    gap: var(--spacing-responsive);
+    margin-bottom: var(--spacing-responsive);
 }
 
-.contact-fields .input-container {
+.checkout-form .input-container {
     flex: 1;
-    width: 50%;
-    padding: 0.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: var(--input-height);
 }
 
 /* Add media query for screens smaller than 641px */
 @media (max-width: 640px) {
-    .contact-fields .input-row {
+    .checkout-form .contact-fields .input-row {
         flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .contact-fields .input-container {
-        width: 100%;
-        padding: 0.25rem;
+        gap: var(--spacing-responsive);
     }
 }
 
 /* Form Section Group */
-.form-section-group {
-    width: 100%;
-    transition: all 0.3s ease-in-out;
-    overflow: hidden;
-    box-sizing: border-box;
-    position: relative;
-    will-change: height, opacity;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
+.checkout-form .form-section-group {
+    margin-bottom: var(--spacing-responsive);
+    padding: var(--spacing-responsive);
+    border-radius: 8px;
     background-color: var(--checkout-form-bg);
-    border-radius: 16px;
 }
 
-.form-section-group.hidden {
-    opacity: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+/* Responsive input height class */
+.h-responsive-input {
+    height: var(--input-height) !important;
+    min-height: var(--input-height) !important;
+}
+
+/* Improve label spacing and typography */
+.checkout-form label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--checkout-form-text);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.dark .checkout-form label {
+    color: var(--checkout-form-text);
 }
 
 /* Inputs, Textareas, and Selects */
 .checkout-form input,
 .checkout-form textarea,
 .checkout-form select {
-    padding: 1.25rem;
+    padding: calc(var(--spacing-responsive) * 0.8) var(--spacing-responsive);
     border: 1px solid var(--checkout-form-border);
-    border-radius: 12px;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    font-size: var(--text-base);
+    line-height: 1.3;
     background-color: var(--checkout-form-bg);
     color: var(--checkout-form-text);
-    transition: all 0.2s ease-in-out;
+    height: var(--input-height);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Override for select elements to fix text cutoff */
+.checkout-form select {
+    padding: calc(var(--spacing-responsive) * 0.4) var(--spacing-responsive);
+    line-height: 1.1;
+    display: block;
+    vertical-align: baseline;
+    text-align-last: left;
 }
 
 .checkout-form input:hover,
@@ -162,55 +179,80 @@ html {
 .dark .checkout-form select:focus {
     border-color: var(--checkout-form-focus);
     outline: none;
+    ring: 2px var(--checkout-form-focus);
 }
 
 /* Specific Input Field Adjustments */
 .checkout-form input {
-    width: 100%;
+    height: var(--input-height);
+    line-height: 1.3;
+}
+
+/* Specific Select Field Adjustments */
+.checkout-form select {
+    height: var(--input-height);
+    line-height: 1.2;
+    padding: calc(var(--spacing-responsive) * 0.5) var(--spacing-responsive);
+    display: block;
+    vertical-align: baseline;
 }
 
 /* For Postal Code and Address Inputs */
 .checkout-form .address-fields {
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
+    margin-top: var(--spacing-responsive);
+    padding: var(--spacing-responsive);
+    background-color: var(--checkout-form-bg);
+    border-radius: 8px;
+    border: 1px solid var(--checkout-form-border);
 }
 
-/* Make address fields take up less space */
 .checkout-form .address-fields input {
-    width: 48%;
+    width: 100%;
+    height: var(--input-height);
 }
 
-/* Special Notes Field */
+/* Special Notes Field - Make it taller */
 .checkout-form textarea {
-    width: 100%;
-    height: 100px;
+    resize: vertical;
+    min-height: calc(var(--input-height) * 2.5);
+    height: auto;
+    align-items: flex-start;
+    padding: var(--spacing-responsive);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    font-family: inherit;
+}
+
+/* Ensure textarea doesn't inherit flex alignment */
+.checkout-form textarea {
+    display: block;
 }
 
 /* Button Styling */
 .checkout-form button {
-    padding: 1rem;
-    background-color: var(--checkout-button-secondary-bg);
-    color: var(--checkout-button-secondary-text);
-    border: 2px solid var(--checkout-button-secondary-border) !important;
-    font-size: 1.125rem;
-    border-radius: 10px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: var(--spacing-responsive);
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.2s;
+    font-size: var(--text-base);
+    height: var(--input-height);
 }
 
 .dark .checkout-form button {
-    background-color: var(--checkout-button-secondary-bg);
-    color: var(--checkout-button-secondary-text);
-    border-color: var(--checkout-button-secondary-border) !important;
+    background-color: #dc2626;
+    color: #ffffff;
 }
 
 .checkout-form button:hover {
-    background-color: var(--checkout-button-secondary-hover);
-    transform: translateY(-2px);
+    background-color: #dc2626;
+    transform: translateY(-1px);
 }
 
 .dark .checkout-form button:hover {
-    background-color: var(--checkout-button-secondary-hover);
+    background-color: #b91c1c;
 }
 
 /* Basket Summary Styling */
@@ -245,7 +287,7 @@ html {
     text-align: center;
 }
 
-.basket-item {
+.basket-summary .basket-item {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -254,17 +296,17 @@ html {
     color: var(--checkout-summary-text);
 }
 
-.basket-item:last-child {
+.basket-summary .basket-item:last-child {
     border-bottom: none;
 }
 
-.basket-item h3 {
+.basket-summary .basket-item h3 {
     color: var(--checkout-summary-text);
     font-size: 1.125rem;
     font-weight: 600;
 }
 
-.basket-item p {
+.basket-summary .basket-item p {
     color: var(--checkout-summary-text);
 }
 
@@ -280,41 +322,91 @@ html {
 
 /* Terms and Conditions */
 .terms-conditions {
-    margin-top: 1rem;
-    color: var(--checkout-terms-text);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-responsive);
+    background-color: #f9fafb;
+    border: 1px solid var(--checkout-form-border);
+    border-radius: 8px;
+}
+
+.dark .terms-conditions {
+    background-color: #1f2937;
+    border-color: var(--checkout-form-border);
 }
 
 .terms-label {
     display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    color: var(--checkout-terms-text);
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-
-.terms-label input[type="checkbox"] {
-    margin-top: 0.25rem;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--checkout-form-border);
+    align-items: center;
+    gap: 12px;
     cursor: pointer;
+    font-size: var(--text-base);
+    line-height: 1.5;
+    color: var(--checkout-form-text);
+    width: 100%;
+    margin: 0;
 }
 
-.terms-label input[type="checkbox"]:checked {
-    background-color: var(--checkout-button-primary-bg);
-    border-color: var(--checkout-button-primary-bg);
+/* Hide the default checkbox and radio inputs */
+.terms-label input[type="checkbox"],
+input[type="radio"].sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Custom checkbox styling */
+.terms-label .custom-checkbox {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover effect for checkbox */
+.terms-label:hover .custom-checkbox > div {
+    border-color: #ef4444;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+/* Active state for checkbox */
+.terms-label:active .custom-checkbox > div {
+    transform: scale(0.95);
+    transition: all 0.1s ease;
+}
+
+/* Custom checkbox and radio button focus styles */
+.terms-label:focus-within .custom-checkbox > div,
+label:focus-within .w-5.h-5 {
+    outline: 2px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* Terms text styling */
+.terms-label span {
+    flex: 1;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .terms-label a {
-    color: var(--checkout-terms-link);
-    text-decoration: underline;
-    transition: color 0.2s ease;
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .terms-label a:hover {
-    color: var(--checkout-terms-link-hover);
+    color: #dc2626;
+    text-decoration: underline;
 }
 
 /* Payment Method */
@@ -340,6 +432,19 @@ html {
     border-color: var(--checkout-payment-hover-border);
 }
 
+/* Ensure custom radio and checkbox elements are accessible */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* Error States */
 .checkout-form input.error {
     border-color: var(--checkout-form-error-border);
@@ -348,12 +453,17 @@ html {
 
 .checkout-form input.error:focus {
     border-color: var(--checkout-form-error-border);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 .error-message {
     color: var(--checkout-form-error);
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+    font-size: var(--text-sm);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* Dark Mode Error States */
@@ -364,6 +474,8 @@ html {
 
 .dark .checkout-form input.error:focus {
     border-color: var(--checkout-form-error-border);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(251, 113, 133, 0.2);
 }
 
 .dark .error-message {
@@ -372,22 +484,34 @@ html {
 
 /* Submit Button */
 .submit-button {
-    background-color: var(--checkout-button-primary-bg) !important;
-    color: var(--checkout-button-primary-text) !important;
-    border: 2px solid var(--checkout-button-primary-border) !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: 2px solid transparent;
+    padding: var(--spacing-responsive);
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: var(--text-lg);
     cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: calc(var(--input-height) * 1.2);
 }
 
-.submit-button:hover {
-    background-color: var(--checkout-button-primary-hover) !important;
-    border-color: var(--checkout-button-primary-hover-border) !important;
+.submit-button:hover:not(.disabled) {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    border-color: #ef4444;
 }
 
 .submit-button.disabled {
-    background-color: var(--checkout-button-primary-disabled-bg) !important;
-    color: var(--checkout-button-primary-disabled-text) !important;
-    border-color: var(--checkout-button-primary-disabled-border) !important;
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    color: #d1d5db;
     cursor: not-allowed;
+    box-shadow: none;
+    border-color: #9ca3af;
 }
 
 /* Order Toggle */
@@ -478,13 +602,14 @@ html {
         max-width: 100%;
     }
     .terms-conditions {
-        flex-direction: column;
+        align-items: center;
         gap: 1rem;
-        align-items: flex-start;
     }
     
     .terms-label {
         font-size: 0.875rem;
+        align-items: center;
+        gap: 8px;
     }
     
     .submit-footer {
@@ -504,33 +629,50 @@ html {
 /* Responsive adjustments for checkout */
 @media (max-width: 1024px) {
     .checkout-container {
-        padding: 100px 20px 20px;
+        padding: 1rem 20px 20px;
+        flex-direction: column;
+        align-items: center;
+        max-width: 600px;
+        gap: 1.5rem;
+    }
+    
+    .checkout-form-container {
+        flex: 1;
+        margin-right: 0;
+        width: 100%;
+        max-width: 100%;
     }
     
     .basket-summary-container {
-        position: relative;
+        position: static;
         top: 0;
         right: 0;
         width: 100%;
         max-width: 100%;
-        margin: 0 auto;
+        margin: 0;
+        flex-shrink: 0;
+        order: 2;
     }
     
     .basket-summary {
         padding: 1rem;
+        max-width: 500px;
+        margin: 0 auto;
     }
 }
 
 @media (max-width: 768px) {
     .checkout-container {
-        padding: 100px 15px 15px;
+        padding: 0.5rem 15px 15px;
         gap: 0.5rem;
         justify-content: center;
+        flex-direction: column;
     }
     
     .checkout-form-container {
         max-width: 100%;
         width: 100%;
+        margin-right: 0;
     }
     
     .basket-summary-container {
@@ -647,6 +789,276 @@ html {
       box-shadow: none;
     }
   }
+}
+
+/* Info button specific to checkout page - more specific selector to override basket styles */
+.checkout-form .info-btn,
+.form-section-group .info-btn {
+    background-color: transparent !important;
+    color: var(--checkout-form-text) !important;
+    border: 1px solid #000000 !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: var(--text-xs) !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: auto !important;
+    height: auto !important;
+    line-height: 1.2;
+    font-weight: 400 !important;
+    text-transform: none;
+    letter-spacing: normal;
+    margin-bottom: 8px !important;
+}
+
+.checkout-form .info-btn:hover,
+.form-section-group .info-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border-color: #000000 !important;
+    color: var(--checkout-form-text) !important;
+    transform: none;
+    opacity: 1;
+}
+
+.dark .checkout-form .info-btn,
+.dark .form-section-group .info-btn {
+    color: var(--checkout-form-text) !important;
+    border-color: #ffffff !important;
+    background-color: transparent !important;
+}
+
+.dark .checkout-form .info-btn:hover,
+.dark .form-section-group .info-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: #ffffff !important;
+    color: var(--checkout-form-text) !important;
+    opacity: 1;
+}
+
+/* Postal Code Selector Styling */
+.checkout-form .address-fields select,
+.checkout-form .address-fields input {
+    width: 100%;
+    height: var(--input-height);
+    padding: var(--spacing-responsive);
+    border: 1px solid var(--checkout-form-border);
+    border-radius: 6px;
+    font-size: var(--text-base);
+    line-height: 1.2;
+    background-color: var(--checkout-form-bg);
+    color: var(--checkout-form-text);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.checkout-form .address-fields select:focus,
+.checkout-form .address-fields input:focus {
+    border-color: var(--checkout-form-focus);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.checkout-form .address-fields select:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.dark .checkout-form .address-fields select,
+.dark .checkout-form .address-fields input {
+    background-color: var(--checkout-form-bg);
+    border-color: var(--checkout-form-border);
+    color: var(--checkout-form-text);
+}
+
+.dark .checkout-form .address-fields select:disabled {
+    background-color: #374151;
+    color: #6b7280;
+}
+
+/* PostalCodeSelector specific grid styling */
+.checkout-form .address-fields .grid {
+    display: grid;
+}
+
+.checkout-form .address-fields .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.checkout-form .address-fields .gap-3 {
+    gap: 1rem;
+}
+
+.checkout-form .address-fields .space-y-4 > * + * {
+    margin-top: 1.5rem;
+}
+
+.checkout-form .address-fields label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--checkout-form-text);
+    margin-bottom: 0.5rem;
+}
+
+.dark .checkout-form .address-fields label {
+    color: var(--checkout-form-text);
+}
+
+/* Error text for postal code selector */
+.checkout-form .address-fields .text-red-500 {
+    color: var(--checkout-form-error);
+    font-size: var(--text-sm);
+}
+
+.dark .checkout-form .address-fields .text-red-500 {
+    color: var(--checkout-form-error);
+}
+
+/* Override PostalCodeSelector specific input heights */
+.checkout-form .address-fields .h-responsive-selector,
+.checkout-form .address-fields .h-responsive-selector input {
+    height: var(--input-height);
+    min-height: var(--input-height);
+}
+
+/* Ensure selects in PostalCodeSelector have proper height and text alignment */
+.checkout-form .address-fields select {
+    height: var(--input-height) !important;
+    min-height: var(--input-height);
+    padding: calc(var(--spacing-responsive) * 0.5) var(--spacing-responsive);
+    vertical-align: baseline;
+    line-height: 1.2;
+    display: block;
+}
+
+/* Fix for specific PostalCodeSelector grid items */
+.checkout-form .address-fields .grid > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-form .address-fields .grid > div input {
+    height: var(--input-height);
+    min-height: var(--input-height);
+    margin-top: auto;
+    line-height: 1.2;
+    padding: calc(var(--spacing-responsive) * 0.6) var(--spacing-responsive);
+}
+
+/* Responsive grid for smaller screens */
+@media (max-width: 640px) {
+    .checkout-form .address-fields .grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .checkout-form .address-fields .grid > div {
+        margin-bottom: 2rem;
+    }
+    
+    /* Increase spacing between address sections on mobile */
+    .checkout-form .address-fields .space-y-6 > * + * {
+        margin-top: 2rem;
+    }
+    
+    /* Better touch targets on mobile */
+    .checkout-form .address-fields input,
+    .checkout-form .address-fields select {
+        min-height: calc(var(--input-height) * 1.2);
+        font-size: 16px; /* Prevents zoom on iOS */
+        line-height: 1.5; /* Increased from 1.3 to prevent text cutoff */
+        padding: calc(var(--spacing-responsive) * 0.8) var(--spacing-responsive);
+        /* Ensure proper vertical centering for select elements */
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    
+    /* Specific fix for select elements on mobile to prevent text cutoff */
+    .checkout-form .address-fields select {
+        /* Override any conflicting flex properties */
+        display: block !important;
+        /* Ensure text is properly centered vertically */
+        line-height: 1.6 !important; /* Even more generous line-height for select elements */
+        /* Add more vertical padding to prevent text cutoff */
+        padding-top: calc(var(--spacing-responsive) * 1) !important;
+        padding-bottom: calc(var(--spacing-responsive) * 1) !important;
+        padding-left: var(--spacing-responsive) !important;
+        padding-right: var(--spacing-responsive) !important;
+        /* Ensure minimum height accommodates text properly */
+        min-height: calc(var(--input-height) * 1.3) !important;
+        height: calc(var(--input-height) * 1.3) !important;
+        /* Fix for webkit appearance that might affect text positioning */
+        -webkit-appearance: none;
+        appearance: none;
+        /* Ensure proper text baseline alignment */
+        vertical-align: baseline;
+        /* Additional mobile-specific fixes */
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        box-sizing: border-box !important;
+    }
+    
+    /* Adjust label spacing for mobile */
+    .checkout-form .address-fields label {
+        margin-bottom: 1rem;
+        font-size: var(--text-base);
+    }
+    
+    /* Add extra spacing between postal code and address sections on mobile */
+    .checkout-form .address-fields > div + div {
+        margin-top: 2.5rem !important;
+    }
+    
+    /* Ensure proper spacing between input and next label on mobile */
+    .checkout-form .address-fields .h-responsive-selector {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Force horizontal layout for terms and conditions on all screen sizes */
+.form-section-group .flex.flex-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+}
+
+.form-section-group .flex.flex-row > label:first-of-type {
+    flex-shrink: 0 !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.form-section-group .flex.flex-row > label:last-of-type {
+    flex: 1 !important;
+    display: block !important;
+    line-height: 1.6 !important;
+}
+
+/* Override any existing terms-conditions styles */
+.terms-conditions,
+.form-section-group .terms-conditions {
+    display: block !important;
+}
+
+/* Ensure responsive behavior remains intact */
+@media (max-width: 640px) {
+    .form-section-group .flex.flex-row {
+        gap: 0.5rem !important;
+    }
+    
+    .form-section-group .flex.flex-row > label:last-of-type {
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+    }
 }
   
   

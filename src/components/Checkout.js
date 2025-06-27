@@ -617,115 +617,6 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
     return groups;
   };
 
-  const OrderSummaryItem = ({ item }) => {
-    const [showDetails, setShowDetails] = useState(false);
-
-    const toggleDetails = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setShowDetails(!showDetails);
-    };
-
-    // Ensure we have valid numbers for prices
-    const originalPrice = Number(item.originalPrice) || 0;
-    const discountedPrice = Number(item.discountedPrice) || originalPrice;
-    const quantity = Number(item.quantity) || 1;
-    const hasDiscount = discountedPrice < originalPrice;
-
-    return (
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">{item.name} x{quantity}</span>
-            <button
-              onClick={toggleDetails}
-              className="info-btn px-2 py-1 text-xs rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              {showDetails ? 'Hide Info' : 'Info'}
-            </button>
-          </div>
-          {showDetails && (
-            <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              {item.selectedItems && item.selectedItems.length > 0 && (
-                <div className="mb-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Selected Options:</span>
-                  <div className="mt-1 space-y-1">
-                    {/* Display groups in the order of item.groupOrder, then any remaining groups */}
-                    {item.groupOrder && item.groupOrder.length > 0 && (() => {
-                      const groupMap = groupOptionsByGroupNameWithOrder(item.selectedItems);
-                      const renderedGroups = new Set();
-                      return [
-                        ...item.groupOrder.filter(groupName => groupMap[groupName]).map(groupName => {
-                          renderedGroups.add(groupName);
-                          const group = groupMap[groupName];
-                          return (
-                            <div key={groupName} className="pl-2">
-                              <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
-                              {group.options.map((opt, i, arr) => (
-                                <span key={i}>
-                                  {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                                </span>
-                              ))}
-                            </div>
-                          );
-                        }),
-                        // Render any remaining groups not in groupOrder
-                        ...Object.entries(groupMap)
-                          .filter(([groupName]) => !renderedGroups.has(groupName))
-                          .map(([groupName, group]) => (
-                            <div key={groupName} className="pl-2">
-                              <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
-                              {group.options.map((opt, i, arr) => (
-                                <span key={i}>
-                                  {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                                </span>
-                              ))}
-                            </div>
-                          ))
-                      ];
-                    })()}
-                    {/* Fallback if no groupOrder: show all groups sorted by displayOrder then name */}
-                    {(!item.groupOrder || item.groupOrder.length === 0) && Object.values(groupOptionsByGroupNameWithOrder(item.selectedItems)).sort((a, b) => {
-                      if (a.displayOrder !== b.displayOrder) return a.displayOrder - b.displayOrder;
-                      return a.name.localeCompare(b.name);
-                    }).map(group => (
-                      <div key={group.name} className="pl-2">
-                        <span className="font-semibold text-gray-600 dark:text-gray-300">{group.name}:</span>{' '}
-                        {group.options.map((opt, i, arr) => (
-                          <span key={i}>
-                            {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                          </span>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {item.note && (
-                <div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Note:</span>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
-                    {item.note}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-        <div className="text-right">
-          {item.discountedPrice ? (
-            <div className="flex flex-col items-end">
-              <span className="text-sm text-gray-500 line-through">€{item.originalPrice.toFixed(2)}</span>
-              <span className="text-green-600 dark:text-green-400">€{item.discountedPrice.toFixed(2)}</span>
-            </div>
-          ) : (
-            <span>€{item.originalPrice.toFixed(2)}</span>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   // Calculate totals with discount
   const calculateTotals = () => {
     const totalOriginalPrice = localBasket.reduce((sum, item) => sum + item.originalPrice, 0);
@@ -742,9 +633,9 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
   return (
     <ApiProvider>
       <OrderProvider>
-        <div className="checkout-container">
-          <div className="checkout-form-container">
-            <div className="flex items-center mb-6">
+        <div className="checkout-container h-responsive-container">
+          <div className="checkout-form-container p-responsive">
+            <div className="flex items-center mb-responsive">
               <button
                 onClick={handleBackToOrder}
                 className="flex items-center text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
@@ -754,17 +645,17 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
               </button>
             </div>
 
-            <h2>{translations[language].checkout.title}</h2>
+            <h2 className="text-responsive-2xl mb-responsive">{translations[language].checkout.title}</h2>
 
             <form 
               className="checkout-form" 
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="form-section-group">
+              <div className="form-section-group mb-responsive">
                 <div className="form-section contact-fields">
-                  <div className="input-row">
-                    <div className="input-container h-[72px]">
+                  <div className="input-row gap-responsive">
+                    <div className="input-container h-responsive-input">
                       <input
                         name="firstName"
                         placeholder={translations[language].firstName}
@@ -773,10 +664,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         onChange={handleInputChange}
                         required
                         ref={firstNameRef}
-                        className={`w-full ${formErrors.firstName ? 'error' : ''}`}
+                        className={`w-full text-responsive-base ${formErrors.firstName ? 'error' : ''}`}
                       />
                     </div>
-                    <div className="input-container h-[72px]">
+                    <div className="input-container h-responsive-input">
                       <input
                         name="lastName"
                         placeholder={translations[language].lastName}
@@ -785,12 +676,12 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         onChange={handleInputChange}
                         required
                         ref={lastNameRef}
-                        className={`w-full ${formErrors.lastName ? 'error' : ''}`}
+                        className={`w-full text-responsive-base ${formErrors.lastName ? 'error' : ''}`}
                       />
                     </div>
                   </div>
-                  <div className="input-row">
-                    <div className="input-container h-[72px]">
+                  <div className="input-row gap-responsive">
+                    <div className="input-container h-responsive-input">
                       <input
                         name="email"
                         placeholder={translations[language].email}
@@ -799,10 +690,10 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         onChange={handleInputChange}
                         required
                         ref={emailRef}
-                        className={`w-full ${formErrors.email ? 'error' : ''}`}
+                        className={`w-full text-responsive-base ${formErrors.email ? 'error' : ''}`}
                       />
                     </div>
-                    <div className="input-container h-[72px]">
+                    <div className="input-container h-responsive-input">
                       <input
                         name="phone"
                         placeholder={translations[language].phone}
@@ -811,7 +702,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         onChange={handleInputChange}
                         required
                         ref={phoneRef}
-                        className={`w-full ${formErrors.phone ? 'error' : ''}`}
+                        className={`w-full text-responsive-base ${formErrors.phone ? 'error' : ''}`}
                       />
                     </div>
                   </div>
@@ -860,7 +751,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                     />
                     {/* Display warnings */}
                     {formErrors.postalCodeWarning && (
-                      <div className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                      <div className="mt-2 text-responsive-sm text-red-600 dark:text-red-400 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
@@ -868,7 +759,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       </div>
                     )}
                     {formErrors.addressWarning && (
-                      <div className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                      <div className="mt-2 text-responsive-sm text-red-600 dark:text-red-400 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
@@ -879,8 +770,8 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                 )}
               </div>
 
-              <div className="form-section-group">
-                <label htmlFor="specialNotes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="form-section-group mb-responsive">
+                <label htmlFor="specialNotes" className="block text-responsive-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {translations[language].specialNotes || "Special Notes (Optional)"}
                 </label>
                 <textarea
@@ -889,99 +780,107 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                   placeholder={translations[language].specialNotesPlaceholder || "Enter any special delivery instructions or additional information..."}
                   value={formData.specialNotes}
                   onChange={handleInputChange}
-                  rows="2"
-                  className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  rows="4"
+                  className="block w-full text-responsive-base rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white resize-vertical"
+                  style={{ minHeight: 'calc(var(--input-height) * 2.5)', lineHeight: '1.6' }}
                 />
               </div>
 
               {/* Order Summary */}
-              <div className="form-section-group mb-6">
-                <h3 className="text-lg font-semibold mb-4">{translations[language].checkout.orderSummary}</h3>
-                <div className="space-y-4">
+              <div className="form-section-group mb-responsive">
+                <h3 className="text-responsive-lg font-semibold mb-responsive">{translations[language].checkout.orderSummary}</h3>
+                <div className="space-y-responsive">
                   {localBasket.map((item, index) => (
-                    <div key={index} className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{item.name} x{item.quantity}</span>
-                          <button
-                            onClick={(e) => toggleItemDetails(e, index)}
-                            className="info-btn px-2 py-1 text-xs rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                          >
-                            {expandedItems[index] ? 'Hide Info' : 'Info'}
-                          </button>
+                    <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-responsive last:border-b-0">
+                      {/* Main item line: name + quantity and price */}
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex-1">
+                          <span className="font-medium text-responsive-base">{item.name} x{item.quantity}</span>
                         </div>
-                        {expandedItems[index] && (
-                          <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            {item.selectedItems && item.selectedItems.length > 0 && (
-                              <div className="mb-2">
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Selected Options:</span>
-                                <div className="mt-1 space-y-1">
-                                  {/* Display groups in the order of item.groupOrder, then any remaining groups */}
-                                  {item.groupOrder && item.groupOrder.length > 0 && (() => {
-                                    const groupMap = groupOptionsByGroupNameWithOrder(item.selectedItems);
-                                    const renderedGroups = new Set();
-                                    return [
-                                      ...item.groupOrder.filter(groupName => groupMap[groupName]).map(groupName => {
-                                        renderedGroups.add(groupName);
-                                        const group = groupMap[groupName];
-                                        return (
-                                          <div key={groupName} className="pl-2">
-                                            <span className="font-semibold text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
-                                            {group.options.map((opt, i, arr) => (
-                                              <span key={i}>
-                                                {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                                              </span>
-                                            ))}
-                                          </div>
-                                        );
-                                      }),
-                                      // Render any remaining groups not in groupOrder
-                                      ...Object.entries(groupMap)
-                                        .filter(([groupName]) => !renderedGroups.has(groupName))
-                                        .map(([groupName, group]) => (
-                                          <div key={groupName} className="pl-2">
-                                            <span className="font-semibold text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
-                                            {group.options.map((opt, i, arr) => (
-                                              <span key={i}>
-                                                {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
-                                              </span>
-                                            ))}
-                                          </div>
-                                        ))
-                                    ];
-                                  })()}
-                                </div>
-                              </div>
-                            )}
-                            {item.note && (
-                              <div>
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Note:</span>
-                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 italic">
-                                  {item.note}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                        <div className="text-right">
+                          {item.discountedPrice ? (
+                            <div className="flex flex-col items-end">
+                              <span className="text-responsive-sm text-gray-500 line-through">€{item.originalPrice.toFixed(2)}</span>
+                              <span className="text-responsive-base text-green-600 dark:text-green-400">€{item.discountedPrice.toFixed(2)}</span>
+                            </div>
+                          ) : (
+                            <span className="text-responsive-base">€{item.originalPrice.toFixed(2)}</span>
+                          )}
+                        </div>
                       </div>
-                      <div className="text-right">
-                        {item.discountedPrice ? (
-                          <div className="flex flex-col items-end">
-                            <span className="text-sm text-gray-500 line-through">€{item.originalPrice.toFixed(2)}</span>
-                            <span className="text-green-600 dark:text-green-400">€{item.discountedPrice.toFixed(2)}</span>
-                          </div>
-                        ) : (
-                          <span>€{item.originalPrice.toFixed(2)}</span>
-                        )}
+                      
+                      {/* Info button positioned below item name */}
+                      <div className="flex justify-start">
+                        <button
+                          onClick={(e) => toggleItemDetails(e, index)}
+                          className="info-btn"
+                        >
+                          {expandedItems[index] ? 'Hide Info' : 'Info'}
+                        </button>
                       </div>
+                      
+                      {/* Expanded details */}
+                      {expandedItems[index] && (
+                        <div className="mt-3 p-responsive bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          {item.selectedItems && item.selectedItems.length > 0 && (
+                            <div className="mb-2">
+                              <span className="text-responsive-sm font-medium text-gray-700 dark:text-gray-300">Selected Options:</span>
+                              <div className="mt-1 space-y-1">
+                                {/* Display groups in the order of item.groupOrder, then any remaining groups */}
+                                {item.groupOrder && item.groupOrder.length > 0 && (() => {
+                                  const groupMap = groupOptionsByGroupNameWithOrder(item.selectedItems);
+                                  const renderedGroups = new Set();
+                                  return [
+                                    ...item.groupOrder.filter(groupName => groupMap[groupName]).map(groupName => {
+                                      renderedGroups.add(groupName);
+                                      const group = groupMap[groupName];
+                                      return (
+                                        <div key={groupName} className="pl-2">
+                                          <span className="font-semibold text-responsive-sm text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
+                                          {group.options.map((opt, i, arr) => (
+                                            <span key={i} className="text-responsive-sm">
+                                              {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      );
+                                    }),
+                                    // Render any remaining groups not in groupOrder
+                                    ...Object.entries(groupMap)
+                                      .filter(([groupName]) => !renderedGroups.has(groupName))
+                                      .map(([groupName, group]) => (
+                                        <div key={groupName} className="pl-2">
+                                          <span className="font-semibold text-responsive-sm text-gray-700 dark:text-gray-300">{group.name}:</span>{' '}
+                                          {group.options.map((opt, i, arr) => (
+                                            <span key={i} className="text-responsive-sm">
+                                              {opt.name}{opt.quantity > 1 ? ` x${opt.quantity}` : ''}{i < arr.length - 1 ? ', ' : ''}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      ))
+                                  ];
+                                })()}
+                              </div>
+                            </div>
+                          )}
+                          {item.note && (
+                            <div>
+                              <span className="text-responsive-sm font-medium text-gray-700 dark:text-gray-300">Note:</span>
+                              <p className="mt-1 text-responsive-sm text-gray-500 dark:text-gray-400 italic">
+                                {item.note}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Coupon Section */}
-              <div className="form-section-group mb-6">
-                <div className="flex items-center gap-4">
+              <div className="form-section-group mb-responsive">
+                <div className="flex items-center gap-responsive">
                   <div className="flex-1">
                     <div className="flex gap-2">
                       <input
@@ -989,7 +888,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
                         placeholder={appliedCoupon ? translations[language].checkout.couponApplied : translations[language].checkout.enterCouponCode}
-                        className={`flex-1 h-[42px] px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white ${
+                        className={`flex-1 h-responsive-input px-responsive border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white text-responsive-base ${
                           appliedCoupon ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''
                         }`}
                         disabled={!!appliedCoupon || isValidatingCoupon}
@@ -998,7 +897,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                         type="button"
                         onClick={() => validateCoupon(couponCode)}
                         disabled={isValidatingCoupon || !couponCode.trim() || !!appliedCoupon}
-                        className="h-[42px] px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
+                        className="h-responsive-input px-responsive bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px] text-responsive-base"
                       >
                         {isValidatingCoupon ? (
                           <div className="flex items-center">
@@ -1011,11 +910,11 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       </button>
                     </div>
                     {couponError && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">{couponError}</p>
+                      <p className="mt-1 text-responsive-sm text-red-600 dark:text-red-400">{couponError}</p>
                     )}
                     {showCouponSuccess && (
                       <div className="mt-1">
-                        <p className="text-sm text-green-600 dark:text-green-400">
+                        <p className="text-responsive-sm text-green-600 dark:text-green-400">
                           Coupon applied successfully!
                         </p>
                         <CouponScheduleInfo schedule={appliedCoupon?.schedule} />
@@ -1027,13 +926,13 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
 
               {/* Minimum Order Value Warning */}
               {localOrderMethod === 'delivery' && formData.postalCode && minimumOrderValue > 0 && (
-                <div className="form-section-group mb-6" ref={minimumOrderRef}>
-                  <div className={`p-4 rounded-lg transition-all duration-300 ${
+                <div className="form-section-group mb-responsive" ref={minimumOrderRef}>
+                  <div className={`p-responsive rounded-lg transition-all duration-300 ${
                     calculateOriginalBasketTotal() < minimumOrderValue 
                       ? 'bg-red-50 dark:bg-red-900/20' 
                       : 'bg-yellow-50 dark:bg-yellow-900/20'
                   } ${highlightMinimumOrder ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}>
-                    <p className={`${
+                    <p className={`text-responsive-base ${
                       calculateOriginalBasketTotal() < minimumOrderValue 
                         ? 'text-red-800 dark:text-red-200' 
                         : 'text-yellow-800 dark:text-yellow-200'
@@ -1050,11 +949,11 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
               )}
 
               {/* Payment Method Selection */}
-              <div className="form-section-group mb-6">
-                <h3 className="text-lg font-semibold mb-4">{translations[language].checkout.paymentMethod}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="form-section-group mb-responsive">
+                <h3 className="text-responsive-lg font-semibold mb-responsive">{translations[language].checkout.paymentMethod}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-responsive">
                   <label 
-                    className={`relative block p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                    className={`relative block p-responsive border rounded-lg cursor-pointer transition-all duration-200 ${
                       paymentMethod === 'stripe' 
                         ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-red-500'
@@ -1066,28 +965,38 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       value="stripe"
                       checked={paymentMethod === 'stripe'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="hidden"
+                      className="sr-only"
                     />
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-responsive">
+                        {/* Custom Radio Button */}
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          paymentMethod === 'stripe' 
+                            ? 'border-red-500 bg-red-500' 
+                            : 'border-gray-300 dark:border-gray-600'
+                        }`}>
+                          {paymentMethod === 'stripe' && (
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          )}
+                        </div>
                         <div className="w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                           </svg>
                         </div>
                         <div>
-                          <div className="font-medium">{translations[language].checkout.creditCard}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{translations[language].checkout.payWithStripe}</div>
+                          <div className="font-medium text-responsive-base">{translations[language].checkout.creditCard}</div>
+                          <div className="text-responsive-sm text-gray-500 dark:text-gray-400">{translations[language].checkout.payWithStripe}</div>
                         </div>
                       </div>
-                      <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <div className="text-responsive-sm font-medium text-gray-500 dark:text-gray-400">
                         {translations[language].checkout.secure}
                       </div>
                     </div>
                   </label>
 
                   <label 
-                    className={`relative block p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                    className={`relative block p-responsive border rounded-lg cursor-pointer transition-all duration-200 ${
                       paymentMethod === 'cash' 
                         ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-red-500'
@@ -1099,25 +1008,35 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
                       value="cash"
                       checked={paymentMethod === 'cash'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="hidden"
+                      className="sr-only"
                     />
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-responsive">
+                        {/* Custom Radio Button */}
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          paymentMethod === 'cash' 
+                            ? 'border-red-500 bg-red-500' 
+                            : 'border-gray-300 dark:border-gray-600'
+                        }`}>
+                          {paymentMethod === 'cash' && (
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          )}
+                        </div>
                         <div className="w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                           </svg>
                         </div>
                         <div>
-                          <div className="font-medium">{translations[language].checkout.cash}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="font-medium text-responsive-base">{translations[language].checkout.cash}</div>
+                          <div className="text-responsive-sm text-gray-500 dark:text-gray-400">
                             {localOrderMethod === 'delivery' 
                               ? translations[language].checkout.payOnDelivery 
                               : translations[language].checkout.payOnPickup}
                           </div>
                         </div>
                       </div>
-                      <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <div className="text-responsive-sm font-medium text-gray-500 dark:text-gray-400">
                         Easy
                       </div>
                     </div>
@@ -1126,39 +1045,55 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
               </div>
 
               {/* Terms and Conditions */}
-              <div className="form-section-group mb-6">
-                <div className="terms-conditions">
-                  <label className="terms-label">
+              <div className="form-section-group mb-responsive">
+                <div className="p-responsive bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg">
+                  <div className="flex flex-row items-center gap-3 w-full">
                     <input
                       type="checkbox"
                       id="terms"
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="sr-only"
                     />
-                    <span>
+                    {/* Custom Checkbox */}
+                    <label 
+                      htmlFor="terms"
+                      className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all duration-200 cursor-pointer flex-shrink-0 ${
+                        termsAccepted 
+                          ? 'border-red-500 bg-red-500' 
+                          : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                      }`}
+                    >
+                      {termsAccepted && (
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </label>
+                    <label htmlFor="terms" className="text-responsive-base flex-1 cursor-pointer leading-relaxed">
                       {translations[language].checkout.agreeToTerms}
-                      <a href="/terms" target="_blank" rel="noopener noreferrer">
+                      <a href="/terms" target="_blank" rel="noopener noreferrer" className="ml-1 text-red-500 hover:text-red-600 font-medium">
                         {translations[language].checkout.termsAndConditions}
                       </a>
                       .
-                    </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
               </div>
 
               {/* Order Total */}
-              <div className="form-section-group">
-                <div className="flex justify-between items-center text-lg font-bold">
+              <div className="form-section-group mb-responsive">
+                <div className="flex justify-between items-center text-responsive-lg font-bold">
                   <span>{translations[language].checkout.total}:</span>
                   <div className="flex flex-col items-end">
                     {totalDiscount > 0 && (
                       <>
-                        <span className="text-sm text-gray-500 line-through">€{totalOriginalPrice.toFixed(2)}</span>
-                        <span className="text-green-600 dark:text-green-400">€{subtotal.toFixed(2)}</span>
+                        <span className="text-responsive-sm text-gray-500 line-through">€{totalOriginalPrice.toFixed(2)}</span>
+                        <span className="text-responsive-lg text-green-600 dark:text-green-400">€{subtotal.toFixed(2)}</span>
                       </>
                     )}
                     {totalDiscount === 0 && (
-                      <span className="text-red-600">€{subtotal.toFixed(2)}</span>
+                      <span className="text-responsive-lg text-red-600">€{subtotal.toFixed(2)}</span>
                     )}
                   </div>
                 </div>
@@ -1168,7 +1103,7 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
               <button
                 type="submit"
                 disabled={!termsAccepted || isSubmitting}
-                className={`w-full py-4 rounded-md text-lg font-bold transition border-2 ${
+                className={`w-full py-responsive rounded-md text-responsive-lg font-bold transition border-2 ${
                   !termsAccepted || isSubmitting
                     ? "submit-button disabled"
                     : "submit-button"

@@ -1,8 +1,8 @@
 /* Base button styles */
 .button-base {
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0.5rem;
+  width: clamp(2rem, 4vw, 2.5rem);
+  height: clamp(2rem, 4vw, 2.5rem);
+  padding: clamp(0.375rem, 1vw, 0.5rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,6 +11,8 @@
   color: var(--header-text-primary);
   border-radius: 9999px;
   transition: background-color 200ms;
+  min-width: 2rem;
+  min-height: 2rem;
 }
 
 .button-base:hover {
@@ -19,15 +21,17 @@
 
 /* Button without border (for basket) */
 .button-base-no-border {
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0.5rem;
+  width: clamp(2rem, 4vw, 2.5rem);
+  height: clamp(2rem, 4vw, 2.5rem);
+  padding: clamp(0.375rem, 1vw, 0.5rem);
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--header-button-bg);
   border-radius: 9999px;
   transition: background-color 200ms;
+  min-width: 2rem;
+  min-height: 2rem;
 }
 
 .button-base-no-border:hover {
@@ -41,7 +45,7 @@
 }
 
 .nav-link a {
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
   font-weight: 600;
   font-family: sans-serif;
   overflow: hidden;
@@ -78,113 +82,328 @@
   width: 0;
 }
 
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(3rem, 6vh, 4rem);
+  background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* Height-responsive header for short screens */
+@media (max-height: 600px) {
+  .header {
+    height: clamp(2.5rem, 5vh, 3.5rem);
+    padding: 0 clamp(0.5rem, 1.5vw, 1rem);
+  }
+}
+
+/* Very short screens */
+@media (max-height: 500px) {
+  .header {
+    height: clamp(2.25rem, 4.5vh, 3rem);
+  }
+}
+
+/* Dark mode */
+.dark .header {
+  background: linear-gradient(135deg, #2d1b69 0%, #512da8 100%);
+}
+
+/* Light mode */
+.light .header {
+  background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+}
+
+/* Header content */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Restaurant name */
+.restaurant-name {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Height-responsive restaurant name for short screens */
+@media (max-height: 600px) {
+  .restaurant-name {
+    font-size: clamp(0.875rem, 2vw, 1.25rem);
+  }
+}
+
+/* Very short screens */
+@media (max-height: 500px) {
+  .restaurant-name {
+    font-size: clamp(0.75rem, 1.8vw, 1.125rem);
+  }
+}
+
+/* Basket toggle */
+.basket-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: clamp(0.375rem, 1vw, 0.625rem) clamp(0.75rem, 1.5vw, 1rem);
+  border-radius: clamp(0.375rem, 1vw, 0.625rem);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 0.5vw, 0.5rem);
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  margin-left: clamp(0.5rem, 1vw, 1rem);
+}
+
+/* Height-responsive basket toggle for short screens */
+@media (max-height: 600px) {
+  .basket-toggle {
+    padding: clamp(0.25rem, 0.75vw, 0.5rem) clamp(0.5rem, 1.25vw, 0.75rem);
+    font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+    gap: clamp(0.1875rem, 0.375vw, 0.375rem);
+  }
+}
+
+/* Very short screens */
+@media (max-height: 500px) {
+  .basket-toggle {
+    padding: clamp(0.1875rem, 0.5vw, 0.375rem) clamp(0.375rem, 1vw, 0.625rem);
+    font-size: clamp(0.5rem, 1vw, 0.625rem);
+  }
+}
+
+.basket-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.basket-toggle:active {
+  transform: translateY(0);
+}
+
+/* Basket count indicator */
+.basket-count {
+  background: #ff5722;
+  color: white;
+  border-radius: 50%;
+  min-width: clamp(1.125rem, 2vw, 1.375rem);
+  height: clamp(1.125rem, 2vw, 1.375rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Height-responsive basket count for short screens */
+@media (max-height: 600px) {
+  .basket-count {
+    min-width: clamp(1rem, 1.75vw, 1.25rem);
+    height: clamp(1rem, 1.75vw, 1.25rem);
+    font-size: clamp(0.5rem, 1vw, 0.625rem);
+  }
+}
+
+/* Very short screens */
+@media (max-height: 500px) {
+  .basket-count {
+    min-width: clamp(0.875rem, 1.5vw, 1.125rem);
+    height: clamp(0.875rem, 1.5vw, 1.125rem);
+    font-size: clamp(0.4375rem, 0.875vw, 0.5625rem);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 clamp(0.5rem, 1.5vw, 1rem);
+  }
+  
+  .restaurant-name {
+    font-size: clamp(0.875rem, 2.25vw, 1.25rem);
+  }
+  
+  .basket-toggle {
+    padding: clamp(0.25rem, 0.75vw, 0.5rem) clamp(0.5rem, 1.25vw, 0.75rem);
+    font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+    margin-left: clamp(0.375rem, 0.75vw, 0.75rem);
+  }
+}
+
+/* Mobile short screens */
+@media (max-width: 768px) and (max-height: 600px) {
+  .header {
+    height: clamp(2.25rem, 4.5vh, 3rem);
+    padding: 0 clamp(0.375rem, 1vw, 0.75rem);
+  }
+  
+  .restaurant-name {
+    font-size: clamp(0.75rem, 2vw, 1.125rem);
+  }
+  
+  .basket-toggle {
+    padding: clamp(0.1875rem, 0.5vw, 0.375rem) clamp(0.375rem, 1vw, 0.625rem);
+    font-size: clamp(0.5rem, 1vw, 0.625rem);
+  }
+  
+  .basket-count {
+    min-width: clamp(0.875rem, 1.5vw, 1.125rem);
+    height: clamp(0.875rem, 1.5vw, 1.125rem);
+    font-size: clamp(0.4375rem, 0.875vw, 0.5625rem);
+  }
+}
+
+/* Very short mobile screens */
+@media (max-width: 768px) and (max-height: 500px) {
+  .header {
+    height: clamp(2rem, 4vh, 2.75rem);
+  }
+  
+  .restaurant-name {
+    font-size: clamp(0.625rem, 1.75vw, 1rem);
+  }
+  
+  .basket-toggle {
+    padding: clamp(0.125rem, 0.375vw, 0.25rem) clamp(0.25rem, 0.75vw, 0.5rem);
+    font-size: clamp(0.4375rem, 0.875vw, 0.5625rem);
+  }
+  
+  .basket-count {
+    min-width: clamp(0.75rem, 1.25vw, 1rem);
+    height: clamp(0.75rem, 1.25vw, 1rem);
+    font-size: clamp(0.375rem, 0.75vw, 0.5rem);
+  }
+}
+
 /* Header container */
 .main-header {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 2000;
+  right: 0;
+  z-index: 50;
   background-color: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: var(--header-shadow);
+  height: var(--header-height);
+  transition: var(--header-transition);
 }
 
 .header-container {
   margin: 0 auto;
-  padding: 0 0.5rem;
+  padding: 0 clamp(0.75rem, 2vw, 2rem);
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  height: 5rem;
-  gap: 0.5rem;
+  height: 100%;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  max-width: 100%;
 }
 
 /* Logo container */
 .logo-container {
   position: relative;
-  height: 4rem;
+  height: 100%;
   display: flex;
   align-items: center;
-  margin-right: 0.5rem;
+  margin-right: clamp(0.5rem, 1.5vw, 1.5rem);
+  flex-shrink: 0;
 }
 
 .logo-image {
-  height: 3rem;
+  height: clamp(2rem, 5vh, 3.75rem);
   width: auto;
   object-fit: contain;
+  max-height: 80%;
 }
 
 /* Navigation container */
 .nav-container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  flex-shrink: 0;
 }
 
 /* Right section container */
 .right-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  flex-shrink: 0;
 }
 
 /* Social links container */
 .social-links {
   display: none;
-  gap: 0.5rem;
+  gap: clamp(0.5rem, 1vw, 1rem);
 }
 
 /* Responsive styles */
 @media (min-width: 640px) {
-  .button-base,
-  .button-base-no-border {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .header-container {
-    padding: 0 1rem;
-    height: 6rem;
-  }
-
-  .logo-container {
-    height: 6rem;
-    margin-right: 1.5rem;
-  }
-
-  .logo-image {
-    height: 5rem;
-  }
-
-  .nav-container {
-    gap: 1.5rem;
-  }
-
-  .right-section {
-    gap: 1rem;
-  }
-
-  .nav-link a {
-    font-size: 1.125rem;
-  }
-
   .social-links {
     display: flex;
   }
 }
 
-@media (min-width: 768px) {
-  .header-container {
-    padding: 0 1.5rem;
-  }
-
+@media (max-width: 639px) {
   .nav-container {
-    gap: 2rem;
+    gap: clamp(0.5rem, 3vw, 1rem);
+  }
+  
+  .logo-container {
+    margin-right: clamp(0.25rem, 2vw, 0.75rem);
+  }
+  
+  .nav-link a {
+    font-size: clamp(0.75rem, 3.5vw, 1rem);
   }
 }
 
-@media (min-width: 1024px) {
-  .header-container {
-    padding: 0 2rem;
+/* Height-based responsive adjustments */
+@media (max-height: 600px) {
+  .main-header {
+    height: clamp(3.5rem, 10vh, 4.5rem);
+  }
+  
+  .logo-image {
+    height: clamp(1.75rem, 6vh, 2.5rem);
+  }
+  
+  .button-base,
+  .button-base-no-border {
+    width: clamp(1.75rem, 5vw, 2rem);
+    height: clamp(1.75rem, 5vw, 2rem);
+    min-width: 1.75rem;
+    min-height: 1.75rem;
   }
 } 

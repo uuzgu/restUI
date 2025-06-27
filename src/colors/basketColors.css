@@ -10,8 +10,8 @@
   /* Delivery/Pickup Toggle Colors */
   --delivery-bg-light: #e0f2fe;              /* Light blue background for delivery button */
   --delivery-bg-dark: #0c4a6e;               /* Dark blue background for delivery button */
-  --delivery-active-bg-light: #cf3946;       /* Active state background for delivery */
-  --delivery-active-bg-dark: #cf3946;        /* Active state background for delivery in dark mode */
+  --delivery-active-bg-light: #e14f65;       /* Active state background for delivery - vibrant blue */
+  --delivery-active-bg-dark: #3b82f6;        /* Active state background for delivery in dark mode - brighter blue */
   --delivery-text-light: #0369a1;            /* Text color for delivery button */
   --delivery-text-dark: #bae6fd;             /* Text color for delivery button in dark mode */
   --delivery-active-text-light: #ffffff;     /* Active state text color for delivery */
@@ -19,8 +19,8 @@
 
   --pickup-bg-light: #f0fdf4;                /* Light green background for pickup button */
   --pickup-bg-dark: #0c4a6e;                 /* Dark green background for pickup button */
-  --pickup-active-bg-light: #cf3946;         /* Active state background for pickup */
-  --pickup-active-bg-dark: #cf3946;          /* Active state background for pickup in dark mode */
+  --pickup-active-bg-light: #e14f65;         /* Active state background for pickup - vibrant green */
+  --pickup-active-bg-dark: #3b82f6;          /* Active state background for pickup in dark mode - brighter green */
   --pickup-text-light: #166534;              /* Text color for pickup button */
   --pickup-text-dark: #bbf7d0;               /* Text color for pickup button in dark mode */
   --pickup-active-text-light: #ffffff;       /* Active state text color for pickup */
@@ -29,8 +29,8 @@
   /* Basket Item Colors */
   --basket-item-bg-light: #ffffff;           /* Individual item background */
   --basket-item-bg-dark: #1f2937;            /* Individual item background in dark mode */
-  --basket-item-border-light: #dfe3e8;       /* Border between basket items - darker for better visibility */
-  --basket-item-border-dark: #4b5563;        /* Border between basket items in dark mode - lighter for better visibility */
+  --basket-item-border-light: #d1d5db;       /* Border between basket items - darker for better visibility */
+  --basket-item-border-dark: #6b7280;        /* Border between basket items in dark mode - lighter for better visibility */
   --basket-item-text-light: #1f2937;         /* Text color for item names and descriptions */
   --basket-item-text-dark: #f3f4f6;          /* Text color for item names and descriptions in dark mode */
   --basket-item-price-light: #dc2626;        /* Price text color */

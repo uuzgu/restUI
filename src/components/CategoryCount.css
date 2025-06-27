@@ -12,4 +12,218 @@
   content: '';
   display: block;
   z-index: 1;
+}
+
+/* Category Header Container Responsive */
+.category-header-container {
+  /* Ensure proper height scaling across all devices - increased for larger icons */
+  min-height: clamp(4rem, 7vh, 5.5rem);
+  max-height: clamp(5.5rem, 9vh, 7rem);
+}
+
+/* Category List Responsive Spacing */
+.category-list {
+  /* Better scroll behavior on mobile */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent text selection during scrolling */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Ensure all buttons have same baseline alignment */
+  align-items: stretch;
+}
+
+/* Category Button Responsive */
+.category-button {
+  /* More flexible button sizing to accommodate text and larger icons */
+  min-width: clamp(3.5rem, 25vw, 7rem);
+  max-width: clamp(7rem, 40vw, 10rem);
+  /* Dynamic height based on content - increased for larger icons */
+  min-height: clamp(3rem, 5vh, 4rem);
+  height: auto;
+  /* Responsive padding with better spacing */
+  padding: clamp(0.4rem, 0.8vh, 0.8rem) clamp(0.25rem, 1vw, 0.5rem);
+  /* Ensure consistent layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  /* Allow content to fit properly */
+  overflow: visible;
+  gap: clamp(0.2rem, 0.4vh, 0.3rem);
+}
+
+/* Category Text Responsive - Fixed wrapping issues */
+.category-text {
+  /* Prevent text wrapping to new lines */
+  white-space: nowrap;
+  /* Handle text overflow with ellipsis only when absolutely necessary */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Allow text to use full button width */
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.1;
+  /* Responsive font sizing */
+  font-size: clamp(0.5rem, 1.3vh, 0.65rem);
+  /* Center text properly */
+  text-align: center;
+  /* Ensure text is visible */
+  display: block;
+  /* Text takes minimal space */
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+/* Category Icon Responsive - 1.3x larger */
+.category-icon {
+  /* Proportional icon scaling - increased by 1.3x */
+  width: clamp(1.1375rem, 2.6vh, 1.625rem);
+  height: clamp(1.1375rem, 2.6vh, 1.625rem);
+  /* Prevent icon distortion */
+  flex-shrink: 0;
+  flex-grow: 0;
+  object-fit: contain;
+  /* Ensure icon displays properly */
+  display: block;
+}
+
+/* Scroll Button Responsive */
+.scroll-button {
+  /* Better touch targets for scroll buttons */
+  min-width: clamp(2.5rem, 6vw, 3.5rem);
+  min-height: clamp(2.5rem, 6vw, 3.5rem);
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .category-header-container {
+    min-height: clamp(3.5rem, 6vh, 4.5rem);
+  }
+  
+  .category-button {
+    min-width: clamp(3.5rem, 25vw, 7rem);
+    max-width: clamp(7rem, 40vw, 10rem);
+    min-height: clamp(3rem, 5vh, 4rem);
+    height: auto;
+    padding: clamp(0.4rem, 0.8vh, 0.8rem) clamp(0.25rem, 1vw, 0.5rem);
+    gap: clamp(0.2rem, 0.4vh, 0.3rem);
+  }
+  
+  .category-text {
+    font-size: clamp(0.5rem, 1.3vh, 0.65rem);
+    line-height: 1.1;
+  }
+  
+  .category-icon {
+    width: clamp(1.1375rem, 2.6vh, 1.625rem);
+    height: clamp(1.1375rem, 2.6vh, 1.625rem);
+  }
+  
+  .scroll-button {
+    min-width: clamp(2rem, 5vw, 3rem);
+    min-height: clamp(2rem, 5vw, 3rem);
+  }
+}
+
+/* Very small mobile screens */
+@media (max-width: 480px) {
+  .category-header-container {
+    min-height: clamp(3.5rem, 6vh, 4.5rem);
+  }
+  
+  .category-button {
+    min-width: clamp(3.5rem, 25vw, 7rem);
+    max-width: clamp(7rem, 40vw, 10rem);
+    min-height: clamp(3rem, 5vh, 4rem);
+    height: auto;
+    padding: clamp(0.4rem, 0.8vh, 0.8rem) clamp(0.25rem, 1vw, 0.5rem);
+    gap: clamp(0.2rem, 0.4vh, 0.3rem);
+  }
+  
+  .category-text {
+    font-size: clamp(0.5rem, 1.3vh, 0.65rem);
+  }
+  
+  .category-icon {
+    width: clamp(1.1375rem, 2.6vh, 1.625rem);
+    height: clamp(1.1375rem, 2.6vh, 1.625rem);
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .category-header-container {
+    min-height: clamp(4rem, 6.5vh, 5rem);
+  }
+  
+  .category-button {
+    min-width: clamp(4rem, 20vw, 8rem);
+    max-width: clamp(8rem, 35vw, 12rem);
+    min-height: clamp(3.5rem, 6vh, 4.5rem);
+    height: auto;
+    padding: clamp(0.5rem, 1vh, 1rem) clamp(0.375rem, 1.2vw, 0.75rem);
+    gap: clamp(0.25rem, 0.5vh, 0.4rem);
+  }
+  
+  .category-text {
+    font-size: clamp(0.55rem, 1.5vh, 0.7rem);
+    line-height: 1.1;
+  }
+  
+  .category-icon {
+    width: clamp(1.3rem, 3.25vh, 1.95rem);
+    height: clamp(1.3rem, 3.25vh, 1.95rem);
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1025px) {
+  .category-header-container {
+    min-height: clamp(4.5rem, 7.5vh, 6rem);
+  }
+  
+  .category-button {
+    min-width: clamp(5rem, 18vw, 10rem);
+    max-width: clamp(10rem, 30vw, 15rem);
+    min-height: clamp(4rem, 6.5vh, 5rem);
+    height: auto;
+    padding: clamp(0.65rem, 1.3vh, 1.3rem) clamp(0.5rem, 1.5vw, 1rem);
+    gap: clamp(0.3rem, 0.65vh, 0.5rem);
+  }
+  
+  .category-text {
+    font-size: clamp(0.625rem, 1.6vh, 0.75rem);
+    line-height: 1.1;
+  }
+  
+  .category-icon {
+    width: clamp(1.625rem, 3.9vh, 2.6rem);
+    height: clamp(1.625rem, 3.9vh, 2.6rem);
+  }
+}
+
+/* Very short screens */
+@media (max-height: 500px) {
+  .category-header-container {
+    min-height: clamp(3rem, 5vh, 4rem);
+  }
+  
+  .category-button {
+    height: clamp(2.75rem, 4.5vh, 3.5rem);
+    padding: clamp(0.3rem, 0.8vh, 0.65rem) clamp(0.5rem, 1.5vw, 1rem);
+  }
+  
+  .category-text {
+    font-size: clamp(0.5rem, 1.2vh, 0.65rem);
+    line-height: 1.1;
+  }
+  
+  .category-icon {
+    width: clamp(1.1375rem, 2.34vh, 1.625rem);
+    height: clamp(1.1375rem, 2.34vh, 1.625rem);
+    margin-top: clamp(0.1rem, 0.2vh, 0.15rem);
+  }
 } 

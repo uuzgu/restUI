@@ -21,7 +21,7 @@ const ImageSlider = ({ images, className = '' }) => {
   }, [currentIndex]);
 
   return (
-    <div className={`relative pt-32 h-[600px] sm:h-[700px] overflow-hidden rounded-2xl z-10 mb-12 ${className}`}>
+    <div className={`relative overflow-hidden rounded-2xl z-10 mb-responsive h-responsive-slider ${className}`}>
       <div className="relative w-full h-full">
         {images.map((img, index) => (
           <img
@@ -34,37 +34,52 @@ const ImageSlider = ({ images, className = '' }) => {
             `}
           />
         ))}
+        
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-[var(--home-overlay-gradient)] rounded-2xl" />
         
-        {/* Arrows */}
-        <div className="absolute top-1/2 left-0 right-0 flex justify-between px-4 sm:px-8 z-20" style={{ transform: 'translateY(-50%)' }}>
+        {/* Navigation Arrows */}
+        <div className="absolute top-1/2 left-0 right-0 flex justify-between z-20 transform -translate-y-1/2 px-responsive">
           <button
             onClick={goToPrev}
-            className="w-12 h-12 flex items-center justify-center bg-[var(--home-slider-nav-bg)] text-[var(--home-text-primary)] rounded-full shadow-lg hover:bg-[var(--home-slider-nav-hover)] transition-colors duration-200 -ml-1 sm:-ml-2"
+            style={{
+              minWidth: '1.75rem',
+              minHeight: '1.75rem',
+              padding: '0.25rem'
+            }}
+            className="w-responsive-slider-dot h-responsive-slider-dot flex items-center justify-center bg-[var(--home-slider-nav-bg)] text-[var(--home-text-primary)] rounded-full shadow-lg hover:bg-[var(--home-slider-nav-hover)] transition-colors duration-200 active:scale-95"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-responsive-slider-icon h-responsive-slider-icon" />
           </button>
 
           <button
             onClick={goToNext}
-            className="w-12 h-12 flex items-center justify-center bg-[var(--home-slider-nav-bg)] text-[var(--home-text-primary)] rounded-full shadow-lg hover:bg-[var(--home-slider-nav-hover)] transition-colors duration-200 -mr-1 sm:-mr-2"
+            style={{
+              minWidth: '1.75rem',
+              minHeight: '1.75rem',
+              padding: '0.25rem'
+            }}
+            className="w-responsive-slider-dot h-responsive-slider-dot flex items-center justify-center bg-[var(--home-slider-nav-bg)] text-[var(--home-text-primary)] rounded-full shadow-lg hover:bg-[var(--home-slider-nav-hover)] transition-colors duration-200 active:scale-95"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-responsive-slider-icon h-responsive-slider-icon" />
           </button>
         </div>
 
         {/* Slide indicators */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+        <div className="absolute left-1/2 bottom-4 transform -translate-x-1/2 z-20 flex space-x-3">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400
-                w-3 h-3 sm:w-4 sm:h-4 min-w-[24px] min-h-[24px] flex items-center justify-center
-                ${index === currentIndex ? 'bg-[var(--home-slider-dot-active)] scale-110 shadow-md' : 'bg-[var(--home-slider-dot-inactive)]'}`}
+              style={{
+                minWidth: '1.75rem',
+                minHeight: '1.75rem',
+                padding: '0.25rem'
+              }}
+              className={`w-responsive-slider-dot h-responsive-slider-dot rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-60 border-2 border-transparent hover:border-white hover:border-opacity-30 flex items-center justify-center
+                ${index === currentIndex ? 'bg-[var(--home-slider-dot-active)] scale-110 shadow-lg' : 'bg-[var(--home-slider-dot-inactive)] hover:bg-[var(--home-slider-dot-active)] hover:bg-opacity-70'}`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

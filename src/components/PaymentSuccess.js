@@ -421,46 +421,46 @@ const PaymentSuccess = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
+      <div className="min-h-responsive-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4" style={{ color: 'var(--payment-success-text)' }}>Loading order details...</p>
+          <div className="animate-spin rounded-full h-responsive-spinner w-responsive-spinner border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-responsive" style={{ color: 'var(--payment-success-text)' }}>Loading order details...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
-      <div className="max-w-md w-full rounded-lg shadow-lg p-8" style={{ 
+    <div className="min-h-responsive-screen flex items-center justify-center" style={{ backgroundColor: 'var(--payment-success-container-bg)' }}>
+      <div className="max-w-md w-full rounded-lg shadow-lg p-responsive" style={{ 
         backgroundColor: 'var(--payment-success-content-bg)',
         borderColor: 'var(--payment-success-content-border)'
       }}>
         <div className="text-center">
-          <div className="text-6xl mb-4" style={{ color: 'var(--payment-success-icon)' }}>
+          <div className="text-responsive-6xl mb-responsive" style={{ color: 'var(--payment-success-icon)' }}>
             <i className="fas fa-check-circle"></i>
           </div>
-          <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--payment-success-heading)' }}>
+          <h2 className="text-responsive-2xl font-bold mb-responsive" style={{ color: 'var(--payment-success-heading)' }}>
             Payment Successful
           </h2>
-          <p className="mb-2" style={{ color: 'var(--payment-success-text)' }}>
+          <p className="mb-responsive" style={{ color: 'var(--payment-success-text)' }}>
             Thank you for your order! Your payment has been processed successfully.
           </p>
           {orderDetails && (
             <div
-              className="mb-6 p-4 rounded-lg border shadow-sm"
+              className="mb-responsive p-responsive rounded-lg border shadow-sm"
               style={{
                 backgroundColor: 'var(--payment-success-details-bg)',
                 borderColor: 'var(--payment-success-details-border)',
                 color: 'var(--payment-success-details-text)'
               }}
             >
-              <div className="flex items-center mb-2">
-                <span className="font-bold text-lg mr-2" style={{ color: 'var(--payment-success-heading)' }}>
+              <div className="flex items-center mb-responsive">
+                <span className="font-bold text-responsive-lg mr-2" style={{ color: 'var(--payment-success-heading)' }}>
                   Order #{orderDetails.orderNumber || orderDetails.OrderNumber}
                 </span>
                 <span
-                  className="ml-auto px-2 py-1 rounded text-xs font-semibold"
+                  className="ml-auto px-responsive py-responsive rounded text-responsive-xs font-semibold"
                   style={{
                     backgroundColor: 'var(--payment-success-details-bg)',
                     color: 'var(--payment-success-text)'
@@ -469,24 +469,24 @@ const PaymentSuccess = () => {
                   {orderDetails.orderMethod || orderDetails.OrderMethod}
                 </span>
               </div>
-              <div className="flex items-center mb-1">
+              <div className="flex items-center mb-responsive">
                 <span className="font-medium mr-2" style={{ color: 'var(--payment-success-text)' }}>Total:</span>
-                <span className="font-bold text-lg" style={{ color: 'var(--payment-success-total)' }}>
+                <span className="font-bold text-responsive-lg" style={{ color: 'var(--payment-success-total)' }}>
                   €{parseFloat(orderDetails.total || orderDetails.Total).toFixed(2)}
                 </span>
               </div>
-              <div className="text-sm" style={{ color: 'var(--payment-success-text)' }}> 
+              <div className="text-responsive-sm" style={{ color: 'var(--payment-success-text)' }}> 
                 <span className="font-medium">Delivery Method:</span> {orderDetails.orderMethod || orderDetails.OrderMethod}
               </div>
             </div>
           )}
           {error && (
-            <p className="text-red-500 mb-4">{error}</p>
+            <p className="text-red-500 mb-responsive">{error}</p>
           )}
-          <div className="space-y-4">
+          <div className="space-y-responsive">
             <button
               onClick={() => setShowOrderDetails(true)}
-              className="w-full py-2 px-4 rounded-md transition duration-200"
+              className="w-full py-responsive px-responsive rounded-md transition duration-200"
               style={{
                 backgroundColor: 'var(--payment-success-primary-bg)',
                 color: 'var(--payment-success-primary-text)'
@@ -498,7 +498,7 @@ const PaymentSuccess = () => {
             </button>
             <button
               onClick={() => navigate('/')}
-              className="w-full py-2 px-4 rounded-md transition duration-200"
+              className="w-full py-responsive px-responsive rounded-md transition duration-200"
               style={{
                 backgroundColor: 'var(--payment-success-secondary-bg)',
                 color: 'var(--payment-success-secondary-text)'

@@ -21,15 +21,32 @@ module.exports = {
         'xl': '1280px',
         '2xl': '1536px',
         '3xl': '1920px',
+        'short': { raw: '(max-height: 600px)' },
+        'mobile-short': { raw: '(max-width: 768px) and (max-height: 700px)' },
+        'mobile-very-short': { raw: '(max-width: 768px) and (max-height: 500px)' },
+        'mobile-extremely-short': { raw: '(max-width: 768px) and (max-height: 400px)' },
+      },
+      height: {
+        'screen-small': '100svh',
+        'screen-dynamic': '100dvh',
+      },
+      minHeight: {
+        'screen-small': '100svh',
+        'screen-dynamic': '100dvh',
+      },
+      maxHeight: {
+        'screen-small': '100svh',
+        'screen-dynamic': '100dvh',
       },
       container: {
         center: true,
         padding: {
           DEFAULT: '1rem',
-          sm: '2rem',
-          lg: '4rem',
-          xl: '5rem',
-          '2xl': '6rem',
+          sm: '1.5rem',
+          md: '2rem',
+          lg: '2.5rem',
+          xl: '3rem',
+          '2xl': '4rem',
         },
         screens: {
           sm: '640px',

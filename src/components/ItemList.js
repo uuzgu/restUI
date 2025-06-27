@@ -10,10 +10,9 @@ import { useDarkMode } from "../DarkModeContext";
 import "../colors/popupIngredientsColors.css";
 import { useApi } from '../contexts/ApiContext';
 
-const ItemList = ({ basketVisible, setBasketVisible }) => {
+const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
   const { language, translations } = useLanguage();
   const location = useLocation();
-  const [basket, setBasket] = useState([]);
   const [itemOptions, setItemOptions] = useState(null);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [ingredientQuantities, setIngredientQuantities] = useState({});
@@ -41,7 +40,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     window.scrollTo(0, 0);
   }, [location.state]);
 
-  // Initialize basket and order method from navigation state if available
+  // Initialize order method from navigation state if available
   useEffect(() => {
     if (location.state?.basket) {
       setBasket(location.state.basket);
@@ -50,7 +49,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     if (location.state?.orderMethod) {
       setOrderMethod(location.state.orderMethod);
     }
-  }, [location.state, setBasketVisible]);
+  }, [location.state, setBasket, setBasketVisible]);
 
   // Fetch categories from API
   useEffect(() => {
@@ -168,17 +167,38 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   });
 
   const scrollToSection = (categoryId) => {
-    const section = document.getElementById(`category-${categoryId}`);
+    const targetId = `category-${categoryId}`;
+    const section = document.getElementById(targetId);
+    
     if (section) {
-      const headerHeight = 96; // Height of the fixed header
-      const categoryListHeight = 48; // Height of the category list
-      const totalOffset = headerHeight + categoryListHeight;
+      // Get all fixed positioned elements at the top of the page
+      const fixedElements = Array.from(document.querySelectorAll('[class*="fixed"]'))
+        .filter(el => {
+          const rect = el.getBoundingClientRect();
+          return rect.top <= 10; // Elements at or near the top
+        });
+      
+      // Calculate total height of fixed headers
+      const totalFixedHeight = fixedElements.reduce((total, el) => {
+        return total + el.offsetHeight;
+      }, 0);
+      
+      const buffer = 20; // Add buffer for better positioning
+      const totalOffset = totalFixedHeight + buffer;
+      
+      console.log('Scroll calculation:', {
+        fixedElementsCount: fixedElements.length,
+        totalFixedHeight,
+        totalOffset
+      });
       
       const elementPosition = section.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
 
+      console.log('Scrolling to position:', offsetPosition);
+      
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, offsetPosition),
         behavior: 'smooth'
       });
       setActiveCategory(categoryId);
@@ -186,9 +206,14 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   };
 
   const detectActiveCategory = useCallback(() => {
-    const sections = Object.keys(categoryLabels).map((categoryId) =>
-      document.getElementById(`category-${categoryId}`)
-    );
+    const sections = Object.keys(categoryLabels).map((categoryId) => {
+      const section = document.getElementById(`category-${categoryId}`);
+      console.log(`Checking section category-${categoryId}:`, section ? 'found' : 'not found');
+      return section;
+    }).filter(Boolean);
+    
+    console.log('Total sections found for detection:', sections.length);
+    
     let closestSection = null;
     let closestOffset = Infinity;
 
@@ -205,6 +230,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
 
     if (closestSection) {
       const categoryId = closestSection.id.split('-')[1];
+      console.log('Setting active category to:', categoryId);
       setActiveCategory(categoryId);
     }
   }, [categoryLabels]);
@@ -222,6 +248,10 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
       console.error('Invalid item:', item);
       return;
     }
+    
+    // Close basket when opening popup to prevent collision on mid-size screens
+    setBasketVisible(false);
+    
     try {
       console.log('Fetching options for item:', item);
       const response = await api.get(`/items/${item.id}/options`);
@@ -870,6 +900,22 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     itemCount: filteredCategorizedItems[categoryId].length
   }));
 
+  // Create fallback category list when items haven't loaded yet
+  const fallbackCategoryList = categories.map(category => ({
+    category: (category.name ?? category.Name).toUpperCase(),
+    categoryId: category.id ?? category.Id,
+    itemCount: 0
+  })).sort((a, b) => {
+    const categoryA = categories.find(cat => (cat.id ?? cat.Id) === a.categoryId);
+    const categoryB = categories.find(cat => (cat.id ?? cat.Id) === b.categoryId);
+    const orderA = categoryA?.DisplayOrder ?? 999;
+    const orderB = categoryB?.DisplayOrder ?? 999;
+    return orderA - orderB;
+  });
+
+  // Use fallback if no items loaded yet, otherwise use the regular list
+  const displayCategories = categoryLabelsWithCount.length > 0 ? categoryLabelsWithCount : fallbackCategoryList;
+
   // Pass orderMethod to Basket component
   const handleOrderMethodChange = (method) => {
     setOrderMethod(method);
@@ -909,7 +955,8 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
         // On mobile, ensure basket is properly positioned
         const basketPanel = document.querySelector('.basket-panel');
         if (basketPanel) {
-          basketPanel.style.top = '96px';
+          // Use CSS variable instead of hardcoded value for consistent responsive behavior
+          basketPanel.style.top = 'var(--header-height)';
           basketPanel.style.right = '0';
           basketPanel.style.width = '100%';
         }
@@ -923,7 +970,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [basketVisible]);
 
   // Update the popupItemQuantity state to trigger price recalculation
   const updatePopupItemQuantity = useCallback((delta) => {
@@ -934,64 +981,80 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--order-bg)] text-[var(--order-text-primary)]">
-      <div className="content-container">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-[var(--category-header-bg)] fixed top-20 sm:top-24 left-0 w-full z-40 py-2 shadow-[var(--category-header-shadow)]">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-center w-full lg:max-w-[700px] space-x-4 overflow-x-auto scrollbar-hide">
-                  <CategoryCount
-                    categories={categoryLabelsWithCount}
-                    activeCategory={activeCategory}
-                    setActiveCategory={setActiveCategory}
-                    scrollToSection={scrollToSection}
-                  />
-                </div>
-                <div className="relative w-full lg:w-[200px] xl:w-[250px] 2xl:w-[300px] flex items-center">
-                  <input
-                    type="text"
-                    placeholder={` 🔍 ${translations[language].searchMenu}`}
-                    className="search-input border-[var(--search-border)] px-4 py-2 text-sm rounded-full shadow-sm focus:ring focus:ring-red-100 focus:outline-none w-full placeholder-[var(--search-placeholder)] bg-[var(--search-bg)] text-[var(--search-text)]"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
+    <div className="min-h-screen-dynamic bg-[var(--order-bg)] text-[var(--order-text-primary)] flex flex-col">
+      {/* Secondary Header - Fixed position */}
+      <div 
+        className="bg-[var(--category-header-bg)] fixed left-0 w-full z-40 shadow-[var(--category-header-shadow)] border-b border-[var(--category-header-border)]"
+        style={{
+          top: 'var(--header-height)'
+        }}
+      >
+        <div className="container mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 py-1 md:py-2 lg:py-3 short:py-0.5 mobile-short:py-0.5 mobile-very-short:py-0.5 mobile-extremely-short:py-0.5">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1 sm:gap-2 lg:gap-4 short:gap-0.5 mobile-short:gap-0.5 mobile-very-short:gap-0.5 mobile-extremely-short:gap-0.5">
+            {/* Categories */}
+            <div className="flex items-center w-full lg:flex-1 lg:max-w-none space-x-1 sm:space-x-2 lg:space-x-2 overflow-x-auto scrollbar-hide">
+              <CategoryCount
+                categories={displayCategories}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                scrollToSection={scrollToSection}
+              />
             </div>
-          </div>
-
-          <div className="menu-content-container">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-[160px] md:pt-[180px]">
-              {error ? (
-                <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-                  <div className="text-red-500 text-4xl mb-2">⚠️</div>
-                  <div className="text-red-500 text-center text-lg">{error}</div>
-                  <button 
-                    onClick={() => window.location.reload()} 
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                  >
-                    {translations[language].retry || 'Retry'}
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col items-start space-y-8">
-                  {sortedCategoryIds.map((categoryId) => (
-                    <MenuSection
-                      key={categoryId}
-                      categoryId={categoryId}
-                      title={categoryLabels[parseInt(categoryId)] || `Category ${categoryId}`}
-                      items={filteredCategorizedItems[categoryId]}
-                      fetchIngredients={showItemIngredients}
-                    />
-                  ))}
-                </div>
-              )}
+            {/* Search */}
+            <div className="flex items-center w-full lg:w-auto lg:flex-shrink-0 space-x-1 sm:space-x-2 lg:space-x-4">
+              <div className="relative w-full lg:w-auto lg:min-w-[250px] xl:min-w-[300px] 2xl:min-w-[350px] lg:max-w-[400px] flex items-center">
+                <input
+                  type="text"
+                  placeholder={` 🔍 ${translations[language].searchMenu}`}
+                  className="search-input border-[var(--search-border)] px-2 sm:px-3 lg:px-4 py-2 md:py-2.5 lg:py-3 short:py-1.5 mobile-short:py-1.5 mobile-very-short:py-1.5 mobile-extremely-short:py-1 text-xs sm:text-sm short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs rounded-full shadow-sm focus:ring focus:ring-red-100 focus:outline-none w-full placeholder-[var(--search-placeholder)] bg-[var(--search-bg)] text-[var(--search-text)]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      {/* Basket rendered at the top level, outside all containers */}
+
+      {/* Main Content */}
+      <div
+        className="w-full mx-auto flex-1"
+        style={{
+          paddingTop: 'calc(var(--header-height) + clamp(3rem, 6vh, 4rem))',
+          minHeight: "calc(100 * var(--vh))",
+        }}
+      >
+        <div className="container mx-auto px-2 sm:px-4 lg:px-6 xl:px-8 pb-2 sm:pb-4 lg:pb-6 xl:pb-8">
+          <div className="mt-2 space-y-4">
+            {error ? (
+              <div className="flex flex-col items-center justify-center min-h-[40vh] short:min-h-[30vh] space-y-2 sm:space-y-4">
+                <div className="text-red-500 text-2xl sm:text-4xl mb-1 sm:mb-2">⚠️</div>
+                <div className="text-red-500 text-center text-sm sm:text-lg">{error}</div>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm"
+                >
+                  {translations[language].retry || 'Retry'}
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-start space-y-3 sm:space-y-4 lg:space-y-6 xl:space-y-8 short:space-y-2">
+                {sortedCategoryIds.map((categoryId) => (
+                  <MenuSection
+                    key={categoryId}
+                    categoryId={categoryId}
+                    title={categoryLabels[parseInt(categoryId)] || `Category ${categoryId}`}
+                    items={filteredCategorizedItems[categoryId]}
+                    fetchIngredients={showItemIngredients}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Basket - Positioned outside main content flow */}
       {basketVisible && (
         <Basket
           basket={basket}
@@ -1009,14 +1072,15 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
           setBasket={setBasket}
         />
       )}
+
+      {/* Popup - Full viewport overlay */}
       {showPopup && selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-30 overflow-hidden">
-          <div
-            className="w-full max-w-[95vw] sm:max-w-[95vw] md:max-w-[500px] lg:max-w-[600px] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-[30px] shadow-lg popup-container"
-          >
-            <div className="rounded-[30px] text-[var(--popup-header-text)] w-full flex flex-col relative h-full">
-              <div className="overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 180px)' }}>
-                {/* Close button and image in scrollable area */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 p-2 sm:p-4 overflow-hidden">
+          <div className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] h-full max-h-[98vh] short:max-h-[95vh] mobile-short:max-h-[90vh] mobile-very-short:max-h-[85vh] mobile-extremely-short:max-h-[80vh] flex flex-col mx-auto bg-[var(--popup-container-bg)] rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg popup-container overflow-hidden">
+            <div className="rounded-xl sm:rounded-2xl lg:rounded-3xl text-[var(--popup-header-text)] w-full flex flex-col relative h-full overflow-hidden">
+              {/* Scrollable Content Area */}
+              <div className="flex-1 overflow-y-auto">
+                {/* Header with image and close button */}
                 <div className="relative">
                   <button
                     onClick={() => {
@@ -1024,22 +1088,21 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                       setShowRequiredOptionsWarning(false);
                       document.body.classList.remove('popup-active');
                     }}
-                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-11 h-11 min-w-[44px] min-h-[44px] bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] rounded-full border border-[var(--popup-close-button-border)] flex items-center justify-center shadow-md z-10"
-                    style={{ zIndex: 100 }}
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 short:w-7 short:h-7 mobile-short:w-6 mobile-short:h-6 mobile-very-short:w-5 mobile-very-short:h-5 mobile-extremely-short:w-4 mobile-extremely-short:h-4 min-w-[32px] min-h-[32px] sm:min-w-[40px] sm:min-h-[40px] short:min-w-[28px] short:min-h-[28px] mobile-short:min-w-[24px] mobile-short:min-h-[24px] mobile-very-short:min-w-[20px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-w-[16px] mobile-extremely-short:min-h-[16px] bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] rounded-full border border-[var(--popup-close-button-border)] flex items-center justify-center shadow-md z-10"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 short:h-3 short:w-3 mobile-short:h-3 mobile-short:w-3 mobile-very-short:h-2 mobile-very-short:w-2 mobile-extremely-short:h-2 mobile-extremely-short:w-2" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                   {selectedItem.image_url && (
-                    <div className="relative w-full h-[180px] sm:h-[220px] md:h-[300px] flex-shrink-0 rounded-t-[30px] overflow-hidden">
+                    <div className="relative w-full h-[clamp(120px,20vh,200px)] short:h-[clamp(80px,15vh,120px)] mobile-short:h-[15vh] mobile-very-short:h-[15vh] mobile-extremely-short:h-[15vh] flex-shrink-0 rounded-t-xl sm:rounded-t-2xl lg:rounded-t-3xl overflow-hidden">
                       <img
                         src={selectedItem.image_url}
                         alt={selectedItem.name || 'Item'}
                         className="w-full h-full object-cover"
                       />
                       {showRequiredOptionsWarning && (
-                        <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 text-white py-2 px-4 text-center animate-fade-in">
+                        <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 text-white py-1 sm:py-2 px-2 sm:px-4 text-center animate-fade-in text-xs sm:text-sm">
                           Please select required options
                         </div>
                       )}
@@ -1047,24 +1110,25 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                   )}
                 </div>
 
-                <div className="px-2 py-2 sm:px-6 sm:py-4 bg-[var(--popup-content-bg)] text-[var(--popup-content-text)]">
-                  <div className="p-2 sm:p-6 mb-4">
-                    <h2 className="text-2xl font-bold text-[var(--popup-header-text)] mb-2 text-left">
+                {/* Content */}
+                <div className="px-2 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 bg-[var(--popup-content-bg)] text-[var(--popup-content-text)]">
+                  <div className="mb-2 sm:mb-4">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl short:text-base font-bold text-[var(--popup-header-text)] mb-1 sm:mb-2 text-left">
                       {selectedItem.name || 'Unnamed Item'}
                     </h2>
                     <div className="flex items-center mb-1">
-                      <span className="text-lg font-bold text-red-500" style={{ textAlign: 'left' }}>
+                      <span className="text-base sm:text-lg short:text-sm font-bold text-red-500" style={{ textAlign: 'left' }}>
                         €{selectedItem.price}
                       </span>
                     </div>
-                    <p className="text-[var(--popup-content-text)] mb-4 text-left">
+                    <p className="text-[var(--popup-content-text)] mb-2 sm:mb-4 text-left text-xs sm:text-sm lg:text-base short:text-xs">
                       {selectedItem.description || 'No description available'}
                     </p>
 
-                    <hr className="border-[var(--popup-content-border)] mb-4" />
+                    <hr className="border-[var(--popup-content-border)] mb-2 sm:mb-4" />
 
                     <div className="ingredient-list">
-                      <h3 className="text-lg font-semibold mb-2 text-[var(--popup-header-text)]">
+                      <h3 className="text-sm sm:text-base lg:text-lg short:text-sm font-semibold mb-1 sm:mb-2 text-[var(--popup-header-text)]">
                         {translations[language].customizeOrder}
                       </h3>
 
@@ -1087,171 +1151,155 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                           <div 
                             key={group.id}
                             id={`group-${group.id}`}
-                            className="mb-6"
+                            className="mb-2 sm:mb-4 lg:mb-6"
                           >
-                            <h4 className="text-md font-semibold mb-3 text-[var(--popup-header-text)] flex items-center">
+                            <h4 className="text-xs sm:text-sm lg:text-md short:text-xs font-semibold mb-1 sm:mb-2 lg:mb-3 text-[var(--popup-header-text)] flex items-center">
                               {group.name}
                               {attentionGroupId === group.id && (
                                 <span className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                               )}
-                              <span className="text-sm font-normal ml-2 text-[var(--popup-content-text)]">
+                              <span className="text-xs short:text-[10px] font-normal ml-2 text-[var(--popup-content-text)]">
                                 ({group.type === 'EXCLUSIONS' ? 'Optional Exclusions' : group.isRequired ? 'Required' : 'Optional'})
                                 {group.type === 'MULTIPLE' && group.threshold > 0 && (
-                                  <span className="text-[var(--popup-content-text)] ml-2">
-                                    (First {group.threshold} {group.name.toLowerCase().endsWith('s') ? group.name.toLowerCase() : group.name.toLowerCase() + 's'} are free)
-                                  </span>
+                                  <span className="text-[var(--popup-content-text)] ml-2">{selectedCount}/{group.threshold} free</span>
                                 )}
                               </span>
                             </h4>
-                            <div className="space-y-2">
-                              {group.options
-                                .sort((a, b) => a.displayOrder - b.displayOrder)
-                                .map((option) => {
-                                  // Check if this option is selected
-                                  const isSelected = selectedIngredients.some(
-                                    ing => ing.id === option.id && ing.type === 'selection'
-                                  );
+
+                            <div className="space-y-1 sm:space-y-2">
+                              {group.options.map((option) => {
+                                const isSelected = selectedIngredients.some(ing => 
+                                  ing.id === option.id && ing.type === 'selection'
+                                );
+
+                                // Get sorted selected options in this group for free calculation
+                                const selectedOptionsInGroup = selectedIngredients
+                                  .filter(ing => ing.type === 'selection' && group.options.some(opt => opt.id === ing.id))
+                                  .sort((a, b) => a.id - b.id); // Sort by ID for consistency
+
+                                // Calculate how many of this option are free
+                                let remainingFreeQuantity = group.threshold || 0;
+                                let freeQuantity = 0;
+                                let paidQuantity = 0;
+
+                                if (isSelected) {
+                                  const optionQuantity = ingredientQuantities[option.id] || 1;
+                                  const optionIndex = selectedOptionsInGroup.findIndex(ing => ing.id === option.id);
                                   
-                                  // Get all selected options in this group with their quantities
-                                  const selectedOptionsInGroup = selectedIngredients
-                                    .filter(ing => ing.type === 'selection' && 
-                                      group.options.some(opt => opt.id === ing.id))
-                                    .map(ing => ({
-                                      ...ing,
-                                      quantity: ingredientQuantities[ing.id] || 1
-                                    }))
-                                    .sort((a, b) => {
-                                      const aIndex = group.options.findIndex(opt => opt.id === a.id);
-                                      const bIndex = group.options.findIndex(opt => opt.id === b.id);
-                                      return aIndex - bIndex;
-                                    });
-
-                                  // Calculate total quantity of selected options
-                                  const totalSelectedQuantity = selectedOptionsInGroup.reduce((sum, opt) => sum + opt.quantity, 0);
-
-                                  // Calculate how many of this option are free
-                                  let remainingFreeQuantity = group.threshold || 0;
-                                  let freeQuantity = 0;
-                                  let paidQuantity = 0;
-
-                                  if (isSelected) {
-                                    const optionQuantity = ingredientQuantities[option.id] || 1;
-                                    const optionIndex = selectedOptionsInGroup.findIndex(ing => ing.id === option.id);
+                                  // Calculate free quantity based on position and remaining free quantity
+                                  if (optionIndex !== -1) {
+                                    const previousOptionsQuantity = selectedOptionsInGroup
+                                      .slice(0, optionIndex)
+                                      .reduce((sum, opt) => sum + opt.quantity, 0);
                                     
-                                    // Calculate free quantity based on position and remaining free quantity
-                                    if (optionIndex !== -1) {
-                                      const previousOptionsQuantity = selectedOptionsInGroup
-                                        .slice(0, optionIndex)
-                                        .reduce((sum, opt) => sum + opt.quantity, 0);
-                                      
-                                      const remainingAfterPrevious = Math.max(0, group.threshold - previousOptionsQuantity);
-                                      freeQuantity = Math.min(remainingAfterPrevious, optionQuantity);
-                                      paidQuantity = optionQuantity - freeQuantity;
-                                    }
+                                    const remainingAfterPrevious = Math.max(0, group.threshold - previousOptionsQuantity);
+                                    freeQuantity = Math.min(remainingAfterPrevious, optionQuantity);
+                                    paidQuantity = optionQuantity - freeQuantity;
                                   }
+                                }
 
-                                  const isPartiallyFree = freeQuantity > 0 && paidQuantity > 0;
-                                  const isFullyFree = freeQuantity === (ingredientQuantities[option.id] || 1);
-                                  const isFullyPaid = paidQuantity === (ingredientQuantities[option.id] || 1);
+                                const isPartiallyFree = freeQuantity > 0 && paidQuantity > 0;
+                                const isFullyFree = freeQuantity === (ingredientQuantities[option.id] || 1);
+                                const isFullyPaid = paidQuantity === (ingredientQuantities[option.id] || 1);
 
-                                  // Calculate total selected quantity in this group
-                                  const totalSelectedInGroup = selectedOptionsInGroup.reduce((sum, opt) => sum + opt.quantity, 0);
-                                  const isWithinThreshold = totalSelectedInGroup <= group.threshold;
+                                // Calculate total selected quantity in this group
+                                const totalSelectedInGroup = selectedOptionsInGroup.reduce((sum, opt) => sum + opt.quantity, 0);
+                                const isWithinThreshold = totalSelectedInGroup <= group.threshold;
 
-                                  return (
-                                    <div 
-                                      key={`${option.id}-${option.name}`} 
-                                      className={`flex items-center justify-between p-2 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
-                                          ${isSelected
-                                          ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
-                                          : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
-                                      `}
-                                      style={{ minHeight: '56px', marginBottom: '8px' }}
-                                      onClick={() => toggleIngredient({
-                                        ...option,
-                                        type: 'selection',
-                                        groupId: group.id
-                                      })}
-                                    >
-                                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                                        {group.type === 'MULTIPLE' ? (
-                                          <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={(e) => {
+                                return (
+                                  <div 
+                                    key={`${option.id}-${option.name}`} 
+                                    className={`flex items-center justify-between p-2 sm:p-3 short:p-1.5 rounded-lg border border-[var(--popup-item-border)] transition-all duration-200 cursor-pointer
+                                        ${isSelected
+                                        ? 'bg-red-100 dark:bg-[var(--popup-item-selected-bg)] text-[var(--popup-item-selected-text)] border-red-300 dark:border-[var(--popup-item-selected-bg)]'
+                                        : 'bg-[var(--popup-item-bg)] text-[var(--popup-item-text)] hover:bg-[var(--popup-item-hover-bg)]'}
+                                    `}
+                                    style={{ minHeight: 'clamp(40px, 6vw, 48px)', marginBottom: '4px' }}
+                                    onClick={() => toggleIngredient({
+                                      ...option,
+                                      type: 'selection',
+                                      groupId: group.id
+                                    })}
+                                  >
+                                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                                      {group.type === 'MULTIPLE' ? (
+                                        <input
+                                          type="checkbox"
+                                          checked={isSelected}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            toggleIngredient({
+                                              ...option,
+                                              type: 'selection',
+                                              groupId: group.id
+                                            });
+                                          }}
+                                          className="w-3 h-3 sm:w-4 sm:h-4 accent-red-500 flex-shrink-0"
+                                        />
+                                      ) : (
+                                        <input
+                                          type="radio"
+                                          name={`group-${group.id}`}
+                                          checked={isSelected}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            toggleIngredient({
+                                              ...option,
+                                              type: 'selection',
+                                              groupId: group.id
+                                            });
+                                          }}
+                                          className="w-3 h-3 sm:w-4 sm:h-4 accent-red-500 flex-shrink-0"
+                                        />
+                                      )}
+                                      <span className="text-[var(--popup-item-text)] truncate text-xs sm:text-sm lg:text-base short:text-xs">{option.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                                      {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && isSelected && (
+                                        <div 
+                                          className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 py-0.5 sm:px-2 sm:py-1 border border-gray-200 dark:border-gray-700"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          <button
+                                            onClick={(e) => {
                                               e.stopPropagation();
-                                              toggleIngredient({
-                                                ...option,
-                                                type: 'selection',
-                                                groupId: group.id
-                                              });
+                                              updateItemQuantity(option.id, option.type, -1);
                                             }}
-                                            className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                          />
-                                        ) : (
-                                          <input
-                                            type="radio"
-                                            name={`group-${group.id}`}
-                                            checked={isSelected}
-                                            onChange={(e) => {
-                                              e.stopPropagation();
-                                              toggleIngredient({
-                                                ...option,
-                                                type: 'selection',
-                                                groupId: group.id
-                                              });
-                                            }}
-                                            className="w-4 h-4 accent-red-500 flex-shrink-0"
-                                          />
-                                        )}
-                                        <span className="text-[var(--popup-item-text)] truncate">{option.name}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2 flex-shrink-0">
-                                        {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && isSelected && (
-                                          <div 
-                                            className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 sm:px-2 py-1 border border-gray-200 dark:border-gray-700"
-                                            onClick={(e) => e.stopPropagation()}
+                                            className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 short:w-3 short:h-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-xs sm:text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                                           >
-                                            <button
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                updateItemQuantity(option.id, option.type, -1);
-                                              }}
-                                              className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                            >
-                                              -
-                                            </button>
-                                            <span className="w-4 sm:w-6 text-center text-[var(--popup-item-text)] font-semibold text-sm sm:text-base">
-                                              {ingredientQuantities[option.id] || 0}
-                                            </span>
-                                            <button
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                updateItemQuantity(option.id, option.type, 1);
-                                              }}
-                                              className="w-5 h-5 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-base sm:text-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                                            >
-                                              +
-                                            </button>
-                                          </div>
-                                        )}
-                                        <div className="min-w-[60px] text-right">
-                                          {option.price > 0 && (
-                                            <span className={`text-sm ${
-                                              group.threshold > 0 && totalSelectedInGroup < group.threshold
-                                                ? 'text-green-600 dark:text-green-400' 
-                                                : 'text-gray-500'
-                                            }`}>
-                                              {group.threshold > 0 && totalSelectedInGroup < group.threshold
-                                                ? 'Free' 
-                                                : `+€${option.price.toFixed(2)}`}
-                                            </span>
-                                          )}
+                                            -
+                                          </button>
+                                          <span className="w-2 sm:w-3 lg:w-5 text-center text-[var(--popup-item-text)] font-semibold text-xs short:text-[10px]">
+                                            {ingredientQuantities[option.id] || 0}
+                                          </span>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              updateItemQuantity(option.id, option.type, 1);
+                                            }}
+                                            className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 short:w-3 short:h-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-xs sm:text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                          >
+                                            +
+                                          </button>
                                         </div>
+                                      )}
+                                      <div className="min-w-[40px] sm:min-w-[50px] lg:min-w-[60px] text-right">
+                                        {option.price > 0 && (
+                                          <span className={`text-xs short:text-[10px] ${
+                                            group.threshold > 0 && totalSelectedInGroup < group.threshold
+                                              ? 'text-green-600 dark:text-green-400' 
+                                              : 'text-gray-500'
+                                          }`}>
+                                            {group.threshold > 0 && totalSelectedInGroup < group.threshold
+                                              ? 'Free' 
+                                              : `+€${option.price.toFixed(2)}`}
+                                          </span>
+                                        )}
                                       </div>
                                     </div>
-                                  );
-                                })}
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
                         );
@@ -1259,8 +1307,8 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                     </div>
 
                     {/* Add Note Field */}
-                    <div className="mt-6 mb-4">
-                      <label htmlFor="itemNote" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="mt-2 sm:mt-4 lg:mt-6 mb-2 sm:mb-4">
+                      <label htmlFor="itemNote" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         {translations[language].specialInstructions || "Special Instructions"}
                       </label>
                       <textarea
@@ -1268,7 +1316,7 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                         value={itemNote}
                         onChange={(e) => setItemNote(e.target.value)}
                         placeholder={translations[language].addNote || "Add any special instructions or notes..."}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white text-xs sm:text-sm"
                         rows="2"
                       />
                     </div>
@@ -1276,42 +1324,44 @@ const ItemList = ({ basketVisible, setBasketVisible }) => {
                 </div>
               </div>
 
-              <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] w-full min-w-0">
-                <div className="flex w-full px-2 sm:px-6">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center border border-[var(--popup-button-border)] rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10">
+              {/* Fixed Footer with Controls */}
+              <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] w-full min-w-0 flex-shrink-0">
+                <div className="flex w-full px-2 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-3 mobile-short:py-1 mobile-very-short:py-1 mobile-extremely-short:py-1">
+                  <div className="flex items-center justify-between w-full gap-2 sm:gap-4 mobile-short:gap-1 mobile-very-short:gap-1 mobile-extremely-short:gap-1">
+                    {/* Quantity Controls */}
+                    <div className="flex items-center border border-[var(--popup-button-border)] rounded-lg sm:rounded-xl lg:rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-8 sm:h-9 lg:h-10 short:h-7 mobile-short:h-6 mobile-very-short:h-5 mobile-extremely-short:h-4 flex-shrink-0">
                       <button
                         onClick={() => updatePopupItemQuantity(-1)}
-                        className="text-lg font-bold text-[var(--popup-button-text)] px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[44px] min-h-[44px]"
+                        className="text-sm sm:text-base lg:text-lg short:text-sm mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-bold text-[var(--popup-button-text)] px-2 sm:px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[32px] sm:min-w-[36px] lg:min-w-[44px] short:min-w-[28px] mobile-short:min-w-[24px] mobile-very-short:min-w-[20px] mobile-extremely-short:min-w-[16px] min-h-[32px] sm:min-h-[36px] lg:min-h-[44px] short:min-h-[28px] mobile-short:min-h-[24px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-h-[16px]"
                       >
                         -
                       </button>
-                      <span className="px-3 text-md font-semibold h-full flex items-center">
+                      <span className="px-1 sm:px-2 lg:px-3 text-xs sm:text-sm lg:text-md short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-semibold h-full flex items-center text-[var(--popup-button-text)]">
                         {popupItemQuantity}
                       </span>
                       <button
                         onClick={() => updatePopupItemQuantity(1)}
-                        className="text-lg font-bold text-[var(--popup-button-text)] px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[44px] min-h-[44px]"
+                        className="text-sm sm:text-base lg:text-lg short:text-sm mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-bold text-[var(--popup-button-text)] px-2 sm:px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[32px] sm:min-w-[36px] lg:min-w-[44px] short:min-w-[28px] mobile-short:min-w-[24px] mobile-very-short:min-w-[20px] mobile-extremely-short:min-w-[16px] min-h-[32px] sm:min-h-[36px] lg:min-h-[44px] short:min-h-[28px] mobile-short:min-h-[24px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-h-[16px]"
                       >
                         +
                       </button>
                     </div>
 
+                    {/* Add to Basket Button */}
                     <button
                       onClick={handleAddToBasket}
-                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-6 h-10 rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 w-full sm:w-auto ml-2"
-                      style={{ maxWidth: '320px' }}
+                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-2 sm:px-4 lg:px-6 h-8 sm:h-9 lg:h-10 short:h-7 mobile-short:h-6 mobile-very-short:h-5 mobile-extremely-short:h-4 rounded-lg sm:rounded-xl lg:rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 flex-1"
                     >
-                      <span className="text-sm flex items-center">
+                      <span className="text-xs sm:text-sm short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs flex items-center truncate">
                         {translations[language].addToBasket}
                       </span>
-                      <div className="flex flex-col items-end ml-4 justify-center">
+                      <div className="flex flex-col items-end ml-1 sm:ml-2 lg:ml-4 justify-center flex-shrink-0">
                         {displayPrice.discountPercentage > 0 && (
-                          <span className="text-sm text-gray-500 line-through">
+                          <span className="text-xs short:text-[10px] mobile-short:text-[10px] mobile-very-short:text-[10px] mobile-extremely-short:text-[10px] text-gray-500 line-through">
                             {selectedItem?.currency || '€'}{(displayPrice.originalPrice * popupItemQuantity).toFixed(2)}
                           </span>
                         )}
-                        <span className="font-bold">
+                        <span className="font-bold text-xs sm:text-sm short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs">
                           {selectedItem?.currency || '€'}{(displayPrice.discountedPrice * popupItemQuantity).toFixed(2)}
                         </span>
                       </div>

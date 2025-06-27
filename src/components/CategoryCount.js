@@ -18,41 +18,25 @@ const CategoryCount = ({ categories, activeCategory, setActiveCategory, scrollTo
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [imageErrors, setImageErrors] = useState({});
 
-  // Debug: Log activeCategory whenever it changes
-  React.useEffect(() => {
-    console.log('Active category:', activeCategory);
-  }, [activeCategory]);
-
-  // Default category image mapping for fallback
-  const defaultCategoryImages = {
-    "0": pizzaImage, // Using pizza image for promotions
-    "1": pizzaImage,
-    "2": bowlImage,
-    "3": burgerImage,
-    "4": saladImage,
-    "5": breakfastImage,
-    "6": drinksImage,
-    "7": soupImage,
-    "8": dessertImage
+  // Map category names to appropriate images
+  const getCategoryImage = (categoryName) => {
+    if (!categoryName) return pizzaImage;
+    
+    const name = categoryName.toLowerCase();
+    
+    if (name.includes('pizza')) return pizzaImage;
+    if (name.includes('bowl')) return bowlImage;
+    if (name.includes('burger') || name.includes('hamburger')) return burgerImage;
+    if (name.includes('salad')) return saladImage;
+    if (name.includes('breakfast')) return breakfastImage;
+    if (name.includes('drink') || name.includes('beverage')) return drinksImage;
+    if (name.includes('soup')) return soupImage;
+    if (name.includes('dessert')) return dessertImage;
+    if (name.includes('promotion')) return pizzaImage;
+    
+    // Default to pizza image for unknown categories
+    return pizzaImage;
   };
-
-  // Sort categories to match backend ordering
-  const sortedCategories = [...categories].sort((a, b) => {
-    const orderMap = {
-      0: 1,  // Promotions
-      1: 2,  // Pizza
-      2: 3,  // Bowls
-      3: 4,  // Hamburgers
-      4: 5,  // Salads
-      5: 6,  // Breakfast
-      6: 7,  // Drinks
-      7: 8,  // Soups
-      8: 9,  // Desserts
-    };
-    const aOrder = orderMap[a.categoryId] || 10;
-    const bOrder = orderMap[b.categoryId] || 10;
-    return aOrder - bOrder;
-  });
 
   useEffect(() => {
     if (categoryListRef.current) {
@@ -60,6 +44,18 @@ const CategoryCount = ({ categories, activeCategory, setActiveCategory, scrollTo
       updateScrollButtons();
     }
   }, [categories]);
+
+  // Add resize listener for better responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      if (categoryListRef.current) {
+        updateScrollButtons();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const updateScrollButtons = () => {
     if (categoryListRef.current) {
@@ -81,7 +77,6 @@ const CategoryCount = ({ categories, activeCategory, setActiveCategory, scrollTo
     }
   };
 
-  // Handle click: suppress observer, set active, scroll, then re-enable observer
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
     scrollToSection(categoryId);
@@ -95,50 +90,75 @@ const CategoryCount = ({ categories, activeCategory, setActiveCategory, scrollTo
   };
 
   if (!categories || categories.length === 0) {
-    return null;
+    return (
+      <div className="category-header-container relative flex items-center w-full z-20 bg-[var(--category-header-bg)] shadow-[var(--category-header-shadow)]">
+        <div className="flex-1 flex items-center justify-center px-responsive">
+          <span className="category-text text-[var(--category-header-text)]">Loading categories...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="relative flex items-center w-full h-20 z-20 bg-[var(--category-header-bg)] shadow-[var(--category-header-shadow)]">
+    <div className="category-header-container relative flex items-center w-full z-20 bg-[var(--category-header-bg)] shadow-[var(--category-header-shadow)]">
       {/* Left Scroll Button */}
       {canScrollLeft && (
         <button
           onClick={() => scrollCategories("left")}
-          className="absolute left-0 z-10 h-full px-2 bg-[var(--category-header-bg)] transition-colors duration-200"
+          className="scroll-button absolute left-0 z-30 h-full flex items-center justify-center bg-[var(--category-header-bg)] transition-all duration-200 hover:bg-opacity-90"
+          style={{ 
+            background: `linear-gradient(to right, var(--category-header-bg), transparent)`,
+            paddingLeft: 'clamp(0.5rem, 1vw, 1rem)',
+            paddingRight: 'clamp(0.5rem, 1vw, 1rem)'
+          }}
         >
-          <ChevronLeftIcon className="h-5 w-5 text-[var(--category-header-active)]" />
+          <ChevronLeftIcon className="w-responsive-icon h-responsive-icon text-[var(--category-header-active)]" />
         </button>
       )}
 
       {/* Scrollable Category List */}
       <div
         ref={categoryListRef}
-        className="category-list flex-1 flex items-center overflow-x-auto gap-3 px-2 sm:px-4 md:px-6 pr-8 sm:pr-12 h-full scrollbar-hide"
-        style={{ WebkitOverflowScrolling: 'touch' }}
+        className="category-list flex-1 flex items-center overflow-x-auto h-full scrollbar-hide"
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          gap: 'clamp(0.25rem, 1vw, 0.75rem)',
+          paddingLeft: canScrollLeft ? 'clamp(3rem, 8vw, 4rem)' : 'clamp(0.75rem, 2vw, 1.5rem)',
+          paddingRight: canScrollRight ? 'clamp(3rem, 8vw, 4rem)' : 'clamp(0.75rem, 2vw, 1.5rem)',
+        }}
         onScroll={updateScrollButtons}
       >
-        {sortedCategories.map((category) => (
+        {categories.map((category) => (
           <button
             key={category.categoryId}
             onClick={() => handleCategoryClick(category.categoryId)}
-            className={`h-full px-4 py-2 text-base font-sans flex flex-col items-center justify-center transition-all duration-200 ease-in-out relative overflow-visible min-w-max border-none outline-none bg-transparent
+            className={`category-button flex flex-col items-center justify-center transition-all duration-200 ease-in-out relative border-none outline-none bg-transparent shrink-0
               ${
                 activeCategory === category.categoryId
                   ? "text-[var(--category-header-active)]"
                   : "text-[var(--category-header-text)] hover:text-[var(--category-header-active)]"
               }`}
-            style={{ touchAction: 'manipulation', marginBottom: 0 }}
+            style={{ 
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent'
+            }}
             tabIndex={0}
           >
-            <span className="mb-1 text-sm sm:text-base w-full block whitespace-normal font-semibold text-center" title={`${category.category} (${category.itemCount})`}>
+            <span 
+              className="category-text w-full block text-center font-semibold" 
+              title={`${category.category} (${category.itemCount})`}
+            >
               {category.category} ({category.itemCount})
             </span>
             {!imageErrors[category.categoryId] && (
               <img 
-                src={defaultCategoryImages[category.categoryId.toString()]} 
+                src={getCategoryImage(category.category)} 
                 alt={category.category}
-                className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 object-contain"
+                className="category-icon"
                 onError={() => handleImageError(category.categoryId)}
+                loading="lazy"
               />
             )}
             {activeCategory === category.categoryId && (
@@ -152,9 +172,14 @@ const CategoryCount = ({ categories, activeCategory, setActiveCategory, scrollTo
       {canScrollRight && (
         <button
           onClick={() => scrollCategories("right")}
-          className="absolute right-0 z-10 h-full px-2 bg-[var(--category-header-bg)] transition-colors duration-200"
+          className="scroll-button absolute right-0 z-30 h-full flex items-center justify-center bg-[var(--category-header-bg)] transition-all duration-200 hover:bg-opacity-90"
+          style={{ 
+            background: `linear-gradient(to left, var(--category-header-bg), transparent)`,
+            paddingLeft: 'clamp(0.5rem, 1vw, 1rem)',
+            paddingRight: 'clamp(0.5rem, 1vw, 1rem)'
+          }}
         >
-          <ChevronRightIcon className="h-5 w-5 text-[var(--category-header-active)]" />
+          <ChevronRightIcon className="w-responsive-icon h-responsive-icon text-[var(--category-header-active)]" />
         </button>
       )}
     </div>

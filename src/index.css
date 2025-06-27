@@ -41,9 +41,79 @@
   --input-error-bg: #fef2f2;
   --input-error-border: #ef4444;
   
-  /* New variables */
-  --header-height: 64px;
-  --popup-scale: 1;
+  /* Dynamic viewport height variables */
+  --vh: 1vh;
+  --dvh: 1dvh;
+  --svh: 1svh;
+  
+  /* IMPROVED RESPONSIVE VARIABLES - Better breakpoint control */
+  /* Mobile: 320px-767px, Tablet: 768px-1023px, Laptop: 1024px-1439px, Desktop: 1440px+ */
+  
+  /* Header and layout - More conservative fluid scaling */
+  --header-height: clamp(3.5rem, 3.25rem + 0.625vw, 5rem);
+  --content-padding: clamp(0.625rem, 0.375rem + 0.5vw, 1.25rem);
+  --section-spacing: clamp(0.75rem, 0.5rem + 0.5vw, 1.75rem);
+  --card-padding: clamp(0.625rem, 0.375rem + 0.5vw, 1.25rem);
+  
+  /* Typography - Further reduced base values with conservative fluid scaling */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.125vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+  --text-base: clamp(0.875rem, 0.8rem + 0.3vw, 1.0625rem);
+  --text-large: clamp(1rem, 0.9rem + 0.4vw, 1.1875rem);
+  --text-xl: clamp(1.125rem, 1rem + 0.4vw, 1.4375rem);
+  --text-2xl: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+  --text-3xl: clamp(1.5rem, 1.25rem + 0.625vw, 2rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
+  
+  /* Interactive elements - Smaller sizing */
+  --button-height: clamp(2.5rem, 2.25rem + 0.4vw, 2.875rem);
+  --input-height: clamp(2.5rem, 2.25rem + 0.4vw, 2.875rem);
+  
+  /* Container dimensions with more conservative fluid scaling */
+  --spacing-responsive: clamp(0.625rem, 0.375rem + 0.5vw, 1.25rem);
+  
+  /* Header to content gap - Small responsive spacing */
+  --header-content-gap: clamp(0.5rem, 0.375rem + 0.25vw, 0.875rem);
+  
+  /* Component-specific heights - Base mobile values */
+  --banner-height: 180px;
+  --image-size: 100px;
+  --popup-image-height: 200px;
+  --slider-component-height: 200px;
+  --selector-height: 50px;
+  --button-responsive-size: 2.75rem;
+  --top-responsive: 1rem;
+  --right-responsive: 1rem;
+  
+  /* Line height improvements for better text readability */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  
+  /* Container dimensions */
+  --container-max-height: calc(100 * var(--vh) - var(--header-height));
+  --container-min-height: calc(100 * var(--vh) - var(--header-height));
+  
+  /* Image slider - Better aspect ratio with reasonable fluid scaling */
+  --slider-height: clamp(180px, 14vw + 120px, 320px);
+  --slider-button-size: clamp(2.25rem, 2rem + 0.4vw, 2.75rem);
+  --slider-icon-size: clamp(1rem, 0.875rem + 0.2vw, 1.375rem);
+  --slider-dot-size: clamp(0.75rem, 0.625rem + 0.25vw, 1rem);
+  --slider-dot-touch-size: 2.25rem;
+  --slider-dot-spacing: clamp(1rem, 0.75rem + 0.5vw, 1.5rem);
+  
+  /* Component-specific heights - More conservative fluid scaling */
+  --banner-height: clamp(140px, 10vw + 80px, 240px);
+  --image-size: clamp(70px, 5vw + 50px, 120px);
+  --popup-image-height: clamp(160px, 10vw + 100px, 240px);
+  --slider-component-height: clamp(160px, 12vw + 100px, 280px);
+  --selector-height: clamp(44px, 3vw + 28px, 56px);
+  --button-responsive-size: clamp(2.25rem, 2rem + 0.5vw, 3rem);
+  --top-responsive: clamp(0.5rem, 0.375rem + 0.375vw, 1rem);
+  --right-responsive: clamp(0.5rem, 0.375rem + 0.375vw, 1rem);
+  
+  /* Popup scaling */
+  --popup-scale: 0.9;
 }
 
 .dark {
@@ -72,7 +142,9 @@
 html, body {
   background-color: rgb(var(--background-start-rgb));
   min-height: 100vh;
+  min-height: calc(100 * var(--vh));
   margin: 0;
+  padding: 0;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -85,6 +157,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   position: relative;
+  min-height: 100vh;
+  min-height: calc(100 * var(--vh));
+}
+
+/* Root App container fix */
+#root {
+  min-height: 100vh;
+  min-height: calc(100 * var(--vh));
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+  min-height: 100vh;
+  min-height: calc(100 * var(--vh));
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 /* Item Box Styles */
@@ -132,8 +222,8 @@ body {
 
 /* Item Image */
 .item-image {
-  width: clamp(80px, 12vw, 140px);
-  height: clamp(80px, 12vw, 140px);
+  width: clamp(96px, 14vw, 160px);
+  height: clamp(96px, 14vw, 160px);
   flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
@@ -149,58 +239,51 @@ body {
 
 /* Item Description */
 .item-description {
-  font-size: clamp(0.75rem, 1vw, 0.875rem);
-  color: rgb(167, 162, 162);
-  margin-bottom: clamp(0.5rem, 1vw, 0.625rem);
-  line-height: 1.5;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: 1rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 /* Item Name */
 .item-name {
-  font-weight: bold;
-  font-size: clamp(0.875rem, 1.25vw, 1.125rem);
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--menu-item-title);
+  font-size: var(--text-large);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
 
 .item-box:hover .item-name {
-  color: var(--menu-item-title);
+  color: var(--primary);
 }
 
 /* Item Price */
 .item-price {
-  font-weight: 600 !important;
-  color: var(--menu-item-price);
-  font-size: clamp(0.875rem, 1.1vw, 1rem);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--primary);
   margin-top: auto;
-  padding-bottom: 0.25rem;
 }
 
-/* Responsive adjustments */
+/* STANDARDIZED BREAKPOINTS - Mobile First */
+/* Mobile (up to 767px) */
 @media (max-width: 767px) {
   .grid-container {
-    margin: 0;
-    padding: 0.5rem;
-    width: 100%;
+    padding: 0.75rem;
   }
 
   .grid {
-    gap: 0.75rem;
-    padding: 0.5rem;
+    gap: 1rem;
     grid-template-columns: 1fr;
   }
   
   .item-box {
     padding: 0.75rem;
-    margin-bottom: 0.5rem;
   }
 
   .item-details {
@@ -208,101 +291,85 @@ body {
   }
 
   .item-image {
-    width: 80px;
-    height: 80px;
+    width: clamp(80px, 18vw, 105px);
+    height: clamp(80px, 18vw, 105px);
   }
 
   .item-name {
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
 
   .item-description {
     font-size: 0.75rem;
-    -webkit-line-clamp: 2;
+    margin-bottom: 0.75rem;
   }
 
   .item-price {
     font-size: 0.875rem;
   }
 
-  /* Improve touch targets */
   button, 
-  .add-button,
-  .action-buttons button {
-    min-height: 44px;
-    min-width: 44px;
-    padding: 0.75rem;
-    font-size: 1rem;
+  .add-button {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    min-height: 2.75rem;
+    border-radius: 0.75rem;
   }
-
-  /* Adjust popup for mobile */
+  
   .ingredient-popup {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .popup-content {
-    width: 95%;
-    max-width: 95%;
-    margin: 1rem auto;
+    max-height: calc(100vh - 8rem);
+    border-radius: 1rem;
   }
 
   .item-description, .item-name, .item-price, .category-list span, .basket-summary, .basket-summary .item-details h3, .basket-summary .ingredient-label, .basket-summary .ingredient-group p:not(.ingredient-label), .basket-summary .quantity {
-    font-size: 0.875rem !important;
+    font-size: 0.875rem;
   }
-
-  /* Mobile Basket Drawer for <=767px */
-  .mobile-basket-panel {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    min-height: 100vh !important;
-    border-radius: 0 !important;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
-    z-index: 2000;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    animation: basket-slide-up 0.3s cubic-bezier(0.4,0,0.2,1);
-    padding-top: 0 !important;
+  
+  /* Larger navigation icons for mobile touch interaction */
+  .w-responsive-slider-icon {
+    width: 1.25rem !important;
   }
-  .basket-panel {
-    border-radius: 0 !important;
-    top: 0 !important;
-    max-width: 100vw !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
-    padding-top: 0 !important;
+  
+  .h-responsive-slider-icon {
+    height: 1.25rem !important;
+  }
+  
+  /* Larger navigation buttons for mobile */
+  .w-responsive-slider-button {
+    width: 3rem !important;
+  }
+  
+  .h-responsive-slider-button {
+    height: 3rem !important;
   }
 }
 
-/* Tablet adjustments */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .grid {
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
+/* Tablet (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    /* Optimized for tablet reading and interaction */
+    --content-padding: clamp(1rem, 0.875rem + 0.5vw, 1.5rem);
+    --section-spacing: clamp(1rem, 0.875rem + 0.5vw, 1.75rem);
   }
 }
 
-/* Desktop adjustments */
-@media (min-width: 1025px) {
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
   .grid {
-    gap: 1.5rem;
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Large Desktop adjustments */
-@media (min-width: 1281px) {
-  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 2rem;
-    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2.5rem;
   }
 }
 
@@ -464,6 +531,45 @@ body {
     padding: 0.75rem;
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     max-height: calc(90vh - 180px - env(safe-area-inset-bottom, 0px));
+  }
+
+  .gap-responsive {
+    gap: clamp(0.5rem, 1.25vh, 1rem);
+  }
+
+  .mb-responsive {
+    margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  }
+
+  .leading-tight {
+    line-height: 1.2;
+  }
+
+  .leading-relaxed {
+    line-height: 1.5;
+  }
+
+  .btn-responsive {
+    height: clamp(2.5rem, 4vh, 3rem);
+    min-height: clamp(2.5rem, 4vh, 3rem);
+    padding: 0 clamp(0.75rem, 2vh, 1.25rem);
+  }
+  
+  /* Maximum size navigation for very small screens */
+  .w-responsive-slider-icon {
+    width: 0.625rem !important;
+  }
+  
+  .h-responsive-slider-icon {
+    height: 0.625rem !important;
+  }
+  
+  .w-responsive-slider-button {
+    width: var(--slider-dot-size) !important;
+  }
+  
+  .h-responsive-slider-button {
+    height: var(--slider-dot-size) !important;
   }
 }
 
@@ -743,79 +849,41 @@ body {
   @apply text-xl font-bold text-red-500;
 }
 
-/* --- Ingredient Popup Responsive Sizing --- */
+/* Responsive ingredient popup sizing */
 @media (max-width: 640px) {
   .ingredient-popup > div {
-    max-width: 98vw;
-    min-width: 0;
-    padding: 0.5rem;
-    border-radius: 1rem;
+    width: 95%;
+    height: 85vh;
+    max-height: 85vh;
   }
+  
   .ingredient-popup .popup-content {
-    max-width: 98vw;
-    padding: 0.5rem;
-    font-size: 0.97rem;
+    max-height: calc(85vh - 8rem);
+    border-radius: 1rem;
   }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
   .ingredient-popup > div {
+    width: 80%;
     max-width: 600px;
-    padding: 1.5rem 1rem;
-    border-radius: 1.25rem;
   }
+  
   .ingredient-popup .popup-content {
-    max-width: 600px;
-    font-size: 1rem;
+    max-height: calc(90vh - 8rem);
   }
 }
 
 @media (min-width: 1025px) {
   .ingredient-popup > div {
+    width: 70%;
     max-width: 700px;
-    padding: 2rem 1.5rem;
-    border-radius: 1.5rem;
   }
+  
   .ingredient-popup .popup-content {
-    max-width: 700px;
-    font-size: 1.05rem;
+    max-height: calc(90vh - 8rem);
   }
 }
-/* --- End Ingredient Popup Responsive Sizing --- */
-
-/* --- Mobile Full-Screen Basket Drawer (Below Header) --- */
-@media (max-width: 800px) {
-  .mobile-basket-panel {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    min-height: 100vh !important;
-    border-radius: 0 !important;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.18);
-    z-index: 2000;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    animation: basket-slide-up 0.3s cubic-bezier(0.4,0,0.2,1);
-    padding-top: 0 !important;
-  }
-  .basket-panel {
-    border-radius: 0 !important;
-    top: 0 !important;
-    max-width: 100vw !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
-    padding-top: 0 !important;
-  }
-}
-/* --- End Mobile Full-Screen Basket Drawer (Below Header) --- */
 
 /* Ingredient item styles */
 .ingredient-item {
@@ -860,4 +928,658 @@ body {
 .popup-content::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
+}
+
+/* Dynamic height utility */
+.min-h-screen-dynamic {
+  min-height: 100vh;
+  min-height: calc(100 * var(--vh));
+}
+
+.h-screen-dynamic {
+  height: 100vh;
+  height: calc(100 * var(--vh));
+}
+
+/* CLEANED UP RESPONSIVE UTILITIES */
+.h-responsive-header {
+  height: var(--header-height);
+}
+
+.h-responsive-container {
+  height: var(--container-max-height);
+  min-height: var(--container-min-height);
+}
+
+.p-responsive {
+  padding: var(--content-padding);
+}
+
+.py-responsive {
+  padding-top: var(--content-padding);
+  padding-bottom: var(--content-padding);
+}
+
+.px-responsive {
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+}
+
+.gap-responsive {
+  gap: var(--spacing-responsive);
+}
+
+.text-responsive-base {
+  font-size: var(--text-base);
+}
+
+.text-responsive-large {
+  font-size: var(--text-large);
+}
+
+.text-responsive-xl {
+  font-size: var(--text-xl);
+}
+
+.text-responsive-2xl {
+  font-size: var(--text-2xl);
+}
+
+.text-responsive-3xl {
+  font-size: var(--text-3xl);
+}
+
+.btn-responsive {
+  height: var(--button-height);
+  min-height: var(--button-height);
+  padding: 0 var(--content-padding);
+}
+
+.input-responsive {
+  height: var(--input-height);
+  min-height: var(--input-height);
+}
+
+.card-responsive {
+  padding: var(--card-padding);
+}
+
+.mb-responsive {
+  margin-bottom: var(--section-spacing);
+}
+
+.mt-responsive {
+  margin-top: var(--section-spacing);
+}
+
+.mt-responsive-header-gap {
+  margin-top: var(--header-content-gap);
+}
+
+/* Component-specific responsive utilities */
+.h-responsive-banner {
+  height: var(--banner-height);
+}
+
+.w-responsive-image {
+  width: var(--image-size);
+}
+
+.h-responsive-image {
+  height: var(--image-size);
+}
+
+.h-responsive-popup-image {
+  height: var(--popup-image-height);
+}
+
+.h-responsive-slider {
+  height: var(--slider-component-height);
+}
+
+.h-responsive-selector {
+  height: var(--selector-height);
+}
+
+.w-responsive-button {
+  width: var(--button-responsive-size);
+}
+
+.h-responsive-button {
+  height: var(--button-responsive-size);
+}
+
+.min-w-responsive-button {
+  min-width: var(--button-responsive-size);
+}
+
+.min-h-responsive-button {
+  min-height: var(--button-responsive-size);
+}
+
+.top-responsive {
+  top: var(--top-responsive);
+}
+
+.right-responsive {
+  right: var(--right-responsive);
+}
+
+/* Fine-tuned height adjustments for very specific cases */
+@media (max-height: 600px) {
+  :root {
+    --header-height: clamp(3rem, 7vh, 4.5rem);
+    --content-padding: clamp(0.5rem, 1.5vh, 1rem);
+    --section-spacing: clamp(0.75rem, 2vh, 1.5rem);
+    --card-padding: clamp(0.5rem, 1.5vh, 1rem);
+    --button-height: clamp(2.5rem, 4vh, 3rem);
+    --input-height: clamp(2.25rem, 3.5vh, 2.75rem);
+    --popup-scale: clamp(0.8, 0.95, 1);
+    --spacing-responsive: clamp(0.5rem, 1.5vh, 1rem);
+    --banner-height: clamp(120px, 20vh, 160px);
+    --image-size: clamp(80px, 12vh, 120px);
+    --popup-image-height: clamp(160px, 25vh, 240px);
+    --slider-component-height: clamp(160px, 25vh, 240px);
+    --selector-height: clamp(48px, 6vh, 60px);
+    --button-responsive-size: clamp(2.25rem, 5vh, 2.75rem);
+  }
+}
+
+@media (max-height: 500px) {
+  :root {
+    --header-height: clamp(2.75rem, 6vh, 4rem);
+    --content-padding: clamp(0.375rem, 1vh, 0.75rem);
+    --section-spacing: clamp(0.5rem, 1.5vh, 1rem);
+    --card-padding: clamp(0.375rem, 1vh, 0.75rem);
+    --button-height: clamp(2.25rem, 3.5vh, 2.75rem);
+    --input-height: clamp(2rem, 3vh, 2.5rem);
+    --popup-scale: clamp(0.75, 0.9, 1);
+    --spacing-responsive: clamp(0.375rem, 1vh, 0.75rem);
+    --banner-height: clamp(100px, 18vh, 140px);
+    --image-size: clamp(70px, 10vh, 100px);
+    --popup-image-height: clamp(140px, 22vh, 200px);
+    --slider-component-height: clamp(140px, 22vh, 200px);
+    --selector-height: clamp(40px, 5vh, 52px);
+    --button-responsive-size: clamp(2rem, 4.5vh, 2.5rem);
+  }
+}
+
+@media (max-height: 400px) {
+  :root {
+    --header-height: clamp(2.5rem, 5vh, 3.5rem);
+    --content-padding: clamp(0.25rem, 0.75vh, 0.5rem);
+    --section-spacing: clamp(0.375rem, 1vh, 0.75rem);
+    --card-padding: clamp(0.25rem, 0.75vh, 0.5rem);
+    --button-height: clamp(2rem, 3vh, 2.5rem);
+    --input-height: clamp(1.875rem, 2.5vh, 2.25rem);
+    --popup-scale: clamp(0.7, 0.85, 1);
+    --spacing-responsive: clamp(0.25rem, 0.75vh, 0.5rem);
+    --banner-height: clamp(80px, 15vh, 120px);
+    --image-size: clamp(60px, 8vh, 80px);
+    --popup-image-height: clamp(120px, 18vh, 160px);
+    --slider-component-height: clamp(120px, 18vh, 160px);
+    --selector-height: clamp(36px, 4vh, 44px);
+    --button-responsive-size: clamp(1.875rem, 4vh, 2.25rem);
+  }
+}
+
+/* Additional responsive utilities */
+.h-responsive-category-header {
+  height: clamp(3.5rem, 6vh, 4rem);
+}
+
+.w-responsive-category-icon {
+  width: clamp(1.5rem, 4vw, 2rem);
+}
+
+.h-responsive-category-icon {
+  height: clamp(1.5rem, 4vw, 2rem);
+}
+
+.min-h-responsive-screen {
+  min-height: calc(100 * var(--vh));
+}
+
+.h-responsive-textarea {
+  height: clamp(6rem, 15vh, 10rem);
+}
+
+.h-responsive-grid-item {
+  height: clamp(8rem, 20vh, 12rem);
+}
+
+.h-responsive-grid-item-small {
+  height: clamp(6rem, 15vh, 9rem);
+}
+
+.h-responsive-icon {
+  height: clamp(1.25rem, 3vh, 1.75rem);
+}
+
+.w-responsive-icon {
+  width: clamp(1.25rem, 3vh, 1.75rem);
+}
+
+.text-responsive-sm {
+  font-size: var(--text-sm);
+}
+
+.text-responsive-xs {
+  font-size: var(--text-xs);
+}
+
+.text-responsive-lg {
+  font-size: var(--text-lg);
+}
+
+.max-w-responsive {
+  max-width: clamp(20rem, 80vw, 48rem);
+}
+
+.gap-responsive-small {
+  gap: clamp(0.25rem, 1vh, 0.75rem);
+}
+
+.px-responsive-larger {
+  padding-left: clamp(1rem, 3vh, 2rem);
+  padding-right: clamp(1rem, 3vh, 2rem);
+}
+
+.pr-responsive-larger {
+  padding-right: clamp(1rem, 3vh, 2rem);
+}
+
+.mb-responsive-large {
+  margin-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+.p-responsive-small {
+  padding: clamp(0.375rem, 1vh, 0.75rem);
+}
+
+.space-x-responsive > * + * {
+  margin-left: var(--spacing-responsive);
+}
+
+.h-responsive-spinner {
+  height: clamp(2rem, 5vh, 3rem);
+}
+
+.w-responsive-spinner {
+  width: clamp(2rem, 5vh, 3rem);
+}
+
+.text-responsive-6xl {
+  font-size: clamp(3rem, 8vh, 4.5rem);
+}
+
+.space-y-responsive > * + * {
+  margin-top: var(--spacing-responsive);
+}
+
+/* Device-specific adjustments */
+@media (max-width: 768px) {
+  :root {
+    --header-height: clamp(3.25rem, 7vh, 5rem);
+    --content-padding: clamp(0.75rem, 2vh, 1.25rem);
+    --section-spacing: clamp(1rem, 2.5vh, 2rem);
+    --card-padding: clamp(0.75rem, 1.5vh, 1rem);
+    --button-height: clamp(2.75rem, 4.5vh, 3.25rem);
+    --input-height: clamp(2.5rem, 3.5vh, 2.875rem);
+    --spacing-responsive: clamp(0.75rem, 1.5vh, 1.25rem);
+  }
+  
+  .w-8 {
+    width: clamp(1.5rem, 6vw, 2rem);
+  }
+  
+  .h-8 {
+    height: clamp(1.5rem, 6vw, 2rem);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: clamp(3rem, 6vh, 4.5rem);
+    --content-padding: clamp(0.5rem, 1.5vh, 1rem);
+    --section-spacing: clamp(0.75rem, 2vh, 1.5rem);
+    --card-padding: clamp(0.5rem, 1.25vh, 0.875rem);
+    --button-height: clamp(2.5rem, 4vh, 3rem);
+    --input-height: clamp(2.25rem, 3vh, 2.625rem);
+    --spacing-responsive: clamp(0.5rem, 1.25vh, 1rem);
+  }
+  
+  .w-8 {
+    width: clamp(1.375rem, 5.5vw, 1.75rem);
+  }
+  
+  .h-8 {
+    height: clamp(1.375rem, 5.5vw, 1.75rem);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-height: clamp(2.75rem, 5.5vh, 4rem);
+    --content-padding: clamp(0.375rem, 1vh, 0.75rem);
+    --section-spacing: clamp(0.5rem, 1.5vh, 1.25rem);
+    --card-padding: clamp(0.375rem, 1vh, 0.75rem);
+    --button-height: clamp(2.25rem, 3.5vh, 2.75rem);
+    --input-height: clamp(2rem, 2.5vh, 2.375rem);
+    --spacing-responsive: clamp(0.375rem, 1vh, 0.875rem);
+  }
+  
+  .w-8 {
+    width: clamp(1.25rem, 5vw, 1.5rem);
+  }
+  
+  .h-8 {
+    height: clamp(1.25rem, 5vw, 1.5rem);
+  }
+}
+
+/* Simplified breakpoint adjustments */
+@media (min-width: 641px) {
+  .mb-responsive {
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+  }
+}
+
+/* Touch-friendly adjustments for mobile */
+@media (max-width: 768px) {
+  .leading-tight {
+    line-height: 1.25;
+  }
+  
+  .leading-relaxed {
+    line-height: 1.625;
+  }
+  
+  .space-x-2 > * + * {
+    margin-left: 0.5rem;
+  }
+  
+  .p-responsive {
+    padding: clamp(0.75rem, 2vh, 1.25rem);
+  }
+  
+  .px-responsive {
+    padding-left: clamp(0.75rem, 2vh, 1.25rem);
+    padding-right: clamp(0.75rem, 2vh, 1.25rem);
+  }
+  
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .gap-responsive {
+    gap: clamp(0.5rem, 1.25vh, 1rem);
+  }
+  
+  .mb-responsive {
+    margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  }
+  
+  .leading-tight {
+    line-height: 1.2;
+  }
+  
+  .leading-relaxed {
+    line-height: 1.5;
+  }
+  
+  .btn-responsive {
+    height: clamp(2.5rem, 4vh, 3rem);
+    min-height: clamp(2.5rem, 4vh, 3rem);
+    padding: 0 clamp(0.75rem, 2vh, 1.25rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .p-responsive {
+    padding: clamp(0.5rem, 1.5vh, 1rem);
+  }
+  
+  .gap-responsive {
+    gap: clamp(0.375rem, 1vh, 0.875rem);
+  }
+  
+  .mb-responsive {
+    margin-bottom: clamp(0.5rem, 1.5vh, 1.25rem);
+  }
+  
+  .leading-tight {
+    line-height: 1.15;
+  }
+  
+  .leading-relaxed {
+    line-height: 1.45;
+  }
+  
+  .btn-responsive {
+    height: clamp(2.25rem, 3.5vh, 2.75rem);
+    min-height: clamp(2.25rem, 3.5vh, 2.75rem);
+    padding: 0 clamp(0.5rem, 1.5vh, 1rem);
+  }
+  
+  /* Maximum size navigation for very small screens */
+  .w-responsive-slider-icon {
+    width: 0.625rem !important;
+  }
+  
+  .h-responsive-slider-icon {
+    height: 0.625rem !important;
+  }
+  
+  .w-responsive-slider-button {
+    width: var(--slider-dot-size) !important;
+  }
+  
+  .h-responsive-slider-button {
+    height: var(--slider-dot-size) !important;
+  }
+}
+
+/* REFINED RESPONSIVE ADJUSTMENTS - Working with fluid base */
+
+/* Small Mobile: Fine-tuning for very small screens */
+@media (max-width: 479px) {
+  :root {
+    /* Minor adjustments for very small screens */
+    --section-spacing: clamp(0.75rem, 0.625rem + 0.625vw, 1.25rem);
+    --card-padding: clamp(0.75rem, 0.625rem + 0.625vw, 1.25rem);
+  }
+}
+
+/* Mobile Landscape: Optimize for horizontal orientation */
+@media (min-width: 480px) and (max-width: 767px) {
+  :root {
+    /* Slightly more generous spacing for landscape mobile */
+    --section-spacing: clamp(1rem, 0.875rem + 0.625vw, 1.5rem);
+  }
+}
+
+/* Laptop: Balance content and white space */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  :root {
+    /* Refined spacing for laptop screens */
+    --content-padding: clamp(1.25rem, 1rem + 0.5vw, 1.625rem);
+    --section-spacing: clamp(1.25rem, 1rem + 0.5vw, 1.875rem);
+  }
+}
+
+/* Desktop and larger: Prevent excessive scaling */
+@media (min-width: 1440px) {
+  :root {
+    /* Cap the maximum sizes for very large screens */
+    --content-padding: clamp(1.5rem, 1.25rem + 0.375vw, 1.875rem);
+    --section-spacing: clamp(1.75rem, 1.5rem + 0.5vw, 2.25rem);
+  }
+}
+
+/* Ultra-wide: Maintain readability */
+@media (min-width: 1920px) {
+  :root {
+    /* Ensure content doesn't become too spread out */
+    --section-spacing: clamp(2rem, 1.75rem + 0.375vw, 2.5rem);
+  }
+}
+
+/* ENHANCED RESPONSIVE UTILITY CLASSES - Better control */
+
+/* Typography utilities with precise scaling */
+.text-responsive-xs {
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.text-responsive-sm {
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.text-responsive-base {
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+
+.text-responsive-large {
+  font-size: var(--text-large);
+  line-height: 1.5;
+}
+
+.text-responsive-xl {
+  font-size: var(--text-xl);
+  line-height: 1.4;
+}
+
+.text-responsive-2xl {
+  font-size: var(--text-2xl);
+  line-height: 1.3;
+}
+
+.text-responsive-3xl {
+  font-size: var(--text-3xl);
+  line-height: 1.2;
+}
+
+.text-responsive-lg {
+  font-size: var(--text-lg);
+  line-height: 1.45;
+}
+
+/* Layout utilities with better control */
+.px-responsive {
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+}
+
+.py-responsive {
+  padding-top: var(--content-padding);
+  padding-bottom: var(--content-padding);
+}
+
+.p-responsive {
+  padding: var(--content-padding);
+}
+
+.gap-responsive {
+  gap: var(--spacing-responsive);
+}
+
+.mb-responsive {
+  margin-bottom: var(--section-spacing);
+}
+
+.mt-responsive {
+  margin-top: var(--section-spacing);
+}
+
+/* Button utilities with precise sizing */
+.btn-responsive {
+  height: var(--button-height);
+  min-height: var(--button-height);
+  padding: 0 var(--content-padding);
+  font-size: var(--text-base);
+  border-radius: 0.75rem;
+}
+
+/* Container utilities with better width control */
+.container-responsive {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  width: 100%;
+}
+
+.card-responsive {
+  padding: var(--card-padding);
+  border-radius: 1rem;
+}
+
+/* Spacing utilities with precise control */
+.space-y-responsive > * + * {
+  margin-top: var(--spacing-responsive);
+}
+
+.space-x-responsive > * + * {
+  margin-left: var(--spacing-responsive);
+}
+
+.gap-responsive-small {
+  gap: calc(var(--spacing-responsive) * 0.6);
+}
+
+.gap-responsive-large {
+  gap: calc(var(--spacing-responsive) * 1.5);
+}
+
+/* Image slider utilities with better proportions */
+.h-responsive-slider {
+  height: var(--slider-height);
+}
+
+.w-responsive-slider-button {
+  width: var(--slider-button-size);
+}
+
+.h-responsive-slider-button {
+  height: var(--slider-button-size);
+}
+
+.w-responsive-slider-icon {
+  width: var(--slider-icon-size);
+}
+
+.h-responsive-slider-icon {
+  height: var(--slider-icon-size);
+}
+
+.w-responsive-slider-dot {
+  width: var(--slider-dot-size);
+}
+
+.h-responsive-slider-dot {
+  height: var(--slider-dot-size);
+}
+
+/* Container width limits for better readability and image proportions */
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container-responsive {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container-responsive {
+    max-width: 1000px;
+  }
 }

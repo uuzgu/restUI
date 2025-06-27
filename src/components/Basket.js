@@ -75,16 +75,14 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
   return (
     <li className="basket-item">
       <div className="basket-item-header">
-        <div className="flex items-center gap-2">
-          <span className="basket-item-name">{item.name}</span>
+        <span className="basket-item-name">{item.name}</span>
+        <div className="basket-item-controls">
           <button
             onClick={toggleDetails}
-            className="info-btn px-2 py-1 text-xs rounded-full border border-[var(--basket-container-border)] hover:bg-[var(--basket-button-hover)] transition-colors"
+            className="info-btn px-2 py-1 text-xs rounded-full border border-[var(--basket-item-border)] hover:bg-[var(--basket-button-hover)] transition-colors"
           >
             {showDetails ? translations[language].hideInfo : translations[language].info}
           </button>
-        </div>
-        <div className="basket-item-controls">
           <button
             onClick={handleDecrease}
             className="quantity-btn bg-[var(--basket-button-bg)] hover:bg-[var(--basket-button-hover)]"
@@ -107,7 +105,7 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
             className="remove-btn"
             aria-label="Remove item"
           >
-            <TrashIcon className="w-7 h-7" />
+            <TrashIcon className="basket-remove-icon" />
           </button>
         </div>
       </div>
@@ -325,14 +323,6 @@ const Basket = ({
       className={`basket-panel transition-transform duration-300 bg-[var(--basket-container-bg)] border border-[var(--basket-container-border)] shadow-lg rounded-lg overflow-hidden flex flex-col ${
         basketVisible ? 'translate-y-0' : 'translate-y-full'
       }`}
-      style={{
-        position: 'fixed',
-        top: '96px',
-        right: window.innerWidth <= 768 ? '0' : '1.5rem',
-        width: window.innerWidth <= 768 ? '100%' : '28rem',
-        height: `calc(100vh - 96px)`,
-        zIndex: 1050
-      }}
     >
       {/* Order Method Toggle */}
       <div className="order-toggle">
@@ -364,7 +354,7 @@ const Basket = ({
       )}
 
       {/* Basket Content */}
-      <div className="basket-content flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+      <div className="basket-content flex-1 overflow-y-auto">
         {basket.length === 0 ? (
           <div className="empty-basket">
             <div className="empty-basket-icon">
@@ -393,7 +383,7 @@ const Basket = ({
 
       {/* Basket Footer: Total and Checkout Button */}
       {basket.length > 0 && (
-        <div className="basket-footer" style={{ padding: '0.5rem 1.5rem 1rem 1.5rem' }}>
+        <div className="basket-footer">
           <div className="basket-total">
             {/* Coupon Warning Message */}
             <div 
@@ -411,27 +401,18 @@ const Basket = ({
               </p>
             </div>
 
-            <div className="flex justify-between items-center" style={{ marginTop: '-0.75rem' }}>
-              <span className="text-base font-semibold">
+            <div className="flex justify-start items-center" style={{ marginTop: '-0.75rem' }}>
+              <span className="text-base font-semibold mr-2">
                 {translations[language].total}:
               </span>
-              <div className="text-right">
-                {totalDiscount > 0 && (
-                  <>
-                    <span className="text-xs text-gray-500 line-through block">
-                      €{totalOriginalPrice.toFixed(2)}
-                    </span>
-                    <span className="text-base font-bold text-green-600 dark:text-green-400">
-                      €{subtotal.toFixed(2)}
-                    </span>
-                  </>
-                )}
-                {totalDiscount === 0 && (
-                  <span className="text-base font-bold">
-                    €{subtotal.toFixed(2)}
-                  </span>
-                )}
-              </div>
+              {totalDiscount > 0 && (
+                <span className="text-xs text-gray-500 line-through mr-2">
+                  €{totalOriginalPrice.toFixed(2)}
+                </span>
+              )}
+              <span className={`text-base font-bold ${totalDiscount > 0 ? 'text-green-600 dark:text-green-400' : ''}`}>
+                €{subtotal.toFixed(2)}
+              </span>
             </div>
           </div>
           <button

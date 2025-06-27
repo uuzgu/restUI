@@ -57,7 +57,7 @@ const MenuSlider = ({ items }) => {
             key={item.id} 
             className="menu-slide min-w-full flex-shrink-0 relative"
           >
-            <div className="relative h-[300px] w-full">
+            <div className="relative h-responsive-slider w-full">
               <img 
                 src={item.image_url} 
                 alt={item.name || 'Item'} 

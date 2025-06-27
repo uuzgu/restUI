@@ -157,9 +157,9 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
   const bellLabel = translations[language]?.checkout?.bell || 'Bell (optional)';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <label htmlFor="postcode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor="postcode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {postcodeLabel}
         </label>
         <select
@@ -167,7 +167,8 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
           value={selectedPostcode}
           onChange={(e) => handlePostcodeChange(Number(e.target.value))}
           ref={postalCodeRef}
-          className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+          className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
+          style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
         >
           <option value="">{selectPostcodeLabel}</option>
           {postcodes.map((postcode) => (
@@ -179,9 +180,9 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
       </div>
 
       {selectedPostcode && (
-        <div className="space-y-4">
+        <div className="space-y-6 mt-8">
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {addressLabel}
             </label>
             <select
@@ -189,8 +190,9 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
               value={selectedAddress}
               onChange={(e) => handleAddressChange(Number(e.target.value))}
               ref={addressRef}
-              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+              className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
               disabled={loading}
+              style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
             >
               <option value="">{selectAddressLabel}</option>
               {addresses.map((address) => (
@@ -200,16 +202,16 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
               ))}
             </select>
             {loading && (
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                 {loadingLabel}
               </p>
             )}
           </div>
 
           {selectedAddress && (
-            <div className="grid grid-cols-2 gap-3">
-              <div className="h-[72px]">
-                <label htmlFor="house" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+              <div className="h-responsive-selector">
+                <label htmlFor="house" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {houseLabel}
                 </label>
                 <input
@@ -219,14 +221,15 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
                   onChange={(e) => handleFieldChange('house', e.target.value)}
                   onBlur={handleFieldBlur}
                   ref={houseRef}
-                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
                   placeholder="Nr."
                   required
+                  style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
                 />
               </div>
 
-              <div className="h-[72px]">
-                <label htmlFor="stairs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="h-responsive-selector">
+                <label htmlFor="stairs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {stairsLabel}
                 </label>
                 <input
@@ -235,13 +238,14 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
                   value={formValues.stairs}
                   onChange={(e) => handleFieldChange('stairs', e.target.value)}
                   onBlur={handleFieldBlur}
-                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
                   placeholder="Stiege"
+                  style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
                 />
               </div>
 
-              <div className="h-[72px]">
-                <label htmlFor="stick" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="h-responsive-selector">
+                <label htmlFor="stick" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {stickLabel}
                 </label>
                 <input
@@ -250,13 +254,14 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
                   value={formValues.stick}
                   onChange={(e) => handleFieldChange('stick', e.target.value)}
                   onBlur={handleFieldBlur}
-                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
                   placeholder="Stock"
+                  style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
                 />
               </div>
 
-              <div className="h-[72px]">
-                <label htmlFor="door" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="h-responsive-selector">
+                <label htmlFor="door" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {doorLabel}
                 </label>
                 <input
@@ -265,13 +270,14 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
                   value={formValues.door}
                   onChange={(e) => handleFieldChange('door', e.target.value)}
                   onBlur={handleFieldBlur}
-                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
                   placeholder="Tür"
+                  style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
                 />
               </div>
 
-              <div className="h-[72px]">
-                <label htmlFor="bell" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="h-responsive-selector sm:col-span-2">
+                <label htmlFor="bell" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {bellLabel}
                 </label>
                 <input
@@ -280,8 +286,9 @@ const PostalCodeSelector = ({ onPostalCodeChange, onAddressChange, refs }) => {
                   value={formValues.bell}
                   onChange={(e) => handleFieldChange('bell', e.target.value)}
                   onBlur={handleFieldBlur}
-                  className="block w-full h-10 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  className="block w-full h-responsive-input rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-responsive-base dark:bg-gray-700 dark:text-white"
                   placeholder="Klingel"
+                  style={{ height: 'var(--input-height)', minHeight: 'var(--input-height)' }}
                 />
               </div>
             </div>

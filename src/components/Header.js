@@ -1,7 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
-import pizzaLogo from "../assets/pizzaLogoTr.png";
-import pizzaLogoDark from "../assets/pizzalogodark.png"; 
+import pizzaLogoDark from "../assets/pizzalogolight.png";
+import pizzaLogo from "../assets/pizzalogodark.png"; 
 import { Instagram, Twitter, Moon, Sun, ShoppingCart } from 'lucide-react';
 import { useDarkMode } from '../DarkModeContext';
 import '../colors/headerColors.css';
@@ -22,7 +22,7 @@ const NavLink = ({ to, isActive, children }) => (
   </div>
 );
 
-const Header = ({ toggleBasket, basketVisible }) => {
+const Header = ({ basketCount = 0, onBasketToggle, basketVisible = false }) => {
   const location = useLocation();
   const { language, toggleLanguage, translations } = useLanguage();
   const isOrderPage = location.pathname === "/order";
@@ -75,17 +75,24 @@ const Header = ({ toggleBasket, basketVisible }) => {
           </button>
 
           {/* Basket Toggle - Only visible on order page */}
-          {isOrderPage && (
-            <button
-              onClick={toggleBasket}
-              className={`button-base-no-border border ${
-                basketVisible 
-                  ? 'border-[var(--header-basket-border-active)] text-[var(--header-basket-text-active)]' 
-                  : 'border-[var(--header-basket-border)] text-[var(--header-basket-text)]'
-              }`}
-            >
-              <ShoppingCart className="w-5 h-5 inline-block" />
-            </button>
+          {isOrderPage && onBasketToggle && (
+            <div className="relative">
+              <button
+                onClick={onBasketToggle}
+                className={`button-base relative ${
+                  basketVisible 
+                    ? 'bg-[var(--header-basket-border-active)] border-[var(--header-basket-border-active)] text-white' 
+                    : 'bg-[var(--header-button-bg)] border-[var(--header-basket-border)] text-[var(--header-basket-text)] hover:bg-[var(--header-button-hover)]'
+                }`}
+              >
+                <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+                {basketCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
+                    {basketCount}
+                  </span>
+                )}
+              </button>
+            </div>
           )}
 
           {/* Social Links - Only on home page and not on mobile */}

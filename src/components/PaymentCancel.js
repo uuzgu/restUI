@@ -47,39 +47,39 @@ const PaymentCancel = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-responsive-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Processing cancellation...</p>
+          <div className="animate-spin rounded-full h-responsive-spinner w-responsive-spinner border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-responsive text-gray-600">Processing cancellation...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-responsive-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-responsive">
         <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">
+          <div className="text-red-500 text-responsive-6xl mb-responsive">
             <i className="fas fa-times-circle"></i>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Payment Cancelled</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-responsive-2xl font-bold text-gray-800 mb-responsive">Payment Cancelled</h2>
+          <p className="text-gray-600 mb-responsive">
             Your payment was cancelled. Would you like to try again?
           </p>
           {error && (
-            <p className="text-red-500 mb-4">{error}</p>
+            <p className="text-red-500 mb-responsive">{error}</p>
           )}
-          <div className="space-y-4">
+          <div className="space-y-responsive">
             <button
               onClick={handleRetry}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+              className="w-full bg-blue-600 text-white py-responsive px-responsive rounded-md hover:bg-blue-700 transition duration-200"
             >
               Retry Payment
             </button>
             <button
               onClick={() => navigate('/')}
-              className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200"
+              className="w-full bg-gray-200 text-gray-800 py-responsive px-responsive rounded-md hover:bg-gray-300 transition duration-200"
             >
               Return to Home
             </button>

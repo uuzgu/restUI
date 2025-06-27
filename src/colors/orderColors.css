@@ -16,6 +16,8 @@
   --category-header-active-dark: #f87171;
   --category-header-shadow-light: 0 4px 12px rgba(0,0,0,0.10);
   --category-header-shadow-dark: 0 4px 12px rgba(0,0,0,0.25);
+  --category-header-border-light: #e5e7eb;
+  --category-header-border-dark: #374151;
 
   /* Menu Section Colors */
   --menu-bg-light: #ffffff;
@@ -66,6 +68,7 @@
   --category-header-text: var(--category-header-text-light);
   --category-header-active: var(--category-header-active-light);
   --category-header-shadow: var(--category-header-shadow-light);
+  --category-header-border: var(--category-header-border-light);
 
   --menu-bg: var(--menu-bg-light);
   --menu-text: var(--menu-text-light);
@@ -97,6 +100,7 @@
   --category-header-text: var(--category-header-text-dark);
   --category-header-active: var(--category-header-active-dark);
   --category-header-shadow: var(--category-header-shadow-dark);
+  --category-header-border: var(--category-header-border-dark);
 
   --menu-bg: var(--menu-bg-dark);
   --menu-text: var(--menu-text-dark);
