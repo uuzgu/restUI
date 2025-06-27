@@ -66,6 +66,8 @@ const BasketItem = ({ item, onRemove, increaseQuantity, decreaseQuantity, index,
     e.preventDefault();
     e.stopPropagation();
     setShowDetails(!showDetails);
+    // Blur the button to remove focus state and prevent persistent red border
+    e.target.blur();
   };
 
   // Calculate the total price for this item

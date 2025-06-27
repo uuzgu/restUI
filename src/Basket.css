@@ -704,6 +704,19 @@
     outline: none;
 }
 
+/* Remove focus outline for info buttons to prevent persistent red border */
+.basket-panel .info-btn:focus {
+    outline: none;
+    /* Add subtle visual feedback for accessibility */
+    box-shadow: 0 0 0 2px rgba(239, 62, 62, 0.3);
+    transform: scale(1.02);
+}
+
+/* Remove box-shadow on hover to prevent overlap */
+.basket-panel .info-btn:hover {
+    box-shadow: none;
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .basket-panel,

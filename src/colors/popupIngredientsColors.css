@@ -40,11 +40,11 @@
   --popup-button-primary-text: #transparent; /* Text color for primary action button */
   --popup-button-primary-border: #dc2626; /* Border color for primary action button */
 
-  /* Popup Close Button Colors */
-  --popup-close-button-bg: #ffffff; /* Background color for close button */
-  --popup-close-button-text: #4b5563; /* Text/icon color for close button */
-  --popup-close-button-hover-text: #1f2937; /* Text/icon color on hover for close button */
-  --popup-close-button-border: #e5e7eb; /* Border color for close button */
+  /* Popup Close Button Colors - Enhanced for better visibility */
+  --popup-close-button-bg: rgba(255, 255, 255, 0.95); /* Background color for close button */
+  --popup-close-button-text: #374151; /* Text/icon color for close button - darker for better contrast */
+  --popup-close-button-hover-text: #dc2626; /* Text/icon color on hover for close button - red for clear indication */
+  --popup-close-button-border: #d1d5db; /* Border color for close button */
 
   /* Selection Group Colors */
   --popup-selection-group-bg: #f9fafb; /* Background color for selection groups */
@@ -156,12 +156,11 @@
   --popup-button-primary-text: #f9fafb;
   --popup-button-primary-border: #ffffff;
 
-  /* Popup Close Button Colors */
-  --popup-close-button-bg: rgba(31, 41, 55, 0.8);
-  --popup-close-button-hover-bg: rgba(31, 41, 55, 0.9);
-  --popup-close-button-text: #d1d5db;
-  --popup-close-button-border: #374151;
-  --popup-close-button-hover-text: #f87171;
+  /* Popup Close Button Colors - Enhanced for better visibility in dark mode */
+  --popup-close-button-bg: rgba(55, 65, 81, 0.95); /* Background color for close button */
+  --popup-close-button-text: #e5e7eb; /* Text/icon color for close button - lighter for better contrast */
+  --popup-close-button-border: #4b5563; /* Border color for close button */
+  --popup-close-button-hover-text: #fca5a5; /* Text/icon color on hover for close button - light red for clear indication */
 }
 
 /* Popup Container Responsive Styles */
@@ -170,6 +169,45 @@
   top: 110px;
   max-height: calc(100vh - 120px - 24px);
   overflow: hidden;
+}
+
+/* Ensure close buttons are perfectly circular */
+.popup-close-button-circular {
+  aspect-ratio: 1 / 1;
+  border-radius: 50% !important;
+  width: clamp(32px, 5vw, 48px);
+  height: clamp(32px, 5vw, 48px);
+  min-width: clamp(32px, 5vw, 48px);
+  min-height: clamp(32px, 5vw, 48px);
+  max-width: clamp(32px, 5vw, 48px);
+  max-height: clamp(32px, 5vw, 48px);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.popup-close-button-circular:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.popup-close-button-circular:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments for circular close button */
+@media (max-width: 640px) {
+  .popup-close-button-circular {
+    width: clamp(28px, 6vw, 36px);
+    height: clamp(28px, 6vw, 36px);
+    min-width: clamp(28px, 6vw, 36px);
+    min-height: clamp(28px, 6vw, 36px);
+    max-width: clamp(28px, 6vw, 36px);
+    max-height: clamp(28px, 6vw, 36px);
+  }
 }
 
 @media (max-width: 640px) {

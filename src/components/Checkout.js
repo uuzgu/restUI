@@ -603,6 +603,8 @@ const Checkout = ({ basket: propBasket, setBasket: propSetBasket, orderMethod: p
       ...prev,
       [itemId]: !prev[itemId]
     }));
+    // Blur the button to remove focus state and prevent persistent red border
+    e.target.blur();
   };
 
   // Helper to group selected items by type

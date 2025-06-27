@@ -835,6 +835,22 @@ label:focus-within .w-5.h-5 {
     opacity: 1;
 }
 
+/* Remove focus outline for info buttons to prevent persistent red border */
+.checkout-form .info-btn:focus,
+.form-section-group .info-btn:focus {
+    outline: none !important;
+    /* Add subtle visual feedback for accessibility */
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2) !important;
+    transform: scale(1.02);
+}
+
+.dark .checkout-form .info-btn:focus,
+.dark .form-section-group .info-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.02);
+}
+
 /* Postal Code Selector Styling */
 .checkout-form .address-fields select,
 .checkout-form .address-fields input {

@@ -1088,9 +1088,9 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
                       setShowRequiredOptionsWarning(false);
                       document.body.classList.remove('popup-active');
                     }}
-                    className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 short:w-7 short:h-7 mobile-short:w-6 mobile-short:h-6 mobile-very-short:w-5 mobile-very-short:h-5 mobile-extremely-short:w-4 mobile-extremely-short:h-4 min-w-[32px] min-h-[32px] sm:min-w-[40px] sm:min-h-[40px] short:min-w-[28px] short:min-h-[28px] mobile-short:min-w-[24px] mobile-short:min-h-[24px] mobile-very-short:min-w-[20px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-w-[16px] mobile-extremely-short:min-h-[16px] bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] rounded-full border border-[var(--popup-close-button-border)] flex items-center justify-center shadow-md z-10"
+                    className="absolute top-2 right-2 sm:top-4 sm:right-4 popup-close-button-circular bg-[var(--popup-close-button-bg)] text-[var(--popup-close-button-text)] hover:text-[var(--popup-close-button-hover-text)] border border-[var(--popup-close-button-border)] shadow-md z-10"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 short:h-3 short:w-3 mobile-short:h-3 mobile-short:w-3 mobile-very-short:h-2 mobile-very-short:w-2 mobile-extremely-short:h-2 mobile-extremely-short:w-2" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
@@ -1257,7 +1257,7 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
                                     <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                                       {group.type === 'MULTIPLE' && group.type !== 'EXCLUSIONS' && isSelected && (
                                         <div 
-                                          className="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-full px-1 py-0.5 sm:px-2 sm:py-1 border border-gray-200 dark:border-gray-700"
+                                          className="flex items-center space-x-2 bg-white dark:bg-gray-800 rounded-full px-2 py-1 border border-gray-200 dark:border-gray-700"
                                           onClick={(e) => e.stopPropagation()}
                                         >
                                           <button
@@ -1265,11 +1265,11 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
                                               e.stopPropagation();
                                               updateItemQuantity(option.id, option.type, -1);
                                             }}
-                                            className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 short:w-3 short:h-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-xs sm:text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-all duration-200 flex-shrink-0"
                                           >
                                             -
                                           </button>
-                                          <span className="w-2 sm:w-3 lg:w-5 text-center text-[var(--popup-item-text)] font-semibold text-xs short:text-[10px]">
+                                          <span className="w-6 sm:w-8 lg:w-10 text-center text-[var(--popup-item-text)] font-semibold text-xs sm:text-sm short:text-xs">
                                             {ingredientQuantities[option.id] || 0}
                                           </span>
                                           <button
@@ -1277,7 +1277,7 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
                                               e.stopPropagation();
                                               updateItemQuantity(option.id, option.type, 1);
                                             }}
-                                            className="w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 short:w-3 short:h-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-xs sm:text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                                            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-all duration-200 flex-shrink-0"
                                           >
                                             +
                                           </button>
@@ -1326,22 +1326,22 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
 
               {/* Fixed Footer with Controls */}
               <div className="sticky bottom-0 left-0 right-0 bg-[var(--popup-container-bg)] border-t border-[var(--popup-container-border)] w-full min-w-0 flex-shrink-0">
-                <div className="flex w-full px-2 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-3 mobile-short:py-1 mobile-very-short:py-1 mobile-extremely-short:py-1">
-                  <div className="flex items-center justify-between w-full gap-2 sm:gap-4 mobile-short:gap-1 mobile-very-short:gap-1 mobile-extremely-short:gap-1">
+                <div className="flex w-full px-2 sm:px-4 lg:px-6 py-2 sm:py-3">
+                  <div className="flex items-center justify-between w-full gap-2 sm:gap-4">
                     {/* Quantity Controls */}
-                    <div className="flex items-center border border-[var(--popup-button-border)] rounded-lg sm:rounded-xl lg:rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-8 sm:h-9 lg:h-10 short:h-7 mobile-short:h-6 mobile-very-short:h-5 mobile-extremely-short:h-4 flex-shrink-0">
+                    <div className="flex items-center border border-[var(--popup-button-border)] rounded-lg sm:rounded-xl lg:rounded-2xl bg-[var(--popup-button-bg)] shadow-sm h-10 flex-shrink-0">
                       <button
                         onClick={() => updatePopupItemQuantity(-1)}
-                        className="text-sm sm:text-base lg:text-lg short:text-sm mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-bold text-[var(--popup-button-text)] px-2 sm:px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[32px] sm:min-w-[36px] lg:min-w-[44px] short:min-w-[28px] mobile-short:min-w-[24px] mobile-very-short:min-w-[20px] mobile-extremely-short:min-w-[16px] min-h-[32px] sm:min-h-[36px] lg:min-h-[44px] short:min-h-[28px] mobile-short:min-h-[24px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-h-[16px]"
+                        className="text-sm sm:text-base lg:text-lg font-bold text-[var(--popup-button-text)] px-3 sm:px-4 h-full flex items-center justify-center hover:text-[var(--popup-button-hover-text)] min-w-[40px] sm:min-w-[44px] lg:min-w-[48px] active:bg-gray-100 dark:active:bg-gray-700 transition-colors"
                       >
                         -
                       </button>
-                      <span className="px-1 sm:px-2 lg:px-3 text-xs sm:text-sm lg:text-md short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-semibold h-full flex items-center text-[var(--popup-button-text)]">
+                      <span className="px-2 sm:px-3 lg:px-4 text-xs sm:text-sm lg:text-md font-semibold h-full flex items-center text-[var(--popup-button-text)] min-w-[32px] text-center">
                         {popupItemQuantity}
                       </span>
                       <button
                         onClick={() => updatePopupItemQuantity(1)}
-                        className="text-sm sm:text-base lg:text-lg short:text-sm mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs font-bold text-[var(--popup-button-text)] px-2 sm:px-3 h-full flex items-center hover:text-[var(--popup-button-hover-text)] min-w-[32px] sm:min-w-[36px] lg:min-w-[44px] short:min-w-[28px] mobile-short:min-w-[24px] mobile-very-short:min-w-[20px] mobile-extremely-short:min-w-[16px] min-h-[32px] sm:min-h-[36px] lg:min-h-[44px] short:min-h-[28px] mobile-short:min-h-[24px] mobile-very-short:min-h-[20px] mobile-extremely-short:min-h-[16px]"
+                        className="text-sm sm:text-base lg:text-lg font-bold text-[var(--popup-button-text)] px-3 sm:px-4 h-full flex items-center justify-center hover:text-[var(--popup-button-hover-text)] min-w-[40px] sm:min-w-[44px] lg:min-w-[48px] active:bg-gray-100 dark:active:bg-gray-700 transition-colors"
                       >
                         +
                       </button>
@@ -1350,18 +1350,18 @@ const ItemList = ({ basketVisible, setBasketVisible, basket, setBasket }) => {
                     {/* Add to Basket Button */}
                     <button
                       onClick={handleAddToBasket}
-                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-2 sm:px-4 lg:px-6 h-8 sm:h-9 lg:h-10 short:h-7 mobile-short:h-6 mobile-very-short:h-5 mobile-extremely-short:h-4 rounded-lg sm:rounded-xl lg:rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 flex-1"
+                      className="flex justify-between items-center border border-[var(--popup-button-primary-border)] bg-[var(--popup-button-primary-bg)] text-[var(--popup-button-primary-text)] px-2 sm:px-4 lg:px-6 h-10 rounded-lg sm:rounded-xl lg:rounded-2xl hover:bg-[var(--popup-button-primary-hover-bg)] font-medium shadow-sm min-w-0 flex-1"
                     >
-                      <span className="text-xs sm:text-sm short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs flex items-center truncate">
+                      <span className="text-xs sm:text-sm flex items-center truncate">
                         {translations[language].addToBasket}
                       </span>
                       <div className="flex flex-col items-end ml-1 sm:ml-2 lg:ml-4 justify-center flex-shrink-0">
                         {displayPrice.discountPercentage > 0 && (
-                          <span className="text-xs short:text-[10px] mobile-short:text-[10px] mobile-very-short:text-[10px] mobile-extremely-short:text-[10px] text-gray-500 line-through">
+                          <span className="text-xs text-gray-500 line-through">
                             {selectedItem?.currency || '€'}{(displayPrice.originalPrice * popupItemQuantity).toFixed(2)}
                           </span>
                         )}
-                        <span className="font-bold text-xs sm:text-sm short:text-xs mobile-short:text-xs mobile-very-short:text-xs mobile-extremely-short:text-xs">
+                        <span className="font-bold text-xs sm:text-sm">
                           {selectedItem?.currency || '€'}{(displayPrice.discountedPrice * popupItemQuantity).toFixed(2)}
                         </span>
                       </div>
