@@ -45,7 +45,7 @@
 }
 
 .nav-link a {
-  font-size: clamp(1.14rem, 3.25vw, 1.46rem);
+  font-size: clamp(0.96rem, 2.75vw, 1.24rem);
   font-weight: 600;
   font-family: sans-serif;
   overflow: hidden;
@@ -385,14 +385,14 @@
   }
   
   .nav-link a {
-    font-size: clamp(0.975rem, 4.55vw, 1.3rem);
+    font-size: clamp(0.83rem, 3.85vw, 1.1rem);
   }
 }
 
 /* Height-based responsive adjustments */
 @media (max-height: 600px) {
   .main-header {
-    height: clamp(4.5rem, 13vh, 5.9rem);
+    height: clamp(3.85rem, 11vh, 5rem);
   }
   
   .logo-image {
